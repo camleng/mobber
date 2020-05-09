@@ -1,0 +1,49 @@
+.mobbers {
+    border: 1px solid black;
+    display: flex;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+
+    input {
+        background-color: rgb(46, 46, 46);
+        color: white;
+        border: none;
+        border-bottom: 1px solid #777;
+        margin-right: 0.5rem;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .add {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        background-color: rgb(182, 118, 0);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+    }
+}
+
+.mobber {
+    padding: 0.5rem 1rem;
+    background-color: #777;
+    color: white;
+    border-radius: 0.5rem;
+
+    &:not(:last-child) {
+        margin-right: 1rem;
+    }
+
+    .role {
+        margin-right: 0.5rem;
+    }
+
+    .close {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+}
