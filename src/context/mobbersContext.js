@@ -1,5 +1,7 @@
 import React, { useContext, createContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MobbersContext = createContext();
 
@@ -26,9 +28,16 @@ const MobbersProvider = (props) => {
     };
 
     const addMobber = (name) => {
-        if (name.trim() !== "") {
-            setMobbers([...mobbers, { name, role: "" }]);
+        if (name.trim() === "") return;
+
+        if (mobbers.find((m) => m.name === name)) {
+            toast.error("This is getting out of hand -- now there are two of them!", {
+                position: toast.POSITION.BOTTOM_CENTER,
+            });
+            return;
         }
+
+        setMobbers([...mobbers, { name, role: "" }]);
     };
 
     const removeMobber = (mobber) => {
