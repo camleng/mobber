@@ -26,7 +26,9 @@ const MobbersProvider = (props) => {
     };
 
     const addMobber = (name) => {
-        setMobbers([...mobbers, { name, role: "" }]);
+        if (name.trim() !== "") {
+            setMobbers([...mobbers, { name, role: "" }]);
+        }
     };
 
     const removeMobber = (mobber) => {
