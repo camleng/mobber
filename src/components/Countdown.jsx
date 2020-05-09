@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Countdown.scss";
 import { useMobbers } from "../context/mobbersContext";
+import { toast } from "react-toastify";
 
 const Countdown = () => {
     let initialSeconds = 1 * 10;
     const [countdown, setCountdown] = useState(initialSeconds);
     const [inProgress, setInProgress] = useState(false);
     const ws = useRef(new WebSocket(`ws://${window.location.hostname}:3002`));
-    const { changeRoles } = useMobbers();
+    const { mobbers, changeRoles } = useMobbers();
 
     useEffect(() => {
-        document.title = formatTime(countdown);
+        document.title = `Mobber - ${formatTime(countdown)}`;
 
         if (countdown === 0 && !inProgress) {
             changeRoles();
@@ -34,6 +35,15 @@ const Countdown = () => {
     };
 
     const start = () => {
+        if (mobbers.length < 2) {
+            toast.error(
+                "You're gonna need at least two mobbers to call this a mob. Add some more!",
+                {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                }
+            );
+            return;
+        }
         setInProgress(true);
         const payload = { command: "START" };
         sendMessage(payload);

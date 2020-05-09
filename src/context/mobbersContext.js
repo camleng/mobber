@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MobbersContext = createContext();
@@ -37,7 +37,15 @@ const MobbersProvider = (props) => {
             return;
         }
 
-        setMobbers([...mobbers, { name, role: "" }]);
+        const role = determineRole();
+
+        setMobbers([...mobbers, { name, role }]);
+    };
+
+    const determineRole = () => {
+        if (mobbers.length === 0) return "driver";
+        else if (mobbers.length === 1) return "navigator";
+        else return "";
     };
 
     const removeMobber = (mobber) => {
