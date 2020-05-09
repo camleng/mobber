@@ -12,13 +12,8 @@ const MobbersProvider = (props) => {
 
     const changeRoles = () => {
         let _mobbers = [...mobbers];
-        let driverIndex = _mobbers.findIndex((m) => m.role === "driver");
-        let navigatorIndex = driverIndex + 1;
 
-        const [newDriverIndex, newNavigatorIndex] = incrementIndices(
-            driverIndex,
-            navigatorIndex
-        );
+        const [newDriverIndex, newNavigatorIndex] = incrementIndices(_mobbers);
 
         clearRoles(_mobbers);
         _mobbers[newDriverIndex].role = "driver";
@@ -56,14 +51,39 @@ const MobbersProvider = (props) => {
             return;
         }
         _mobbers.splice(mobberIndex, 1);
+        reassignRoles(_mobbers);
         setMobbers(_mobbers);
     };
 
-    const incrementIndices = (driverIndex, navigatorIndex) => {
-        if (driverIsLastInSequence(driverIndex)) {
+    const reassignRoles = (_mobbers) => {
+        if (_mobbers.length === 0) {
+            return _mobbers;
+        } else if (_mobbers.length === 1) {
+            _mobbers[0].role = "driver";
+            return _mobbers;
+        } else if (_mobbers.length >= 2) {
+            const navigatorIndex = getNavigatorIndex(_mobbers);
+            if (navigatorIndex !== -1) {
+                const driverIndex =
+                    navigatorIndex === 0 ? _mobbers.length - 1 : navigatorIndex - 1;
+                _mobbers[driverIndex].role = "driver";
+            } else {
+                const driverIndex = getDriverIndex(_mobbers);
+                const navigatorIndex =
+                    driverIndex === _mobbers.length - 1 ? 0 : driverIndex + 1;
+                _mobbers[navigatorIndex].role = "navigator";
+            }
+        }
+    };
+
+    const incrementIndices = (_mobbers) => {
+        let driverIndex = getDriverIndex(_mobbers);
+        let navigatorIndex = getNavigatorIndex(_mobbers);
+
+        if (driverIsLastInSequence(_mobbers)) {
             driverIndex = 0;
             navigatorIndex = driverIndex + 1;
-        } else if (navigatorIsLastInSequence(driverIndex)) {
+        } else if (navigatorIsLastInSequence(_mobbers)) {
             driverIndex = mobbers.length - 1;
             navigatorIndex = 0;
         } else {
@@ -74,12 +94,22 @@ const MobbersProvider = (props) => {
         return [driverIndex, navigatorIndex];
     };
 
-    const navigatorIsLastInSequence = (driverIndex) => {
-        return driverIndex + 1 === mobbers.length - 1;
+    const getDriverIndex = (_mobbers) => {
+        return _mobbers.findIndex((m) => m.role === "driver");
     };
 
-    const driverIsLastInSequence = (driverIndex) => {
-        return driverIndex === mobbers.length - 1;
+    const getNavigatorIndex = (_mobbers) => {
+        return _mobbers.findIndex((m) => m.role === "navigator");
+    };
+
+    const navigatorIsLastInSequence = (_mobbers) => {
+        const navigatorIndex = _mobbers.findIndex((m) => m.role === "navigator");
+        return navigatorIndex === _mobbers.length - 1;
+    };
+
+    const driverIsLastInSequence = (_mobbers) => {
+        const driverIndex = _mobbers.findIndex((m) => m.role === "driver");
+        return driverIndex === _mobbers.length - 1;
     };
 
     const clearRoles = (_mobbers) => {
