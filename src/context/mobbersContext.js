@@ -118,7 +118,7 @@ const MobbersProvider = (props) => {
 
     return (
         <MobbersContext.Provider
-            value={{ mobbers, changeRoles, addMobber, removeMobber }}>
+            value={{ mobbers, changeRoles, addMobber, removeMobber, sessionId }}>
             {props.children}
         </MobbersContext.Provider>
     );

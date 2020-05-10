@@ -8,10 +8,10 @@ import { toast } from "react-toastify";
 
 const MobbingSession = () => {
     let initialSeconds = 1 * 10;
-    const [countdown, setCountdown] = useState(initialSeconds);
+    const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
     const ws = useRef(new WebSocket(`ws://${window.location.hostname}:3002`));
-    const { mobbers, changeRoles } = useMobbers();
+    const { mobbers, changeRoles, sessionId } = useMobbers();
 
     useEffect(() => {
         if (countdown === 0 && !inProgress) {
@@ -31,6 +31,7 @@ const MobbingSession = () => {
 
     const sendMessage = (payload) => {
         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            payload.sessionId = sessionId;
             ws.current.send(JSON.stringify(payload));
         }
     };
@@ -65,14 +66,17 @@ const MobbingSession = () => {
 
     const initialize = () => {
         setCountdown(initialSeconds);
-        const payload = { command: "INITIALIZE", initialSeconds: initialSeconds };
+        const payload = {
+            command: "INITIALIZE",
+            initialSeconds: initialSeconds,
+        };
         sendMessage(payload);
     };
 
     return (
         <div>
             <div className="countdown-and-controls">
-                <Countdown countdown={countdown} />
+                <Countdown countdown={countdown} inProgress={inProgress} />
 
                 <div className="buttons">
                     {!inProgress && countdown > 0 && (

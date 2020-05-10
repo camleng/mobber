@@ -1,22 +1,26 @@
 const WebSocket = require("ws");
-
 const wss = new WebSocket.Server({ port: 3002 });
-let intervalId = 0;
 
-let seconds = 0;
+const db = require("./database");
+db.init();
+
+let intervals = {};
+let currentIntervalIndex = 0;
+
+let timers = {};
 
 wss.on("connection", (ws) => {
     ws.on("message", (message) => {
         console.log(`Received message => ${message}`);
         const msg = JSON.parse(message);
         if (msg.command === "START") {
-            start();
+            start(msg.sessionId);
         } else if (msg.command === "STOP") {
-            stop();
+            stop(msg.sessionId);
         } else if (msg.command === "RESET") {
-            reset(msg.initialSeconds);
+            reset(msg.initialSeconds, msg.sessionId);
         } else if (msg.command === "INITIALIZE") {
-            initialize(msg.initialSeconds);
+            initialize(msg.initialSeconds, msg.sessionId);
         }
     });
 });
@@ -29,43 +33,60 @@ const broadcast = (message) => {
     });
 };
 
-const timer = () => {
-    --seconds;
-    if (seconds === 0) {
-        stop();
+const timer = (sessionId) => {
+    --timers[sessionId];
+    let remainingSeconds = timers[sessionId];
 
+    if (remainingSeconds === 0) {
         const timesUpMessage = "Time's up!";
         console.log(timesUpMessage);
-        return { inProgress: false, remainingSeconds: 0 };
+        db.setRemainingSeconds(sessionId, false, 0);
+        stop(sessionId);
+
+        return;
     }
-    return { inProgress: true, remainingSeconds: seconds };
+    db.setRemainingSeconds(sessionId, true, remainingSeconds);
+    return { inProgress: true, remainingSeconds };
 };
 
-const start = () => {
-    if (seconds < 0) return;
-    intervalId = setInterval(() => broadcast(timer()), 1000);
+const start = (sessionId) => {
+    db.getMobbingSession(sessionId, (session) => {
+        const { remainingSeconds } = session;
+
+        timers[sessionId] = remainingSeconds;
+
+        if (timers[sessionId] < 0) return;
+
+        const interval = setInterval(() => {
+            broadcast(timer(sessionId));
+        }, 1000);
+
+        intervals[++currentIntervalIndex] = interval;
+        db.setIntervalId(sessionId, true, currentIntervalIndex);
+        broadcast({ inProgress: true, remainingSeconds: remainingSeconds });
+    });
 };
 
-const stop = () => {
-    clearInterval(intervalId);
-    intervalId = 0;
+const stop = (sessionId) => {
+    db.getMobbingSession(sessionId, (session) => {
+        const { intervalIndex, remainingSeconds } = session;
+        clearInterval(intervals[intervalIndex]);
+        db.setIntervalId(sessionId, false, null);
+        broadcast({ inProgress: false, remainingSeconds });
+    });
 };
 
-const reset = (initialSeconds) => {
-    stop();
-    seconds = initialSeconds;
-    console.log(`Timer reset to ${seconds} seconds`);
-    broadcast({ inProgress: false, remainingSeconds: seconds });
+const reset = (initialSeconds, sessionId) => {
+    timers[sessionId] = initialSeconds;
+    db.resetSession(sessionId, initialSeconds);
+    console.log(`Timer reset to ${initialSeconds} seconds`);
+    broadcast({ inProgress: false, remainingSeconds: initialSeconds });
 };
 
-const initialize = (initialSeconds) => {
-    if (!timerIsRunning()) {
-        reset(initialSeconds);
-    } else {
-        console.log("Timer's already running. Won't reset.");
-    }
-};
-
-const timerIsRunning = () => {
-    return intervalId !== 0;
+const initialize = (initialSeconds, sessionId) => {
+    db.createMobbingSession(sessionId, false, initialSeconds);
+    db.getMobbingSession(sessionId, (session) => {
+        session.inProgress = session.inProgress === 1;
+        broadcast(session);
+    });
 };

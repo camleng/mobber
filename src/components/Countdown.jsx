@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import "./Countdown.scss";
 
-const Countdown = ({ countdown }) => {
+const Countdown = ({ countdown, inProgress }) => {
     useEffect(() => {
         document.title = `Mobber - ${formatTime(countdown)}`;
     }, [countdown]);
 
     const formatTime = (seconds) => {
+        if (seconds === undefined || seconds === null) return "00:00";
         const min = Math.floor(seconds / 60)
             .toString()
             .padStart(2, "0");
@@ -17,7 +18,7 @@ const Countdown = ({ countdown }) => {
     return (
         <div className="countdown">
             {countdown > 0 && <div className="timer">{formatTime(countdown)}</div>}
-            {countdown <= 0 && <div className="timer">Time's up!</div>}
+            {!inProgress && countdown <= 0 && <div className="timer">Time's up!</div>}
         </div>
     );
 };
