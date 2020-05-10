@@ -10,8 +10,10 @@ const MobbingSession = () => {
     let initialSeconds = 1 * 10;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const ws = useRef(new WebSocket(`ws://${window.location.hostname}:3002`));
     const { mobbers, changeRoles, sessionId } = useMobbers();
+    const ws = useRef(
+        new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
+    );
 
     useEffect(() => {
         if (countdown === 0 && !inProgress) {

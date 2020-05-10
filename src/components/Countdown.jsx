@@ -19,6 +19,7 @@ const Countdown = ({ countdown, inProgress }) => {
         <div className="countdown">
             {countdown > 0 && <div className="timer">{formatTime(countdown)}</div>}
             {!inProgress && countdown <= 0 && <div className="timer">Time's up!</div>}
+            {countdown === null && "00:00"}
         </div>
     );
 };

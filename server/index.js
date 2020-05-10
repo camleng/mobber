@@ -9,7 +9,16 @@ let currentIntervalIndex = 0;
 
 let timers = {};
 
-wss.on("connection", (ws) => {
+let clients = {};
+
+wss.on("connection", (ws, req) => {
+    const sessionId = parseInt(req.url.substr(1));
+
+    if (!clients.hasOwnProperty(sessionId)) {
+        clients[sessionId] = [];
+    }
+    clients[sessionId].push(ws);
+
     ws.on("message", (message) => {
         console.log(`Received message => ${message}`);
         const msg = JSON.parse(message);
@@ -25,8 +34,13 @@ wss.on("connection", (ws) => {
     });
 });
 
-const broadcast = (message) => {
-    wss.clients.forEach((client) => {
+const broadcast = (message, sessionId) => {
+    const clientsInSession = clients[sessionId];
+    if (!clientsInSession || clientsInSession.length === 0) {
+        console.log("No clients found");
+        return;
+    }
+    clientsInSession.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
         }
@@ -58,12 +72,12 @@ const start = (sessionId) => {
         if (timers[sessionId] < 0) return;
 
         const interval = setInterval(() => {
-            broadcast(timer(sessionId));
+            broadcast(timer(sessionId), sessionId);
         }, 1000);
 
         intervals[++currentIntervalIndex] = interval;
         db.setIntervalId(sessionId, true, currentIntervalIndex);
-        broadcast({ inProgress: true, remainingSeconds: remainingSeconds });
+        broadcast({ inProgress: true, remainingSeconds: remainingSeconds }, sessionId);
     });
 };
 
@@ -72,7 +86,7 @@ const stop = (sessionId) => {
         const { intervalIndex, remainingSeconds } = session;
         clearInterval(intervals[intervalIndex]);
         db.setIntervalId(sessionId, false, null);
-        broadcast({ inProgress: false, remainingSeconds });
+        broadcast({ inProgress: false, remainingSeconds }, sessionId);
     });
 };
 
@@ -80,13 +94,13 @@ const reset = (initialSeconds, sessionId) => {
     timers[sessionId] = initialSeconds;
     db.resetSession(sessionId, initialSeconds);
     console.log(`Timer reset to ${initialSeconds} seconds`);
-    broadcast({ inProgress: false, remainingSeconds: initialSeconds });
+    broadcast({ inProgress: false, remainingSeconds: initialSeconds }, sessionId);
 };
 
 const initialize = (initialSeconds, sessionId) => {
     db.createMobbingSession(sessionId, false, initialSeconds);
     db.getMobbingSession(sessionId, (session) => {
         session.inProgress = session.inProgress === 1;
-        broadcast(session);
+        broadcast(session, sessionId);
     });
 };
