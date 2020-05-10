@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Mobber from "./Mobber";
+import RoundedRect from "./RoundedRect";
 import "./Mobbers.scss";
 import { useMobbers } from "../context/mobbersContext";
 
@@ -17,17 +18,19 @@ const Mobbers = () => {
     };
 
     return (
-        <div className="mobbers">
-            {mobbers.map((mobber, index) => (
-                <Mobber mobber={mobber} key={index} />
-            ))}
+        <div className="mobbers-container">
+            <div className="mobbers">
+                {mobbers.map((mobber, index) => (
+                    <Mobber mobber={mobber} key={index} />
+                ))}
+            </div>
 
-            <input
-                onChange={(e) => setNewMobberName(e.target.value)}
-                value={newMobberName}
-                onKeyUp={handleKeyPress}></input>
-            <div className="add" onClick={addMobberToMob}>
-                Add
+            <div className="add-mobber">
+                <input
+                    onChange={(e) => setNewMobberName(e.target.value)}
+                    value={newMobberName}
+                    onKeyUp={handleKeyPress}></input>
+                <RoundedRect title="Add" className="add" onClick={addMobberToMob} />
             </div>
         </div>
     );

@@ -1,0 +1,47 @@
+.connect {
+    background-color: rgb(40, 40, 250);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.create {
+    background-color: rgb(4, 160, 4);
+    font-size: 1.2rem;
+}
+
+label {
+    font-size: 1.6rem;
+}
+
+.connect-to-session {
+    div {
+        margin-top: 0.5rem;
+        display: flex;
+
+        input {
+            background-color: rgb(46, 46, 46);
+            color: white;
+            border: none;
+            border-bottom: 1px solid #777;
+            margin-right: 1rem;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+.or {
+    font-size: 1.4rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.create-session {
+    div {
+        margin-top: 1rem;
+    }
+}

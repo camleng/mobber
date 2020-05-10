@@ -1,0 +1,30 @@
+.countdown-and-controls {
+    position: relative;
+    top: -4rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+
+    div {
+        width: 4rem;
+        line-height: 1rem;
+
+        &:first-child {
+            margin-right: 1rem;
+        }
+
+        &.start {
+            background-color: rgb(4, 160, 4);
+        }
+
+        &.stop {
+            background-color: rgb(206, 33, 33);
+        }
+
+        &.reset {
+            background-color: rgb(40, 40, 250);
+        }
+    }
+}
