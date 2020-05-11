@@ -5,15 +5,22 @@ import RoundedRect from "./RoundedRect";
 import { useMobbers } from "../context/mobbersContext";
 import "./MobbingSession.scss";
 import { toast } from "react-toastify";
+import io from "socket.io-client";
 
 const MobbingSession = () => {
-    let initialSeconds = 1 * 10;
+    let initialSeconds = 10 * 1;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
     const { mobbers, changeRoles, sessionId } = useMobbers();
-    const ws = useRef(
-        new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
-    );
+    const socket = io("http://localhost:3002");
+
+    socket.on("news", (data) => {
+        console.log(data);
+        socket.emit("my other event", { my: "data" });
+    });
+    // const ws = useRef(
+    //     new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
+    // );
 
     useEffect(() => {
         if (countdown === 0 && !inProgress) {
@@ -21,21 +28,23 @@ const MobbingSession = () => {
         }
     }, [countdown, inProgress]);
 
-    ws.current.onopen = () => {
-        initialize(initialSeconds);
-    };
+    // ws.current.onopen = () => {
+    //     initialize(initialSeconds);
+    // };
 
-    ws.current.onmessage = (message) => {
-        const payload = JSON.parse(message.data);
-        setInProgress(payload.inProgress);
-        setCountdown(payload.remainingSeconds);
-    };
+    // ws.current.onmessage = (message) => {
+    //     console.log(message.data);
+
+    //     const payload = JSON.parse(message.data);
+    //     setInProgress(payload.inProgress);
+    //     setCountdown(payload.remainingSeconds);
+    // };
 
     const sendMessage = (payload) => {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            payload.sessionId = sessionId;
-            ws.current.send(JSON.stringify(payload));
-        }
+        // if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+        //     payload.sessionId = sessionId;
+        //     ws.current.send(JSON.stringify(payload));
+        // }
     };
 
     const start = () => {
@@ -90,6 +99,7 @@ const MobbingSession = () => {
                     {!inProgress && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
+                    {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
                 </div>
             </div>
             <Mobbers />

@@ -1,5 +1,9 @@
 const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 3002 });
+const app = require("http").createServer((req, res) => "<h1>Welcome</h1>");
+// const wss = new WebSocket.Server({ port: 3002 });
+const io = require("socket.io")(app);
+
+app.listen(3002);
 
 const db = require("./database");
 db.init();
@@ -11,30 +15,47 @@ let timers = {};
 
 let clients = {};
 
-wss.on("connection", (ws, req) => {
-    const sessionId = parseInt(req.url.substr(1));
-
-    if (!clients.hasOwnProperty(sessionId)) {
-        clients[sessionId] = [];
-    }
-    clients[sessionId].push(ws);
-
-    ws.on("message", (message) => {
-        console.log(`Received message => ${message}`);
-        const msg = JSON.parse(message);
-        if (msg.command === "START") {
-            start(msg.sessionId);
-        } else if (msg.command === "STOP") {
-            stop(msg.sessionId);
-        } else if (msg.command === "RESET") {
-            reset(msg.initialSeconds, msg.sessionId);
-        } else if (msg.command === "INITIALIZE") {
-            initialize(msg.initialSeconds, msg.sessionId);
-        }
+io.on("connection", (socket) => {
+    socket.emit("news", { hello: "world" });
+    socket.on("my other event", (data) => {
+        console.log(data);
     });
 });
 
+// wss.on("connection", (ws, req) => {
+//     const sessionId = parseInt(req.url.substr(1));
+
+//     if (!clients.hasOwnProperty(sessionId)) {
+//         clients[sessionId] = [];
+//     }
+//     if (!clients[sessionId].includes(ws)) {
+//         clients[sessionId].push(ws);
+//     } else {
+//         console.log("Already in there");
+//     }
+
+//     ws.on("message", (message) => {
+//         console.log(`Received message => ${message}`);
+//         const msg = JSON.parse(message);
+//         if (msg.command === "START") {
+//             start(msg.sessionId);
+//         } else if (msg.command === "STOP") {
+//             stop(msg.sessionId);
+//         } else if (msg.command === "RESET") {
+//             reset(msg.initialSeconds, msg.sessionId);
+//         } else if (msg.command === "INITIALIZE") {
+//             initialize(msg.initialSeconds, msg.sessionId);
+//         }
+//     });
+
+//     ws.on("close", () => {
+//         console.log("Connection closed");
+//     });
+// });
+
 const broadcast = (message, sessionId) => {
+    console.log(`Sending: ${JSON.stringify(message)}`);
+
     const clientsInSession = clients[sessionId];
     if (!clientsInSession || clientsInSession.length === 0) {
         console.log("No clients found");
@@ -56,11 +77,10 @@ const timer = (sessionId) => {
         console.log(timesUpMessage);
         db.setRemainingSeconds(sessionId, false, 0);
         stop(sessionId);
-
-        return;
+    } else {
+        db.setRemainingSeconds(sessionId, true, remainingSeconds);
+        return { inProgress: true, remainingSeconds };
     }
-    db.setRemainingSeconds(sessionId, true, remainingSeconds);
-    return { inProgress: true, remainingSeconds };
 };
 
 const start = (sessionId) => {
@@ -72,7 +92,8 @@ const start = (sessionId) => {
         if (timers[sessionId] < 0) return;
 
         const interval = setInterval(() => {
-            broadcast(timer(sessionId), sessionId);
+            const progress = timer(sessionId);
+            if (progress) broadcast(progress, sessionId);
         }, 1000);
 
         intervals[++currentIntervalIndex] = interval;
@@ -101,6 +122,12 @@ const initialize = (initialSeconds, sessionId) => {
     db.createMobbingSession(sessionId, false, initialSeconds);
     db.getMobbingSession(sessionId, (session) => {
         session.inProgress = session.inProgress === 1;
-        broadcast(session, sessionId);
+        broadcast(
+            {
+                remainingSeconds: session.remainingSeconds,
+                inProgress: session.inProgress === 1,
+            },
+            sessionId
+        );
     });
 };
