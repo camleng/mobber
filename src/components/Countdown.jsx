@@ -18,7 +18,7 @@ const Countdown = ({ countdown, inProgress }) => {
     return (
         <div className="countdown">
             {countdown > 0 && <div className="timer">{formatTime(countdown)}</div>}
-            {!inProgress && countdown <= 0 && <div className="timer">Time's up!</div>}
+            {!inProgress && countdown <= 0 && <div className="times-up">Time's up!</div>}
         </div>
     );
 };

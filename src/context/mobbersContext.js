@@ -8,9 +8,13 @@ const MobbersContext = createContext();
 const MobbersProvider = (props) => {
     const [mobbers, setMobbers] = useState([]);
     const { socket, sendMessage } = useSession();
+    const [driver, setDriver] = useState();
+    const [navigator, setNavigator] = useState();
 
-    socket.on("MOBBERS:UPDATE", (data) => {
-        setMobbers(data);
+    socket.on("MOBBERS:UPDATE", (mobbers) => {
+        setMobbers(mobbers);
+        setDriver(getDriver(mobbers));
+        setNavigator(getNavigator(mobbers));
     });
 
     const changeRoles = () => {
@@ -34,9 +38,24 @@ const MobbersProvider = (props) => {
         sendMessage("MOBBERS:REMOVE", { mobber });
     };
 
+    const getDriver = (mobbers) => {
+        return mobbers.find((m) => m.role === "driver");
+    };
+
+    const getNavigator = (mobbers) => {
+        return mobbers.find((m) => m.role === "navigator");
+    };
+
     return (
         <MobbersContext.Provider
-            value={{ mobbers, changeRoles, addMobber, removeMobber }}>
+            value={{
+                mobbers,
+                changeRoles,
+                addMobber,
+                removeMobber,
+                driver,
+                navigator,
+            }}>
             {props.children}
         </MobbersContext.Provider>
     );

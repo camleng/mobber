@@ -1,0 +1,29 @@
+.current-mobbers {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    font-size: 1.6rem;
+
+    @media screen and (min-width: 375px) {
+        font-size: 2rem;
+    }
+
+    @media screen and (min-width: 425px) {
+        font-size: 2.4rem;
+    }
+
+    @media screen and (min-width: 768px) {
+        font-size: 3rem;
+    }
+}
+
+.current-role {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    svg {
+        margin-bottom: 0.5rem;
+    }
+}

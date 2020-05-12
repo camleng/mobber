@@ -17,6 +17,7 @@ const Mobber = ({ mobber }) => {
         <div className={`mobber ${mobber.role}`}>
             {isDriver() && <FontAwesomeIcon icon="car" className="role" />}
             {isNavigator() && <FontAwesomeIcon icon="map-signs" className="role" />}
+            {!isDriver() && !isNavigator() && <div className="role"></div>}
             {mobber.name}
             <FontAwesomeIcon
                 icon="times"
