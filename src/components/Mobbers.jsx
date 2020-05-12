@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Mobber from "./Mobber";
 import RoundedRect from "./RoundedRect";
 import "./Mobbers.scss";
-import { useMobbers } from "../context/mobbersContext";
+import { useMobbers } from "../context/MobbersContext";
 
 const Mobbers = () => {
     const { mobbers, addMobber } = useMobbers();

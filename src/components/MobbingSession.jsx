@@ -1,38 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Countdown from "./Countdown";
 import Mobbers from "./Mobbers";
 import RoundedRect from "./RoundedRect";
-import { useMobbers } from "../context/mobbersContext";
-import "./MobbingSession.scss";
 import { toast } from "react-toastify";
-import io from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useMobbers } from "../context/MobbersContext";
+import { useSession } from "../context/SessionContext";
+import "./MobbingSession.scss";
 
 const MobbingSession = () => {
     let initialSeconds = 10 * 1;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const { mobbers, changeRoles } = useMobbers();
-    const { sessionId } = useParams();
-    const socket = io("http://localhost:3002");
-
-    // const ws = useRef(
-    //     new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
-    // );
+    const { mobbers } = useMobbers();
+    const { socket, sessionId } = useSession();
 
     useEffect(() => {
         initialize();
     }, []);
-
-    // ws.current.onopen = () => {
-    //     initialize(initialSeconds);
-    // };
-
-    useEffect(() => {
-        if (countdown === 0 && !inProgress) {
-            changeRoles();
-        }
-    }, [countdown, inProgress]);
 
     socket.on("TIMER:UPDATE", (update) => {
         setInProgress(update.inProgress);
@@ -70,7 +54,7 @@ const MobbingSession = () => {
     };
 
     const initialize = () => {
-        const event = "TIMER:INITIALIZE";
+        const event = "SESSION:INITIALIZE";
         const payload = {
             initialSeconds: initialSeconds,
         };
