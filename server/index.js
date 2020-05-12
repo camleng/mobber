@@ -76,11 +76,19 @@ const timer = (sessionId) => {
 const start = (sessionId) => {
     const { remainingSeconds } = timers[sessionId];
     if (remainingSeconds < 0) return;
+<<<<<<< HEAD
 
     const interval = setInterval(() => {
         timer(sessionId);
     }, 1000);
 
+=======
+
+    const interval = setInterval(() => {
+        timer(sessionId);
+    }, 1000);
+
+>>>>>>> master
     timers[sessionId] = { inProgress: true, remainingSeconds, interval };
     broadcastTimerUpdate(sessionId);
 };

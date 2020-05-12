@@ -78,6 +78,7 @@ const MobbingSession = () => {
                     {!inProgress && countdown !== initialSeconds && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
+                    {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
                 </div>
             </div>
             <CurrentMobbers />
