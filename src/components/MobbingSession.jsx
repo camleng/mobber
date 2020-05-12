@@ -9,8 +9,8 @@ import { useSession } from "../context/SessionContext";
 import "./MobbingSession.scss";
 
 const MobbingSession = () => {
-    // let initialSeconds = 60 * 15;
-    let initialSeconds = 3;
+    let initialSeconds = 60 * 15;
+    // let initialSeconds = 3;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
     const { mobbers } = useMobbers();
@@ -78,7 +78,6 @@ const MobbingSession = () => {
                     {!inProgress && countdown !== initialSeconds && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
-                    {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
                 </div>
             </div>
             <CurrentMobbers />
