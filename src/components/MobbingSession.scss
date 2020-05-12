@@ -11,8 +11,8 @@
         width: 4rem;
         line-height: 1rem;
 
-        &:first-child {
-            margin-right: 1rem;
+        &:not(:first-child) {
+            margin-left: 1rem;
         }
 
         &.start {
@@ -25,6 +25,10 @@
 
         &.reset {
             background-color: rgb(40, 40, 250);
+        }
+
+        &.next {
+            background-color: rgb(212, 212, 0);
         }
     }
 }

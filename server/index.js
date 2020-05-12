@@ -1,106 +1,223 @@
-const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 3002 });
+const app = require("http").createServer(() => "<h1>Welcome</h1>");
+const io = require("socket.io")(app);
+
+app.listen(3002);
 
 const db = require("./database");
 db.init();
-
-let intervals = {};
-let currentIntervalIndex = 0;
 
 let timers = {};
 
 let clients = {};
 
-wss.on("connection", (ws, req) => {
-    const sessionId = parseInt(req.url.substr(1));
+let mobbers = {};
 
-    if (!clients.hasOwnProperty(sessionId)) {
-        clients[sessionId] = [];
-    }
-    clients[sessionId].push(ws);
+io.on("connection", (socket) => {
+    socket.on("SESSION:INITIALIZE", (data) => {
+        initializeSession(data.initialSeconds, data.sessionId, socket);
+    });
 
-    ws.on("message", (message) => {
-        console.log(`Received message => ${message}`);
-        const msg = JSON.parse(message);
-        if (msg.command === "START") {
-            start(msg.sessionId);
-        } else if (msg.command === "STOP") {
-            stop(msg.sessionId);
-        } else if (msg.command === "RESET") {
-            reset(msg.initialSeconds, msg.sessionId);
-        } else if (msg.command === "INITIALIZE") {
-            initialize(msg.initialSeconds, msg.sessionId);
-        }
+    socket.on("TIMER:START", (data) => {
+        start(data.sessionId);
+    });
+
+    socket.on("TIMER:STOP", (data) => {
+        stop(data.sessionId);
+    });
+
+    socket.on("TIMER:RESET", (data) => {
+        reset(data.initialSeconds, data.sessionId);
+    });
+
+    socket.on("MOBBERS:ADD", (data) => {
+        addMobber(data.name, data.sessionId);
+    });
+
+    socket.on("MOBBERS:REMOVE", (data) => {
+        removeMobber(data.mobber, data.sessionId);
+    });
+
+    socket.on("MOBBERS:CHANGE", (data) => {
+        changeRoles(data.sessionId);
     });
 });
 
-const broadcast = (message, sessionId) => {
-    const clientsInSession = clients[sessionId];
-    if (!clientsInSession || clientsInSession.length === 0) {
+const broadcast = (event, message, sessionId) => {
+    console.log(`Sending: ${JSON.stringify(message)}`);
+
+    if (clients[sessionId]) {
+        clients[sessionId].forEach((client) => {
+            client.emit(event, message);
+        });
+    } else {
         console.log("No clients found");
-        return;
     }
-    clientsInSession.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(message));
-        }
-    });
+};
+
+const broadcastTimerUpdate = (sessionId) => {
+    const { inProgress, remainingSeconds } = timers[sessionId];
+    broadcast("TIMER:UPDATE", { inProgress, remainingSeconds }, sessionId);
+};
+
+const broadcastMobbersUpdate = (sessionId) => {
+    broadcast("MOBBERS:UPDATE", mobbers[sessionId], sessionId);
 };
 
 const timer = (sessionId) => {
-    --timers[sessionId];
-    let remainingSeconds = timers[sessionId];
+    timers[sessionId].remainingSeconds -= 1;
+
+    let { remainingSeconds } = timers[sessionId];
 
     if (remainingSeconds === 0) {
         const timesUpMessage = "Time's up!";
         console.log(timesUpMessage);
-        db.setRemainingSeconds(sessionId, false, 0);
         stop(sessionId);
-
-        return;
+        changeRoles(sessionId);
+    } else {
+        broadcastTimerUpdate(sessionId);
     }
-    db.setRemainingSeconds(sessionId, true, remainingSeconds);
-    return { inProgress: true, remainingSeconds };
 };
 
 const start = (sessionId) => {
-    db.getMobbingSession(sessionId, (session) => {
-        const { remainingSeconds } = session;
+    const { remainingSeconds } = timers[sessionId];
+    if (remainingSeconds < 0) return;
 
-        timers[sessionId] = remainingSeconds;
+    const interval = setInterval(() => {
+        timer(sessionId);
+    }, 1000);
 
-        if (timers[sessionId] < 0) return;
-
-        const interval = setInterval(() => {
-            broadcast(timer(sessionId), sessionId);
-        }, 1000);
-
-        intervals[++currentIntervalIndex] = interval;
-        db.setIntervalId(sessionId, true, currentIntervalIndex);
-        broadcast({ inProgress: true, remainingSeconds: remainingSeconds }, sessionId);
-    });
+    timers[sessionId] = { inProgress: true, remainingSeconds, interval };
+    broadcastTimerUpdate(sessionId);
 };
 
 const stop = (sessionId) => {
-    db.getMobbingSession(sessionId, (session) => {
-        const { intervalIndex, remainingSeconds } = session;
-        clearInterval(intervals[intervalIndex]);
-        db.setIntervalId(sessionId, false, null);
-        broadcast({ inProgress: false, remainingSeconds }, sessionId);
-    });
+    clearInterval(timers[sessionId].interval);
+    timers[sessionId].inProgress = false;
+    broadcastTimerUpdate(sessionId);
 };
 
 const reset = (initialSeconds, sessionId) => {
-    timers[sessionId] = initialSeconds;
-    db.resetSession(sessionId, initialSeconds);
     console.log(`Timer reset to ${initialSeconds} seconds`);
-    broadcast({ inProgress: false, remainingSeconds: initialSeconds }, sessionId);
+    timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
+    broadcastTimerUpdate(sessionId);
 };
 
-const initialize = (initialSeconds, sessionId) => {
-    db.createMobbingSession(sessionId, false, initialSeconds);
-    db.getMobbingSession(sessionId, (session) => {
-        session.inProgress = session.inProgress === 1;
-        broadcast(session, sessionId);
-    });
+const initializeSession = (initialSeconds, sessionId, socket) => {
+    if (!clients[sessionId]) {
+        clients[sessionId] = [];
+    }
+    clients[sessionId].push(socket);
+
+    if (!mobbers.hasOwnProperty(sessionId)) {
+        mobbers[sessionId] = [];
+    }
+
+    if (!timers.hasOwnProperty(sessionId)) {
+        timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
+    }
+
+    broadcastTimerUpdate(sessionId);
+    broadcastMobbersUpdate(sessionId);
+};
+
+const addMobber = (name, sessionId) => {
+    const role = determineRole(sessionId);
+
+    mobbers[sessionId].push({ name, role });
+
+    broadcastMobbersUpdate(sessionId);
+};
+
+const removeMobber = (mobber, sessionId) => {
+    const _mobbers = mobbers[sessionId];
+    const mobberIndex = _mobbers.findIndex((m) => m.name === mobber.name);
+    if (mobberIndex === -1) {
+        console.log("Couldn't find the mobber");
+        return;
+    }
+
+    _mobbers.splice(mobberIndex, 1);
+    reassignRoles(_mobbers);
+    mobbers[sessionId] = _mobbers;
+    broadcastMobbersUpdate(sessionId);
+};
+
+const changeRoles = (sessionId) => {
+    let _mobbers = mobbers[sessionId];
+
+    const [newDriverIndex, newNavigatorIndex] = incrementIndices(_mobbers);
+
+    clearRoles(_mobbers);
+    _mobbers[newDriverIndex].role = "driver";
+    _mobbers[newNavigatorIndex].role = "navigator";
+
+    mobbers[sessionId] = _mobbers;
+    broadcastMobbersUpdate(sessionId);
+};
+
+const incrementIndices = (_mobbers) => {
+    let driverIndex = getDriverIndex(_mobbers);
+    let navigatorIndex = getNavigatorIndex(_mobbers);
+
+    if (driverIsLastInSequence(_mobbers)) {
+        driverIndex = 0;
+        navigatorIndex = driverIndex + 1;
+    } else if (navigatorIsLastInSequence(_mobbers)) {
+        driverIndex = _mobbers.length - 1;
+        navigatorIndex = 0;
+    } else {
+        driverIndex++;
+        navigatorIndex++;
+    }
+
+    return [driverIndex, navigatorIndex];
+};
+
+const navigatorIsLastInSequence = (_mobbers) => {
+    const navigatorIndex = _mobbers.findIndex((m) => m.role === "navigator");
+    return navigatorIndex === _mobbers.length - 1;
+};
+
+const driverIsLastInSequence = (_mobbers) => {
+    const driverIndex = _mobbers.findIndex((m) => m.role === "driver");
+    return driverIndex === _mobbers.length - 1;
+};
+
+const clearRoles = (_mobbers) => {
+    _mobbers.forEach((m) => (m.role = ""));
+};
+
+const reassignRoles = (_mobbers) => {
+    if (_mobbers.length === 0) {
+        return _mobbers;
+    } else if (_mobbers.length === 1) {
+        _mobbers[0].role = "driver";
+        return _mobbers;
+    } else if (_mobbers.length >= 2) {
+        const navigatorIndex = getNavigatorIndex(_mobbers);
+        if (navigatorIndex !== -1) {
+            const driverIndex =
+                navigatorIndex === 0 ? _mobbers.length - 1 : navigatorIndex - 1;
+            _mobbers[driverIndex].role = "driver";
+        } else {
+            const driverIndex = getDriverIndex(_mobbers);
+            const navigatorIndex =
+                driverIndex === _mobbers.length - 1 ? 0 : driverIndex + 1;
+            _mobbers[navigatorIndex].role = "navigator";
+        }
+    }
+};
+
+const getNavigatorIndex = (_mobbers) => {
+    return _mobbers.findIndex((m) => m.role === "navigator");
+};
+
+const getDriverIndex = (_mobbers) => {
+    return _mobbers.findIndex((m) => m.role === "driver");
+};
+
+const determineRole = (sessionId) => {
+    if (mobbers[sessionId].length === 0) return "driver";
+    else if (mobbers[sessionId].length === 1) return "navigator";
+    else return "";
 };

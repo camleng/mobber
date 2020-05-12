@@ -1,41 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Countdown from "./Countdown";
 import Mobbers from "./Mobbers";
 import RoundedRect from "./RoundedRect";
-import { useMobbers } from "../context/mobbersContext";
-import "./MobbingSession.scss";
 import { toast } from "react-toastify";
+import { useMobbers } from "../context/MobbersContext";
+import { useSession } from "../context/SessionContext";
+import "./MobbingSession.scss";
 
 const MobbingSession = () => {
-    let initialSeconds = 1 * 10;
+    let initialSeconds = 10 * 1;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const { mobbers, changeRoles, sessionId } = useMobbers();
-    const ws = useRef(
-        new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
-    );
+    const { mobbers } = useMobbers();
+    const { socket, sessionId } = useSession();
 
     useEffect(() => {
-        if (countdown === 0 && !inProgress) {
-            changeRoles();
-        }
-    }, [countdown, inProgress]);
+        initialize();
+    }, []);
 
-    ws.current.onopen = () => {
-        initialize(initialSeconds);
-    };
+    socket.on("TIMER:UPDATE", (update) => {
+        setInProgress(update.inProgress);
+        setCountdown(update.remainingSeconds);
+    });
 
-    ws.current.onmessage = (message) => {
-        const payload = JSON.parse(message.data);
-        setInProgress(payload.inProgress);
-        setCountdown(payload.remainingSeconds);
-    };
-
-    const sendMessage = (payload) => {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            payload.sessionId = sessionId;
-            ws.current.send(JSON.stringify(payload));
-        }
+    const sendMessage = (event, payload) => {
+        payload = payload || {};
+        payload.sessionId = sessionId;
+        socket.emit(event, payload);
     };
 
     const start = () => {
@@ -48,31 +39,26 @@ const MobbingSession = () => {
             );
             return;
         }
-        setInProgress(true);
-        const payload = { command: "START" };
-        sendMessage(payload);
+        sendMessage("TIMER:START");
     };
 
     const stop = () => {
-        setInProgress(false);
-        const payload = { command: "STOP" };
-        sendMessage(payload);
+        const event = "TIMER:STOP";
+        sendMessage(event);
     };
 
     const reset = () => {
-        setInProgress(false);
-        setCountdown(initialSeconds);
-        const payload = { command: "RESET", initialSeconds: initialSeconds };
-        sendMessage(payload);
+        const event = "TIMER:RESET";
+        const payload = { initialSeconds: initialSeconds };
+        sendMessage(event, payload);
     };
 
     const initialize = () => {
-        setCountdown(initialSeconds);
+        const event = "SESSION:INITIALIZE";
         const payload = {
-            command: "INITIALIZE",
             initialSeconds: initialSeconds,
         };
-        sendMessage(payload);
+        sendMessage(event, payload);
     };
 
     return (
@@ -90,6 +76,7 @@ const MobbingSession = () => {
                     {!inProgress && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
+                    {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
                 </div>
             </div>
             <Mobbers />
