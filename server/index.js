@@ -3,13 +3,8 @@ const io = require("socket.io")(app);
 
 app.listen(3002);
 
-const db = require("./database");
-db.init();
-
 let timers = {};
-
 let clients = {};
-
 let mobbers = {};
 
 io.on("connection", (socket) => {
@@ -81,11 +76,19 @@ const timer = (sessionId) => {
 const start = (sessionId) => {
     const { remainingSeconds } = timers[sessionId];
     if (remainingSeconds < 0) return;
+<<<<<<< HEAD
 
     const interval = setInterval(() => {
         timer(sessionId);
     }, 1000);
 
+=======
+
+    const interval = setInterval(() => {
+        timer(sessionId);
+    }, 1000);
+
+>>>>>>> master
     timers[sessionId] = { inProgress: true, remainingSeconds, interval };
     broadcastTimerUpdate(sessionId);
 };

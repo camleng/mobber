@@ -2,6 +2,12 @@
     .timer {
         text-align: center;
         font-size: 6rem;
-        margin-bottom: 1rem;
+    }
+
+    .times-up {
+        font-size: 3.6rem;
+        @media screen and (min-width: 375px) {
+            font-size: 4rem;
+        }
     }
 }

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import Countdown from "./Countdown";
 import Mobbers from "./Mobbers";
 import RoundedRect from "./RoundedRect";
+import CurrentMobbers from "./CurrentMobbers";
 import { toast } from "react-toastify";
 import { useMobbers } from "../context/MobbersContext";
 import { useSession } from "../context/SessionContext";
 import "./MobbingSession.scss";
 
 const MobbingSession = () => {
-    let initialSeconds = 10 * 1;
+    let initialSeconds = 60 * 15;
+    // let initialSeconds = 3;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
     const { mobbers } = useMobbers();
@@ -62,7 +64,7 @@ const MobbingSession = () => {
     };
 
     return (
-        <div>
+        <>
             <div className="countdown-and-controls">
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
@@ -73,14 +75,15 @@ const MobbingSession = () => {
                     {inProgress && (
                         <RoundedRect title="Stop" className="stop" onClick={stop} />
                     )}
-                    {!inProgress && (
+                    {!inProgress && countdown !== initialSeconds && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
                     {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
                 </div>
             </div>
+            <CurrentMobbers />
             <Mobbers />
-        </div>
+        </>
     );
 };
 

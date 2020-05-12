@@ -1,14 +1,10 @@
-.countdown-and-controls {
-    position: relative;
-    top: -4rem;
-}
-
 .buttons {
     display: flex;
     justify-content: center;
 
     div {
-        width: 4rem;
+        margin-top: 1rem;
+        width: 100%;
         line-height: 1rem;
 
         &:not(:first-child) {
