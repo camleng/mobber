@@ -3,13 +3,8 @@ const io = require("socket.io")(app);
 
 app.listen(3002);
 
-const db = require("./database");
-db.init();
-
 let timers = {};
-
 let clients = {};
-
 let mobbers = {};
 
 io.on("connection", (socket) => {
