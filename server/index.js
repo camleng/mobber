@@ -1,133 +1,102 @@
-const WebSocket = require("ws");
-const app = require("http").createServer((req, res) => "<h1>Welcome</h1>");
-// const wss = new WebSocket.Server({ port: 3002 });
+const app = require("http").createServer(handler);
 const io = require("socket.io")(app);
 
 app.listen(3002);
 
+function handler() {
+    return "<h1>Welcome</h1>";
+}
+
 const db = require("./database");
 db.init();
-
-let intervals = {};
-let currentIntervalIndex = 0;
 
 let timers = {};
 
 let clients = {};
 
 io.on("connection", (socket) => {
-    socket.emit("news", { hello: "world" });
-    socket.on("my other event", (data) => {
-        console.log(data);
+    socket.on("TIMER:INITIALIZE", (data) => {
+        initializeTimer(data.initialSeconds, data.sessionId, socket);
+    });
+
+    socket.on("TIMER:START", (data) => {
+        start(data.sessionId);
+    });
+
+    socket.on("TIMER:STOP", (data) => {
+        stop(data.sessionId);
+    });
+
+    socket.on("TIMER:RESET", (data) => {
+        reset(data.initialSeconds, data.sessionId);
     });
 });
 
-// wss.on("connection", (ws, req) => {
-//     const sessionId = parseInt(req.url.substr(1));
-
-//     if (!clients.hasOwnProperty(sessionId)) {
-//         clients[sessionId] = [];
-//     }
-//     if (!clients[sessionId].includes(ws)) {
-//         clients[sessionId].push(ws);
-//     } else {
-//         console.log("Already in there");
-//     }
-
-//     ws.on("message", (message) => {
-//         console.log(`Received message => ${message}`);
-//         const msg = JSON.parse(message);
-//         if (msg.command === "START") {
-//             start(msg.sessionId);
-//         } else if (msg.command === "STOP") {
-//             stop(msg.sessionId);
-//         } else if (msg.command === "RESET") {
-//             reset(msg.initialSeconds, msg.sessionId);
-//         } else if (msg.command === "INITIALIZE") {
-//             initialize(msg.initialSeconds, msg.sessionId);
-//         }
-//     });
-
-//     ws.on("close", () => {
-//         console.log("Connection closed");
-//     });
-// });
-
-const broadcast = (message, sessionId) => {
+const broadcast = (event, message, sessionId) => {
     console.log(`Sending: ${JSON.stringify(message)}`);
 
-    const clientsInSession = clients[sessionId];
-    if (!clientsInSession || clientsInSession.length === 0) {
+    if (clients[sessionId]) {
+        clients[sessionId].forEach((client) => {
+            client.emit(event, message);
+        });
+    } else {
         console.log("No clients found");
-        return;
     }
-    clientsInSession.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(message));
-        }
-    });
+};
+
+const broadcastTimerUpdate = (sessionId) => {
+    const { inProgress, remainingSeconds } = timers[sessionId];
+    broadcast("TIMER:UPDATE", { inProgress, remainingSeconds }, sessionId);
 };
 
 const timer = (sessionId) => {
-    --timers[sessionId];
-    let remainingSeconds = timers[sessionId];
+    timers[sessionId].remainingSeconds -= 1;
+
+    let { remainingSeconds } = timers[sessionId];
 
     if (remainingSeconds === 0) {
         const timesUpMessage = "Time's up!";
         console.log(timesUpMessage);
-        db.setRemainingSeconds(sessionId, false, 0);
         stop(sessionId);
     } else {
-        db.setRemainingSeconds(sessionId, true, remainingSeconds);
-        return { inProgress: true, remainingSeconds };
+        broadcastTimerUpdate(sessionId);
     }
 };
 
 const start = (sessionId) => {
-    db.getMobbingSession(sessionId, (session) => {
-        const { remainingSeconds } = session;
+    const { remainingSeconds } = timers[sessionId];
+    if (remainingSeconds < 0) return;
 
-        timers[sessionId] = remainingSeconds;
+    const interval = setInterval(() => {
+        timer(sessionId);
+    }, 1000);
 
-        if (timers[sessionId] < 0) return;
-
-        const interval = setInterval(() => {
-            const progress = timer(sessionId);
-            if (progress) broadcast(progress, sessionId);
-        }, 1000);
-
-        intervals[++currentIntervalIndex] = interval;
-        db.setIntervalId(sessionId, true, currentIntervalIndex);
-        broadcast({ inProgress: true, remainingSeconds: remainingSeconds }, sessionId);
-    });
+    timers[sessionId] = { inProgress: true, remainingSeconds, interval };
+    broadcastTimerUpdate(sessionId);
 };
 
 const stop = (sessionId) => {
-    db.getMobbingSession(sessionId, (session) => {
-        const { intervalIndex, remainingSeconds } = session;
-        clearInterval(intervals[intervalIndex]);
-        db.setIntervalId(sessionId, false, null);
-        broadcast({ inProgress: false, remainingSeconds }, sessionId);
-    });
+    clearInterval(timers[sessionId].interval);
+    timers[sessionId].inProgress = false;
+    broadcastTimerUpdate(sessionId);
 };
 
 const reset = (initialSeconds, sessionId) => {
-    timers[sessionId] = initialSeconds;
-    db.resetSession(sessionId, initialSeconds);
     console.log(`Timer reset to ${initialSeconds} seconds`);
-    broadcast({ inProgress: false, remainingSeconds: initialSeconds }, sessionId);
+    timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
+    broadcastTimerUpdate(sessionId);
 };
 
-const initialize = (initialSeconds, sessionId) => {
-    db.createMobbingSession(sessionId, false, initialSeconds);
-    db.getMobbingSession(sessionId, (session) => {
-        session.inProgress = session.inProgress === 1;
-        broadcast(
-            {
-                remainingSeconds: session.remainingSeconds,
-                inProgress: session.inProgress === 1,
-            },
-            sessionId
-        );
-    });
+const initializeTimer = (initialSeconds, sessionId, socket) => {
+    if (!clients[sessionId]) {
+        clients[sessionId] = [];
+    }
+    clients[sessionId].push(socket);
+
+    if (!timers.hasOwnProperty(sessionId)) {
+        timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
+    }
+
+    broadcastTimerUpdate(sessionId);
+    console.log("Timer initialized");
 };

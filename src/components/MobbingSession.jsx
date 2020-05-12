@@ -6,21 +6,27 @@ import { useMobbers } from "../context/mobbersContext";
 import "./MobbingSession.scss";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
+import { useParams } from "react-router-dom";
 
 const MobbingSession = () => {
     let initialSeconds = 10 * 1;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const { mobbers, changeRoles, sessionId } = useMobbers();
+    const { mobbers, changeRoles } = useMobbers();
+    const { sessionId } = useParams();
     const socket = io("http://localhost:3002");
 
-    socket.on("news", (data) => {
-        console.log(data);
-        socket.emit("my other event", { my: "data" });
-    });
     // const ws = useRef(
     //     new WebSocket(`ws://${window.location.hostname}:3002/${sessionId}`)
     // );
+
+    useEffect(() => {
+        initialize();
+    }, []);
+
+    // ws.current.onopen = () => {
+    //     initialize(initialSeconds);
+    // };
 
     useEffect(() => {
         if (countdown === 0 && !inProgress) {
@@ -28,23 +34,15 @@ const MobbingSession = () => {
         }
     }, [countdown, inProgress]);
 
-    // ws.current.onopen = () => {
-    //     initialize(initialSeconds);
-    // };
+    socket.on("TIMER:UPDATE", (update) => {
+        setInProgress(update.inProgress);
+        setCountdown(update.remainingSeconds);
+    });
 
-    // ws.current.onmessage = (message) => {
-    //     console.log(message.data);
-
-    //     const payload = JSON.parse(message.data);
-    //     setInProgress(payload.inProgress);
-    //     setCountdown(payload.remainingSeconds);
-    // };
-
-    const sendMessage = (payload) => {
-        // if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-        //     payload.sessionId = sessionId;
-        //     ws.current.send(JSON.stringify(payload));
-        // }
+    const sendMessage = (event, payload) => {
+        payload = payload || {};
+        payload.sessionId = sessionId;
+        socket.emit(event, payload);
     };
 
     const start = () => {
@@ -57,31 +55,26 @@ const MobbingSession = () => {
             );
             return;
         }
-        setInProgress(true);
-        const payload = { command: "START" };
-        sendMessage(payload);
+        sendMessage("TIMER:START");
     };
 
     const stop = () => {
-        setInProgress(false);
-        const payload = { command: "STOP" };
-        sendMessage(payload);
+        const event = "TIMER:STOP";
+        sendMessage(event);
     };
 
     const reset = () => {
-        setInProgress(false);
-        setCountdown(initialSeconds);
-        const payload = { command: "RESET", initialSeconds: initialSeconds };
-        sendMessage(payload);
+        const event = "TIMER:RESET";
+        const payload = { initialSeconds: initialSeconds };
+        sendMessage(event, payload);
     };
 
     const initialize = () => {
-        setCountdown(initialSeconds);
+        const event = "TIMER:INITIALIZE";
         const payload = {
-            command: "INITIALIZE",
             initialSeconds: initialSeconds,
         };
-        sendMessage(payload);
+        sendMessage(event, payload);
     };
 
     return (
