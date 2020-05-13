@@ -10,7 +10,7 @@ const Brand = () => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     return (
-        <div class="title-bar">
+        <div className="title-bar">
             <div></div>
             <div className="title" onClick={() => history.push("/")}>
                 Mobber
