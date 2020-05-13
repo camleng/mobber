@@ -1,6 +1,5 @@
 import React, { useState, useContext, createContext } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "./SessionContext";
 
 const MobbersContext = createContext();
@@ -26,7 +25,7 @@ const MobbersProvider = (props) => {
 
         if (mobbers.find((m) => m.name === name)) {
             toast.error("This is getting out of hand -- now there are two of them!", {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: toast.POSITION.TOP_RIGHT,
             });
             return;
         }

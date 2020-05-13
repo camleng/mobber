@@ -1,0 +1,20 @@
+.popover {
+    color: black;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.share {
+    cursor: pointer;
+
+    svg {
+        font-size: 1.4rem;
+    }
+}
+
+.title-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
