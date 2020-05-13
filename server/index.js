@@ -1,7 +1,11 @@
-const app = require("http").createServer(() => "<h1>Welcome</h1>");
-const io = require("socket.io")(app);
+const express = require('express');
+const app = express();
+var http = require('http').createServer(app);
+const io = require("socket.io")(http);
 
-app.listen(3002);
+app.use(express.static(__dirname, { dotfiles: 'allow' }));
+
+http.listen(3002);
 
 let timers = {};
 let clients = {};
