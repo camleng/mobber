@@ -6,6 +6,7 @@ import CurrentMobbers from "./CurrentMobbers";
 import { toast } from "react-toastify";
 import { useMobbers } from "../context/MobbersContext";
 import { useSession } from "../context/SessionContext";
+import { formatTime } from "../services/timeFormatter";
 import "./MobbingSession.scss";
 
 const MobbingSession = () => {
@@ -13,12 +14,18 @@ const MobbingSession = () => {
     // let initialSeconds = 3;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const { mobbers } = useMobbers();
+    const { mobbers, driver } = useMobbers();
     const { socket, sessionId } = useSession();
 
     useEffect(() => {
         initialize();
     }, []);
+
+    useEffect(() => {
+        let title = `Mobber - ${formatTime(countdown)}`;
+        if (driver) title += ` | ${driver.name}`;
+        document.title = title;
+    }, [countdown]);
 
     socket.on("TIMER:UPDATE", (update) => {
         setInProgress(update.inProgress);
