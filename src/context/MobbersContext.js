@@ -17,6 +17,15 @@ const MobbersProvider = (props) => {
     });
 
     const changeRoles = () => {
+        if (mobbers.length < 2) {
+            toast.error(
+                "You're gonna need at least two mobbers to call this a mob. Add some more!",
+                {
+                    position: toast.POSITION.TOP_RIGHT,
+                }
+            );
+            return;
+        }
         sendMessage("MOBBERS:CHANGE");
     };
 
