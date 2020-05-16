@@ -2,14 +2,15 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const https = require('https');
-const io = require("socket.io")(https);
+const socket = require("socket.io")
 const fs = require('fs')
 const path = require('path');
 const cors = require('cors')
 
 var corsOptions = {
    origin: 'https://mobber.dev',
-   optionsSuccessStatus: 200 
+   optionsSuccessStatus: 200,
+   credentials: true
 }
 app.use(cors(corsOptions));
 
@@ -30,7 +31,9 @@ httpsServer.listen(3002, () => {
 
 let timers = {};
 let clients = {};
-let mobbers = {};
+let mobbers = {}; 
+
+const io = socket(httpsServer);
 
 io.on("connection", (socket) => {
     socket.on("SESSION:INITIALIZE", (data) => {
