@@ -6,7 +6,7 @@ const SessionContext = createContext();
 
 const SessionProvider = (props) => {
     const { sessionId } = useParams();
-    const socket = io(`http://${window.location.hostname}:3002`);
+    const socket = io(`https://${window.location.hostname}:3002`, { transport : ['websocket'] });
 
     const sendMessage = (event, payload) => {
         payload = payload || {};

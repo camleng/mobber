@@ -1,9 +1,23 @@
 const express = require('express');
 const app = express();
-var http = require('http').createServer(app);
-const io = require("socket.io")(http);
+const http = require('http').createServer(app);
+const https = require('https');
+const io = require("socket.io")(https);
+const fs = require('fs')
+const path = require('path');
+const cors = require('cors')
 
-app.use(express.static(__dirname, { dotfiles: 'allow' }));
+var corsOptions = {
+   origin: 'https://mobber.dev',
+   optionsSuccessStatus: 200 
+}
+app.use(cors(corsOptions));
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', (req, res) => {
+   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 const httpsServer = https.createServer({
     key: fs.readFileSync('/etc/letsencrypt/live/mobber.dev/privkey.pem'),
@@ -11,7 +25,7 @@ const httpsServer = https.createServer({
 }, app);
 
 httpsServer.listen(3002, () => {
-    console.log('HTTPS Server running on port 443');
+    console.log('HTTPS Server running on port 3002');
 });
 
 let timers = {};

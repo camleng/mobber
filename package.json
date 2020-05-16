@@ -28,7 +28,7 @@
     },
     "scripts": {
         "start": "npm-run-all -p -r server client",
-        "server": "node server/index.js",
+        "server": "node index.js",
         "client": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
