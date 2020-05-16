@@ -1,11 +1,39 @@
-const app = require("http").createServer(() => "<h1>Welcome</h1>");
-const io = require("socket.io")(app);
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const https = require('https');
+const socket = require("socket.io")
+const fs = require('fs')
+const path = require('path');
+const cors = require('cors')
 
-app.listen(3002);
+var corsOptions = {
+   origin: 'https://mobber.dev',
+   optionsSuccessStatus: 200,
+   credentials: true
+}
+app.use(cors(corsOptions));
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', (req, res) => {
+   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+const httpsServer = https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/mobber.dev/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/mobber.dev/fullchain.pem'),
+}, app);
+
+httpsServer.listen(3002, () => {
+    console.log('HTTPS Server running on port 3002');
+});
 
 let timers = {};
 let clients = {};
-let mobbers = {};
+let mobbers = {}; 
+
+const io = socket(httpsServer);
 
 io.on("connection", (socket) => {
     socket.on("SESSION:INITIALIZE", (data) => {
