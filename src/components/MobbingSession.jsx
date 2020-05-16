@@ -14,7 +14,7 @@ const MobbingSession = () => {
     // let initialSeconds = 3;
     const [countdown, setCountdown] = useState(null);
     const [inProgress, setInProgress] = useState(false);
-    const { mobbers, driver } = useMobbers();
+    const { mobbers, driver, changeRoles } = useMobbers();
     const { socket, sessionId } = useSession();
 
     useEffect(() => {
@@ -85,7 +85,9 @@ const MobbingSession = () => {
                     {!inProgress && countdown !== initialSeconds && (
                         <RoundedRect title="Reset" className="reset" onClick={reset} />
                     )}
-                    {/* <RoundedRect title="Next" className="next" onClick={changeRoles} /> */}
+                    {!inProgress && countdown === initialSeconds && (
+                        <RoundedRect title="Next" className="next" onClick={changeRoles} />
+                    )}
                 </div>
             </div>
             <CurrentMobbers />

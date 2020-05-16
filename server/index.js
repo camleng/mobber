@@ -5,7 +5,14 @@ const io = require("socket.io")(http);
 
 app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
-http.listen(3002);
+const httpsServer = https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/mobber.dev/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/mobber.dev/fullchain.pem'),
+}, app);
+
+httpsServer.listen(3002, () => {
+    console.log('HTTPS Server running on port 443');
+});
 
 let timers = {};
 let clients = {};
