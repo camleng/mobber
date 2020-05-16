@@ -5,6 +5,7 @@ import App from "./App";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCar, faMapSigns, faTimes, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 library.add(faCar, faMapSigns, faTimes, faCopy);
 toast.configure();
