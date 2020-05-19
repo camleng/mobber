@@ -1,12 +1,22 @@
-import React, { createContext, useContext } from "react";
-import io from "socket.io-client";
-import { useParams } from "react-router-dom";
+import React, { createContext, useContext } from 'react';
+import io from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 const SessionContext = createContext();
 
 const SessionProvider = (props) => {
     const { sessionId } = useParams();
-    const socket = io(`https://${window.location.hostname}:3002`, { transport : ['websocket'] });
+    var connectionOptions = {
+        'force new connection': true,
+        reconnectionAttempts: 'Infinity',
+        timeout: 10000,
+        transports: ['websocket'],
+    };
+
+    const socket = io(
+        `https://${window.location.hostname}:${process.env.REACT_APP_PORT}`,
+        connectionOptions
+    );
 
     const sendMessage = (event, payload) => {
         payload = payload || {};
