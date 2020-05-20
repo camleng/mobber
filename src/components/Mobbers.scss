@@ -80,6 +80,12 @@
         width: 1.2rem;
     }
 
+    .name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 0.75rem;
+    }
+
     .close {
         cursor: pointer;
         font-size: 1.2rem;

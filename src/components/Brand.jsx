@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import './Brand.scss';
 
 const Brand = () => {
     const history = useHistory();
