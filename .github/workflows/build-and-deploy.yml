@@ -54,4 +54,4 @@ jobs:
       env:
         host: ${{ secrets.SSH_HOST }}
         user: ${{ secrets.SSH_USER }}
-      run: scp -r build server.js -i ~/.ssh/gh_actions_key -o StrictHostKeyChecking=no ${user}@${host}:Programming/mobber/
+      run: scp -r build server.js -i ~/.ssh/gh_actions_key -o StrictHostKeyChecking=no cameron@camleng.com:Programming/mobber/
