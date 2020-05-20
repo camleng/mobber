@@ -46,7 +46,7 @@ jobs:
       env:
         key: ${{ secrets.SSH_KEY }}
       run: |
-        mkdir .ssh
+        mkdir ~/.ssh
         echo "$key" > ~/.ssh/gh_actions_key
         chmod 600 ~/.ssh/gh_actions_key
         
