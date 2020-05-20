@@ -50,8 +50,8 @@ jobs:
         echo "${key}" > ~/.ssh/gh_actions_key
         chmod 600 ~/.ssh/gh_actions_key
         
-    - name: Make sure we actually wrote something to the file
-      run: cat ~/.ssh/gh_actions_key | wc -c
+    - name: Cat public key from GitHub
+      run: cat ~/.ssh/id_rsa.pub
       
     - name: Send files to server
       env:
