@@ -3,6 +3,7 @@ import Countdown from './Countdown';
 import Mobbers from './Mobbers';
 import RoundedRect from './RoundedRect';
 import CurrentMobbers from './CurrentMobbers';
+import Clipboard from './Clipboard';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
@@ -72,6 +73,7 @@ const MobbingSession = () => {
 
     return (
         <>
+            <Clipboard />
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
@@ -94,6 +96,7 @@ const MobbingSession = () => {
                     )}
                 </div>
             </div>
+
             <CurrentMobbers />
             <Mobbers />
         </>

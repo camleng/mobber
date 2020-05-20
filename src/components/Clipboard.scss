@@ -1,0 +1,16 @@
+.popover {
+    color: black;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.share {
+    position: absolute;
+    right: 2rem;
+    cursor: pointer;
+
+    svg {
+        font-size: 1.4rem;
+    }
+}
