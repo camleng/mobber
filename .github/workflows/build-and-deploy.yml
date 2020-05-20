@@ -55,6 +55,6 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         user: ${{ secrets.SSH_USER }}
       run: |
-        cat ${user}
-        cat ${host}
+        echo "${user}"
+        echo "${host}"
         scp -r build server.js -i ~/.ssh/gh_actions_key ${user}@${host}:Programming/mobber/
