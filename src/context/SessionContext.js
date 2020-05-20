@@ -14,7 +14,7 @@ const SessionProvider = (props) => {
     };
 
     const socket = io(
-        `https://${window.location.hostname}:${process.env.REACT_APP_PORT}`,
+        `https://${window.location.hostname}:${process.env.REACT_APP_PORT || 3002}`,
         connectionOptions
     );
 
