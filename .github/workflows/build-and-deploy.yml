@@ -42,16 +42,25 @@ jobs:
         name: drop
         path: 'server.js'        
         
-    - name: Install SSH key
-      env:
-        key: ${{ secrets.SSH_KEY }}
-      run: |
-        mkdir ~/.ssh
-        echo "${key}" > ~/.ssh/gh_actions_key
-        chmod 600 ~/.ssh/gh_actions_key
-      
-    - name: Send files to server
-      env:
+    - name: SCP Files to Server
+      uses: appleboy/scp-action@master
+      with:
         host: ${{ secrets.SSH_HOST }}
-        user: ${{ secrets.SSH_USER }}
-      run: scp -r build server.js -i ~/.ssh/gh_actions_key -o StrictHostKeyChecking=no cameron@camleng.com:Programming/mobber/
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "build/,server.js"
+        target: "~/Programming/mobber"
+        
+#     - name: Install SSH key
+#       env:
+#         key: ${{ secrets.SSH_KEY }}
+#       run: |
+#         mkdir ~/.ssh
+#         echo "${key}" > ~/.ssh/gh_actions_key
+#         chmod 600 ~/.ssh/gh_actions_key
+      
+#     - name: Send files to server
+#       env:
+#         host: ${{ secrets.SSH_HOST }}
+#         user: ${{ secrets.SSH_USER }}
+#       run: scp -r build server.js -i ~/.ssh/gh_actions_key -o StrictHostKeyChecking=no cameron@camleng.com:Programming/mobber/
