@@ -49,12 +49,9 @@ jobs:
         mkdir ~/.ssh
         echo "${key}" > ~/.ssh/gh_actions_key
         chmod 600 ~/.ssh/gh_actions_key
-        
-    - name: Cat public key from GitHub
-      run: cat ~/.ssh/id_rsa.pub
       
     - name: Send files to server
       env:
         host: ${{ secrets.SSH_HOST }}
-        user: ${{ secrets.USER }}
+        user: ${{ secrets.SSH_USER }}
       run: scp -r build server.js -i ~/.ssh/gh_actions_key ${user}@${host}:Programming/mobber/
