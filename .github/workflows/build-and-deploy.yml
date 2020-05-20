@@ -47,11 +47,11 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
       run: |
         mkdir ~/.ssh
-        echo "$key" > ~/.ssh/gh_actions_key
+        echo "${key}" > ~/.ssh/gh_actions_key
         chmod 600 ~/.ssh/gh_actions_key
         
     - name: Send files to server
       env:
         host: ${{ secrets.SSH_HOST }}
         user: ${{ secrets.USER }}
-      run: scp -r build server.js user@host:Programming/mobber/build
+      run: scp -r build server.js ${user}@${host}:Programming/mobber/build
