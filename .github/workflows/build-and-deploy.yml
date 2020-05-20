@@ -48,7 +48,8 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-        source: "build/,server.js"
+        pot: 22
+        source: "server.js"
         target: "~/Programming/mobber"
         
 #     - name: Install SSH key
