@@ -8,7 +8,6 @@ const init = (sessionId, initialSeconds) => {
 };
 
 const broadcastTimerUpdate = (sessionId, broadcast) => {
-    console.log(broadcast);
     const { inProgress, remainingSeconds } = timers[sessionId];
     broadcast('TIMER:UPDATE', { inProgress, remainingSeconds }, sessionId);
 };

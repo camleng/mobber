@@ -9,6 +9,11 @@ require('dotenv').config();
 
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
+app.get('/session/generate', (req, res) => {
+    const sessionId = session.generateRandomSessionId();
+    res.send({ sessionId });
+});
+
 if (NODE_ENV === 'production') {
     var corsOptions = {
         origin: 'https://mobber.dev',

@@ -66,4 +66,14 @@ const initializeSession = (initialSeconds, sessionId, socket) => {
     mobbers.broadcastMobbersUpdate(sessionId, broadcast);
 };
 
-module.exports = { init };
+const generateRandomSessionId = () => {
+    let randomSessionId;
+
+    do {
+        randomSessionId = Math.floor(Math.random() * 1000000);
+    } while (clients.hasOwnProperty(randomSessionId));
+
+    return randomSessionId;
+};
+
+module.exports = { init, generateRandomSessionId };
