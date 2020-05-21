@@ -5,6 +5,7 @@
     justify-content: space-between;
     padding: 0.75rem;
     border-radius: 0.5rem;
+    width: 100%;
 
     .mobbers {
         display: flex;
@@ -55,6 +56,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 
     @media screen and (min-width: 425px) {
         width: 9rem;
@@ -65,7 +67,7 @@
     }
 
     &:not(:last-child) {
-        @media (min-width: 768px) {
+        @media (min-width: 585px) {
             margin-right: 1rem;
         }
     }
