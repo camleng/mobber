@@ -7,6 +7,11 @@
     border-radius: 0.5rem;
     width: 100%;
 
+    @media screen and (min-width: 768px) {
+        width: unset;
+        max-width: 100%;
+    }
+
     .mobbers {
         display: flex;
         flex-wrap: wrap;
@@ -59,15 +64,13 @@
     box-sizing: border-box;
 
     @media screen and (min-width: 425px) {
-        width: 9rem;
-    }
-
-    @media screen and (min-width: 768px) {
         width: 11rem;
     }
 
-    &:not(:last-child) {
-        @media (min-width: 585px) {
+    @media screen and (min-width: 768px) {
+        width: 14rem;
+
+        &:not(:last-child) {
             margin-right: 1rem;
         }
     }
