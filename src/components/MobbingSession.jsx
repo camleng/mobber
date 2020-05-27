@@ -11,6 +11,7 @@ import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
+import { DragDropContext } from 'react-beautiful-dnd';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
@@ -81,6 +82,24 @@ const MobbingSession = () => {
         sendMessage(event);
     };
 
+    const reassignMobbers = (mobbers) => {
+        const event = 'MOBBERS:REASSIGN';
+        sendMessage(event, { mobbers });
+    };
+
+    const onDragEnd = (result) => {
+        const { destination, source } = result;
+
+        if (!destination || destination.index === source.index) return;
+
+        const _mobbers = Array.from(mobbers);
+        const movedMobber = _mobbers.splice(source.index, 1)[0];
+
+        _mobbers.splice(destination.index, 0, movedMobber);
+
+        reassignMobbers(_mobbers);
+    };
+
     return activating ? (
         <h1>Activating</h1>
     ) : (
@@ -111,7 +130,10 @@ const MobbingSession = () => {
             </div>
 
             <CurrentMobbers />
-            <Mobbers />
+
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Mobbers />
+            </DragDropContext>
         </>
     );
 };

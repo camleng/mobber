@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import Mobber from './Mobber';
 import RoundedRect from './shared/RoundedRect';
-import './Mobbers.scss';
 import { useMobbers } from '../context/MobbersContext';
+import { Droppable } from 'react-beautiful-dnd';
+import './Mobbers.scss';
+
+const determineScreenSizeCategory = () => {
+    return window.innerWidth >= 768 ? 'tablet' : 'phone';
+};
 
 const Mobbers = () => {
     const { mobbers, addMobber } = useMobbers();
     const [newMobberName, setNewMobberName] = useState('');
+    const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     const addMobberToMob = () => {
         addMobber(newMobberName);
@@ -17,13 +23,27 @@ const Mobbers = () => {
         if (e.key === 'Enter') addMobberToMob();
     };
 
+    window.addEventListener('resize', (e) => {
+        setScreenSize(determineScreenSizeCategory());
+    });
+
     return (
         <div className='mobbers-container'>
-            <div className='mobbers'>
-                {mobbers.map((mobber, index) => (
-                    <Mobber mobber={mobber} key={index} />
-                ))}
-            </div>
+            <Droppable
+                droppableId='mobbers'
+                direction={screenSize === 'tablet' ? 'horizontal' : 'vertical'}>
+                {(provided) => (
+                    <div
+                        className='mobbers'
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}>
+                        {mobbers.map((mobber, index) => (
+                            <Mobber mobber={mobber} key={mobber.name} index={index} />
+                        ))}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
 
             <div className='add-mobber'>
                 <input

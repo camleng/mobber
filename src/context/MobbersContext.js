@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { toast } from 'react-toastify';
 import { useSession } from './SessionContext';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
