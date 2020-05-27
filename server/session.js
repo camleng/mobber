@@ -38,6 +38,10 @@ const addListeners = (io) => {
         socket.on('MOBBERS:CHANGE', (data) => {
             mobbers.changeRoles(data.sessionId, broadcast);
         });
+
+        socket.on('MOBBERS:RANDOMIZE', (data) => {
+            mobbers.randomize(data.sessionId, broadcast);
+        });
     });
 };
 

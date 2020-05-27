@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Countdown from './Countdown';
 import Mobbers from './Mobbers';
-import RoundedRect from './RoundedRect';
+import RoundedRect from './shared/RoundedRect';
 import CurrentMobbers from './CurrentMobbers';
+import Randomize from './Randomize';
 import Clipboard from './Clipboard';
+import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
@@ -56,16 +58,7 @@ const MobbingSession = () => {
     };
 
     const start = () => {
-        if (mobbers.length < 2) {
-            toast.error(
-                "You're gonna need at least two mobbers to call this a mob. Add some more!",
-                {
-                    position: toast.POSITION.TOP_RIGHT,
-                }
-            );
-            return;
-        }
-        sendMessage('TIMER:START');
+        if (hasEnoughMobbers(mobbers)) sendMessage('TIMER:START');
     };
 
     const stop = () => {
@@ -83,10 +76,18 @@ const MobbingSession = () => {
         sendMessage(event);
     };
 
+    const randomizeMobbers = () => {
+        if (hasEnoughMobbers(mobbers)) {
+            const event = 'MOBBERS:RANDOMIZE';
+            sendMessage(event);
+        }
+    };
+
     return activating ? (
         <h1>Activating</h1>
     ) : (
         <>
+            <Randomize randomize={randomizeMobbers} />
             <Clipboard />
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />

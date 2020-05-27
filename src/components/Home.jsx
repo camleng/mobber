@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import RoundedRect from './RoundedRect';
+import RoundedRect from './shared/RoundedRect';
 import './Home.scss';
 
 const Home = () => {

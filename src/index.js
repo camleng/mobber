@@ -1,18 +1,24 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCar, faMapSigns, faTimes, faCopy } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+    faCar,
+    faMapSigns,
+    faTimes,
+    faCopy,
+    faDice,
+} from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-library.add(faCar, faMapSigns, faTimes, faCopy);
+library.add(faCar, faMapSigns, faTimes, faCopy, faDice);
 toast.configure();
 
 ReactDOM.render(
     <React.StrictMode>
         <App />
     </React.StrictMode>,
-    document.getElementById("root")
+    document.getElementById('root')
 );

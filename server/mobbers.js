@@ -1,3 +1,5 @@
+const randomizer = require('./randomizer');
+
 let mobbers = {};
 
 const init = (sessionId) => {
@@ -40,6 +42,20 @@ const changeRoles = (sessionId, broadcast) => {
     clearRoles(_mobbers);
     _mobbers[newDriverIndex].role = 'driver';
     _mobbers[newNavigatorIndex].role = 'navigator';
+
+    mobbers[sessionId] = _mobbers;
+    broadcastMobbersUpdate(sessionId, broadcast);
+};
+
+const randomize = (sessionId, broadcast) => {
+    let _mobbers = mobbers[sessionId];
+
+    clearRoles(_mobbers);
+
+    _mobbers = randomizer.shuffle(_mobbers);
+
+    _mobbers[0].role = 'driver';
+    _mobbers[1].role = 'navigator';
 
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
@@ -112,4 +128,11 @@ const determineRole = (sessionId) => {
     else return '';
 };
 
-module.exports = { init, addMobber, removeMobber, changeRoles, broadcastMobbersUpdate };
+module.exports = {
+    init,
+    addMobber,
+    removeMobber,
+    changeRoles,
+    randomize,
+    broadcastMobbersUpdate,
+};
