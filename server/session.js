@@ -11,8 +11,6 @@ const init = (server) => {
 
 const addListeners = (io) => {
     io.on('connection', (socket) => {
-        socket.on('SESSION:ISACTIVE', (data) => {});
-
         socket.on('SESSION:CONNECT', (data) => {
             connectToSession(data.sessionId, socket);
         });
