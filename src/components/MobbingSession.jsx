@@ -77,17 +77,15 @@ const MobbingSession = () => {
     };
 
     const randomizeMobbers = () => {
-        if (hasEnoughMobbers(mobbers)) {
-            const event = 'MOBBERS:RANDOMIZE';
-            sendMessage(event);
-        }
+        const event = 'MOBBERS:RANDOMIZE';
+        sendMessage(event);
     };
 
     return activating ? (
         <h1>Activating</h1>
     ) : (
         <>
-            <Randomize randomize={randomizeMobbers} />
+            {mobbers.length >= 2 && <Randomize randomize={randomizeMobbers} />}
             <Clipboard />
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
