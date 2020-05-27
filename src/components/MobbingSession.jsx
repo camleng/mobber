@@ -5,6 +5,7 @@ import RoundedRect from './shared/RoundedRect';
 import CurrentMobbers from './CurrentMobbers';
 import Randomize from './Randomize';
 import Clipboard from './Clipboard';
+import Audio from './shared/Audio';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
@@ -134,6 +135,8 @@ const MobbingSession = () => {
             <DragDropContext onDragEnd={onDragEnd}>
                 <Mobbers />
             </DragDropContext>
+
+            {!inProgress && countdown <= 0 && <Audio />}
         </>
     );
 };
