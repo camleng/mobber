@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Mobber from './Mobber';
 import RoundedRect from './shared/RoundedRect';
-import './Mobbers.scss';
 import { useMobbers } from '../context/MobbersContext';
+import { Droppable } from 'react-beautiful-dnd';
+import './Mobbers.scss';
 
 const Mobbers = () => {
     const { mobbers, addMobber } = useMobbers();
@@ -19,11 +20,19 @@ const Mobbers = () => {
 
     return (
         <div className='mobbers-container'>
-            <div className='mobbers'>
-                {mobbers.map((mobber, index) => (
-                    <Mobber mobber={mobber} key={index} />
-                ))}
-            </div>
+            <Droppable droppableId='mobbers'>
+                {(provided) => (
+                    <div
+                        className='mobbers'
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}>
+                        {mobbers.map((mobber, index) => (
+                            <Mobber mobber={mobber} key={mobber.name} index={index} />
+                        ))}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
 
             <div className='add-mobber'>
                 <input

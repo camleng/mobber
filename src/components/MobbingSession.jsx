@@ -11,13 +11,14 @@ import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
+import { DragDropContext } from 'react-beautiful-dnd';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
     const [countdown, setCountdown] = useState();
     const [inProgress, setInProgress] = useState();
-    const { mobbers, driver, changeRoles } = useMobbers();
+    const { mobbers, setMobbers, driver, changeRoles } = useMobbers();
     const { socket, sessionId } = useSession();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
@@ -81,6 +82,22 @@ const MobbingSession = () => {
         sendMessage(event);
     };
 
+    const onDragEnd = (result) => {
+        const { destination, source, draggableId } = result;
+
+        if (!destination || destination.index === source.index) return;
+
+        console.log(source.index);
+        console.log(destination.index);
+        console.log(draggableId);
+
+        const _mobbers = Array.from(mobbers);
+        _mobbers.splice(source.index, 1);
+        _mobbers.splice(destination.index, 0, { name: draggableId });
+
+        setMobbers(_mobbers);
+    };
+
     return activating ? (
         <h1>Activating</h1>
     ) : (
@@ -111,7 +128,10 @@ const MobbingSession = () => {
             </div>
 
             <CurrentMobbers />
-            <Mobbers />
+
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Mobbers />
+            </DragDropContext>
         </>
     );
 };

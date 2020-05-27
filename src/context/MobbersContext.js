@@ -50,6 +50,7 @@ const MobbersProvider = (props) => {
         <MobbersContext.Provider
             value={{
                 mobbers,
+                setMobbers,
                 changeRoles,
                 addMobber,
                 removeMobber,
