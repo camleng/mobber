@@ -12,8 +12,12 @@ const init = (sessionId) => {
 };
 
 const broadcastTimerUpdate = (sessionId, broadcast) => {
-    const { inProgress, remainingSeconds } = timers[sessionId];
-    broadcast('TIMER:UPDATE', { inProgress, remainingSeconds }, sessionId);
+    const { inProgress, remainingSeconds, initialSeconds } = timers[sessionId];
+    broadcast(
+        'TIMER:UPDATE',
+        { inProgress, remainingSeconds, initialSeconds },
+        sessionId
+    );
 };
 
 const timer = (sessionId, changeRoles, broadcast) => {
