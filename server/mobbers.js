@@ -12,11 +12,6 @@ const broadcastMobbersUpdate = (sessionId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
 };
 
-const propogate = (sessionId, newMobbers, broadcast) => {
-    mobbers[sessionId] = newMobbers;
-    broadcastMobbersUpdate(sessionId, broadcast);
-};
-
 const addMobber = (name, sessionId, broadcast) => {
     const role = determineRole(sessionId);
 
@@ -159,7 +154,6 @@ const determineRole = (sessionId) => {
 
 module.exports = {
     init,
-    propogate,
     addMobber,
     removeMobber,
     changeRoles,
