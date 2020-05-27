@@ -16,7 +16,7 @@ function App() {
                     <Route exact path='/'>
                         <Home />
                     </Route>
-                    <Route path='/session/:sessionId'>
+                    <Route exact path='/session/:sessionId'>
                         <SessionProvider>
                             <MobbersProvider>
                                 <MobbingSession />

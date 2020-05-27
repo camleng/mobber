@@ -1,9 +1,13 @@
 let timers = {};
+const DEFAULT_SECONDS = 900;
 
-const init = (sessionId, initialSeconds) => {
+const init = (sessionId) => {
     if (!timers.hasOwnProperty(sessionId)) {
-        timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
-        console.log('Created timer for this session');
+        timers[sessionId] = {
+            inProgress: false,
+            initialSeconds: DEFAULT_SECONDS,
+            remainingSeconds: DEFAULT_SECONDS,
+        };
     }
 };
 
@@ -45,9 +49,13 @@ const stop = (sessionId, broadcast) => {
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
-const reset = (initialSeconds, sessionId, broadcast) => {
-    console.log(`Timer reset to ${initialSeconds} seconds`);
-    timers[sessionId] = { inProgress: false, remainingSeconds: initialSeconds };
+const reset = (sessionId, broadcast) => {
+    console.log(`Timer reset to ${DEFAULT_SECONDS} seconds`);
+    timers[sessionId] = {
+        inProgress: false,
+        initialSeconds: DEFAULT_SECONDS,
+        remainingSeconds: DEFAULT_SECONDS,
+    };
     broadcastTimerUpdate(sessionId, broadcast);
 };
 

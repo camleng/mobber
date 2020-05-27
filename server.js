@@ -10,8 +10,13 @@ require('dotenv').config();
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
 app.get('/session/generate', (req, res) => {
-    const sessionId = session.generateRandomSessionId();
+    const sessionId = session.activateRandomSession();
     res.send({ sessionId });
+});
+
+app.get('/session/:sessionId/is-active', (req, res) => {
+    const isActive = session.isSessionActive(req.params.sessionId);
+    res.send({ isActive });
 });
 
 if (NODE_ENV === 'production') {

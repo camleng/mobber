@@ -11,8 +11,10 @@ const init = (server) => {
 
 const addListeners = (io) => {
     io.on('connection', (socket) => {
-        socket.on('SESSION:INITIALIZE', (data) => {
-            initializeSession(data.initialSeconds, data.sessionId, socket);
+        socket.on('SESSION:ISACTIVE', (data) => {});
+
+        socket.on('SESSION:CONNECT', (data) => {
+            connectToSession(data.sessionId, socket);
         });
 
         socket.on('TIMER:START', (data) => {
@@ -24,7 +26,7 @@ const addListeners = (io) => {
         });
 
         socket.on('TIMER:RESET', (data) => {
-            timer.reset(data.initialSeconds, data.sessionId, broadcast);
+            timer.reset(data.sessionId, broadcast);
         });
 
         socket.on('MOBBERS:ADD', (data) => {
@@ -53,27 +55,39 @@ const broadcast = (event, message, sessionId) => {
     }
 };
 
-const initializeSession = (initialSeconds, sessionId, socket) => {
-    if (!clients[sessionId]) {
-        clients[sessionId] = [];
-    }
-    clients[sessionId].push(socket);
-
-    timer.init(sessionId, initialSeconds);
-    mobbers.init(sessionId);
-
+const connectToSession = (sessionId, socket) => {
+    addClientToSession(sessionId, socket);
     timer.broadcastTimerUpdate(sessionId, broadcast);
     mobbers.broadcastMobbersUpdate(sessionId, broadcast);
 };
 
-const generateRandomSessionId = () => {
+const addClientToSession = (sessionId, socket) => {
+    clients[sessionId].push(socket);
+};
+
+const initializeSession = (sessionId) => {
+    if (!clients[sessionId]) {
+        clients[sessionId] = [];
+    }
+    timer.init(sessionId);
+    mobbers.init(sessionId);
+};
+
+const activateRandomSession = () => {
     let randomSessionId;
 
     do {
         randomSessionId = Math.floor(Math.random() * 1000000);
     } while (clients.hasOwnProperty(randomSessionId));
 
+    initializeSession(randomSessionId);
+
     return randomSessionId;
 };
 
-module.exports = { init, generateRandomSessionId };
+const isSessionActive = (sessionId) => {
+    const isActive = clients[sessionId] !== undefined;
+    return isActive;
+};
+
+module.exports = { init, activateRandomSession, isSessionActive };

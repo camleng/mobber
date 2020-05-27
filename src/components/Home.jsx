@@ -4,10 +4,10 @@ import RoundedRect from './RoundedRect';
 import './Home.scss';
 
 const Home = () => {
-    const [sessionId, setSessionId] = useState();
+    const [sessionId, setSessionId] = useState('');
     const history = useHistory();
 
-    const generateRandomSessionId = () => {
+    const activateRandomSession = () => {
         fetch('/session/generate').then(async (res) => {
             const { sessionId } = await res.json();
             history.push(`/session/${sessionId}`);
@@ -37,7 +37,7 @@ const Home = () => {
                         <RoundedRect
                             title='Create'
                             className='create'
-                            onClick={generateRandomSessionId}
+                            onClick={activateRandomSession}
                         />
                     </div>
                 </div>

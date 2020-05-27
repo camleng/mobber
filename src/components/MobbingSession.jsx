@@ -7,20 +7,35 @@ import Clipboard from './Clipboard';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
+import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
-    let initialSeconds = 60 * 15;
-    // let initialSeconds = 3;
-    const [countdown, setCountdown] = useState(null);
-    const [inProgress, setInProgress] = useState(false);
+    const [initialSeconds, setInitialSeconds] = useState(0);
+    const [countdown, setCountdown] = useState();
+    const [inProgress, setInProgress] = useState();
     const { mobbers, driver, changeRoles } = useMobbers();
     const { socket, sessionId } = useSession();
+    const [activating, setActivating] = useState(true);
+    const history = useHistory();
 
     useEffect(() => {
-        initialize();
+        checkIfActive();
     }, []);
+
+    const checkIfActive = async () => {
+        const res = await fetch(`/session/${sessionId}/is-active`);
+        const data = await res.json();
+
+        if (data.isActive) {
+            connect();
+            setActivating(false);
+        } else {
+            toast.error(`Session "${sessionId}" is not active`);
+            history.push('/');
+        }
+    };
 
     useEffect(() => {
         let title = `Mobber - ${formatTime(countdown)}`;
@@ -31,6 +46,7 @@ const MobbingSession = () => {
     socket.on('TIMER:UPDATE', (update) => {
         setInProgress(update.inProgress);
         setCountdown(update.remainingSeconds);
+        setInitialSeconds(update.initialSeconds);
     });
 
     const sendMessage = (event, payload) => {
@@ -59,19 +75,17 @@ const MobbingSession = () => {
 
     const reset = () => {
         const event = 'TIMER:RESET';
-        const payload = { initialSeconds: initialSeconds };
-        sendMessage(event, payload);
+        sendMessage(event);
     };
 
-    const initialize = () => {
-        const event = 'SESSION:INITIALIZE';
-        const payload = {
-            initialSeconds: initialSeconds,
-        };
-        sendMessage(event, payload);
+    const connect = () => {
+        const event = 'SESSION:CONNECT';
+        sendMessage(event);
     };
 
-    return (
+    return activating ? (
+        <h1>Activating</h1>
+    ) : (
         <>
             <Clipboard />
             <div className='countdown-and-controls'>
