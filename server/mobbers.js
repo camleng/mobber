@@ -12,6 +12,11 @@ const broadcastMobbersUpdate = (sessionId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
 };
 
+const propogate = (sessionId, newMobbers, broadcast) => {
+    mobbers[sessionId] = newMobbers;
+    broadcastMobbersUpdate(sessionId, broadcast);
+};
+
 const addMobber = (name, sessionId, broadcast) => {
     const role = determineRole(sessionId);
 
@@ -29,7 +34,7 @@ const removeMobber = (mobber, sessionId, broadcast) => {
     }
 
     _mobbers.splice(mobberIndex, 1);
-    reassignRoles(_mobbers);
+    reassign(_mobbers);
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
 };
@@ -42,6 +47,15 @@ const changeRoles = (sessionId, broadcast) => {
     clearRoles(_mobbers);
     _mobbers[newDriverIndex].role = 'driver';
     _mobbers[newNavigatorIndex].role = 'navigator';
+
+    mobbers[sessionId] = _mobbers;
+    broadcastMobbersUpdate(sessionId, broadcast);
+};
+
+const reassignRoles = (sessionId, broadcast) => {
+    let _mobbers = mobbers[sessionId];
+
+    reassign(_mobbers);
 
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
@@ -93,7 +107,7 @@ const clearRoles = (_mobbers) => {
     _mobbers.forEach((m) => (m.role = ''));
 };
 
-const reassignRoles = (_mobbers) => {
+const reassign = (_mobbers) => {
     if (_mobbers.length === 0) {
         return _mobbers;
     } else if (_mobbers.length === 1) {
@@ -130,9 +144,11 @@ const determineRole = (sessionId) => {
 
 module.exports = {
     init,
+    propogate,
     addMobber,
     removeMobber,
     changeRoles,
+    reassignRoles,
     randomize,
     broadcastMobbersUpdate,
 };

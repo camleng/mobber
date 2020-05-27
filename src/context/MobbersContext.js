@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { toast } from 'react-toastify';
 import { useSession } from './SessionContext';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
@@ -16,6 +16,11 @@ const MobbersProvider = (props) => {
         setDriver(getDriver(mobbers));
         setNavigator(getNavigator(mobbers));
     });
+
+    const propogateMobbers = (mobbers) => {
+        setMobbers(mobbers);
+        sendMessage('MOBBERS:PROPOGATE', { mobbers });
+    };
 
     const changeRoles = () => {
         if (hasEnoughMobbers(mobbers)) sendMessage('MOBBERS:CHANGE');
@@ -50,7 +55,7 @@ const MobbersProvider = (props) => {
         <MobbersContext.Provider
             value={{
                 mobbers,
-                setMobbers,
+                propogateMobbers,
                 changeRoles,
                 addMobber,
                 removeMobber,

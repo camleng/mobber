@@ -8,8 +8,8 @@ const SessionProvider = (props) => {
     const { sessionId } = useParams();
     var connectionOptions = {
         'force new connection': true,
-        reconnectionAttempts: 'Infinity',
-        timeout: 10000,
+        reconnectionAttempts: 6,
+        timeout: 5000,
         transports: ['websocket'],
     };
 

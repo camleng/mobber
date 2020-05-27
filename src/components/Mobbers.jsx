@@ -5,9 +5,14 @@ import { useMobbers } from '../context/MobbersContext';
 import { Droppable } from 'react-beautiful-dnd';
 import './Mobbers.scss';
 
+const determineScreenSizeCategory = () => {
+    return window.innerWidth >= 768 ? 'tablet' : 'phone';
+};
+
 const Mobbers = () => {
     const { mobbers, addMobber } = useMobbers();
     const [newMobberName, setNewMobberName] = useState('');
+    const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     const addMobberToMob = () => {
         addMobber(newMobberName);
@@ -18,9 +23,15 @@ const Mobbers = () => {
         if (e.key === 'Enter') addMobberToMob();
     };
 
+    window.addEventListener('resize', (e) => {
+        setScreenSize(determineScreenSizeCategory());
+    });
+
     return (
         <div className='mobbers-container'>
-            <Droppable droppableId='mobbers'>
+            <Droppable
+                droppableId='mobbers'
+                direction={screenSize === 'tablet' ? 'horizontal' : 'vertical'}>
                 {(provided) => (
                     <div
                         className='mobbers'

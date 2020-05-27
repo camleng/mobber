@@ -27,6 +27,10 @@ const addListeners = (io) => {
             timer.reset(data.sessionId, broadcast);
         });
 
+        socket.on('MOBBERS:PROPOGATE', (data) => {
+            mobbers.propogate(data.sessionId, data.mobbers, broadcast);
+        });
+
         socket.on('MOBBERS:ADD', (data) => {
             mobbers.addMobber(data.name, data.sessionId, broadcast);
         });
@@ -37,6 +41,10 @@ const addListeners = (io) => {
 
         socket.on('MOBBERS:CHANGE', (data) => {
             mobbers.changeRoles(data.sessionId, broadcast);
+        });
+
+        socket.on('MOBBERS:REASSIGN', (data) => {
+            mobbers.reassignRoles(data.sessionId, broadcast);
         });
 
         socket.on('MOBBERS:RANDOMIZE', (data) => {
