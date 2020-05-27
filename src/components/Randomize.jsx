@@ -6,6 +6,7 @@ import './Randomize.scss';
 const Randomize = ({ randomize }) => {
     return (
         <Popover
+            text='Randomized!'
             className='randomize'
             render={() => (
                 <div onClick={randomize}>
