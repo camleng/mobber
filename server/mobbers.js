@@ -34,7 +34,7 @@ const removeMobber = (mobber, sessionId, broadcast) => {
     }
 
     _mobbers.splice(mobberIndex, 1);
-    reassign(_mobbers);
+    reassignAfterDeletion(_mobbers);
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
 };
@@ -52,10 +52,8 @@ const changeRoles = (sessionId, broadcast) => {
     broadcastMobbersUpdate(sessionId, broadcast);
 };
 
-const reassignRoles = (sessionId, broadcast) => {
-    let _mobbers = mobbers[sessionId];
-
-    reassign(_mobbers);
+const reassign = (sessionId, _mobbers, broadcast) => {
+    reassignAfterDragAndDrop(_mobbers);
 
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
@@ -107,7 +105,24 @@ const clearRoles = (_mobbers) => {
     _mobbers.forEach((m) => (m.role = ''));
 };
 
-const reassign = (_mobbers) => {
+const reassignAfterDragAndDrop = (_mobbers) => {
+    if (_mobbers.length < 2) return _mobbers;
+
+    let driverIndex, navigatorIndex;
+
+    driverIndex = getDriverIndex(_mobbers);
+    navigatorIndex = determineNewNavigatorIndex(_mobbers, driverIndex);
+
+    clearRoles(_mobbers);
+    _mobbers[driverIndex].role = 'driver';
+    _mobbers[navigatorIndex].role = 'navigator';
+};
+
+const determineNewNavigatorIndex = (_mobbers, driverIndex) => {
+    return driverIndex === _mobbers.length - 1 ? 0 : driverIndex + 1;
+};
+
+const reassignAfterDeletion = (_mobbers) => {
     if (_mobbers.length === 0) {
         return _mobbers;
     } else if (_mobbers.length === 1) {
@@ -148,7 +163,7 @@ module.exports = {
     addMobber,
     removeMobber,
     changeRoles,
-    reassignRoles,
+    reassign,
     randomize,
     broadcastMobbersUpdate,
 };

@@ -18,7 +18,7 @@ const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
     const [countdown, setCountdown] = useState();
     const [inProgress, setInProgress] = useState();
-    const { mobbers, propogateMobbers, driver, changeRoles } = useMobbers();
+    const { mobbers, driver, changeRoles } = useMobbers();
     const { socket, sessionId } = useSession();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
@@ -82,21 +82,22 @@ const MobbingSession = () => {
         sendMessage(event);
     };
 
-    const reassignMobbers = () => {
+    const reassignMobbers = (mobbers) => {
         const event = 'MOBBERS:REASSIGN';
-        sendMessage(event);
+        sendMessage(event, { mobbers });
     };
 
     const onDragEnd = (result) => {
-        const { destination, source, draggableId } = result;
+        const { destination, source } = result;
 
         if (!destination || destination.index === source.index) return;
 
         const _mobbers = Array.from(mobbers);
-        _mobbers.splice(source.index, 1);
-        _mobbers.splice(destination.index, 0, { name: draggableId });
-        propogateMobbers(_mobbers);
-        reassignMobbers();
+        const movedMobber = _mobbers.splice(source.index, 1)[0];
+
+        _mobbers.splice(destination.index, 0, movedMobber);
+
+        reassignMobbers(_mobbers);
     };
 
     return activating ? (

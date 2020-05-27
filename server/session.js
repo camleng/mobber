@@ -44,7 +44,7 @@ const addListeners = (io) => {
         });
 
         socket.on('MOBBERS:REASSIGN', (data) => {
-            mobbers.reassignRoles(data.sessionId, broadcast);
+            mobbers.reassign(data.sessionId, data.mobbers, broadcast);
         });
 
         socket.on('MOBBERS:RANDOMIZE', (data) => {

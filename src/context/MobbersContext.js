@@ -17,11 +17,6 @@ const MobbersProvider = (props) => {
         setNavigator(getNavigator(mobbers));
     });
 
-    const propogateMobbers = (mobbers) => {
-        setMobbers(mobbers);
-        sendMessage('MOBBERS:PROPOGATE', { mobbers });
-    };
-
     const changeRoles = () => {
         if (hasEnoughMobbers(mobbers)) sendMessage('MOBBERS:CHANGE');
     };
@@ -55,7 +50,6 @@ const MobbersProvider = (props) => {
         <MobbersContext.Provider
             value={{
                 mobbers,
-                propogateMobbers,
                 changeRoles,
                 addMobber,
                 removeMobber,
