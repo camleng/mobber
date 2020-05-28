@@ -9,11 +9,12 @@ import {
     faTimes,
     faCopy,
     faDice,
+    faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-library.add(faCar, faMapSigns, faTimes, faCopy, faDice);
+library.add(faCar, faMapSigns, faTimes, faCopy, faDice, faVolumeUp);
 toast.configure();
 
 ReactDOM.render(
