@@ -1,5 +1,6 @@
 let timers = {};
-const DEFAULT_SECONDS = 900;
+// const DEFAULT_SECONDS = 900;
+const DEFAULT_SECONDS = 5;
 
 const init = (sessionId) => {
     if (!timers.hasOwnProperty(sessionId)) {

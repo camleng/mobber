@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.scss';
-import { MobbersProvider } from './context/MobbersContext';
 import Home from './components/Home';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import MobbingSession from './components/MobbingSession';
 import Brand from './components/Brand';
+import { MobbersProvider } from './context/MobbersContext';
 import { SessionProvider } from './context/SessionContext';
+import { AudioProvider } from './context/AudioContext';
+import MobbingSession from './components/MobbingSession';
 
 function App() {
     return (
@@ -18,9 +19,11 @@ function App() {
                     </Route>
                     <Route exact path='/session/:sessionId'>
                         <SessionProvider>
-                            <MobbersProvider>
-                                <MobbingSession />
-                            </MobbersProvider>
+                            <AudioProvider>
+                                <MobbersProvider>
+                                    <MobbingSession />
+                                </MobbersProvider>
+                            </AudioProvider>
                         </SessionProvider>
                     </Route>
                     <Route path='*'>

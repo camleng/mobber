@@ -6,6 +6,7 @@ import CurrentMobbers from './CurrentMobbers';
 import Randomize from './Randomize';
 import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
+import AudioSelection from './AudioSelection';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
@@ -105,6 +106,8 @@ const MobbingSession = () => {
         <h1>Activating</h1>
     ) : (
         <>
+            <AudioSelection />
+
             {mobbers.length >= 2 && <Randomize randomize={randomizeMobbers} />}
             <Clipboard />
             <div className='countdown-and-controls'>
@@ -135,7 +138,6 @@ const MobbingSession = () => {
             <DragDropContext onDragEnd={onDragEnd}>
                 <Mobbers />
             </DragDropContext>
-
             {!inProgress && countdown <= 0 && <Audio />}
         </>
     );

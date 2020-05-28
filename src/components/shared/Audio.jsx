@@ -1,8 +1,11 @@
 import React from 'react';
-import soundfile from '../../audio/your-turn.mp3';
+import { useAudio } from '../../context/AudioContext';
 
 const Audio = () => {
-    return <audio src={soundfile} autoPlay />;
+    const { audioFile } = useAudio();
+    const audioPath = `../../audio/${audioFile}`;
+
+    return <audio src={audioPath} autoPlay></audio>;
 };
 
 export default Audio;
