@@ -1,5 +1,7 @@
 let timers = {};
-const DEFAULT_SECONDS = 900;
+
+const { NODE_ENV } = process.env;
+const DEFAULT_SECONDS = NODE_ENV === 'production' ? 900 : 4;
 
 const init = (sessionId) => {
     if (!timers.hasOwnProperty(sessionId)) {
