@@ -5,14 +5,14 @@ import './AudioSelection.scss';
 import { useAudio } from '../context/AudioContext';
 
 const AudioSelection = () => {
-    const { options, makeSelection } = useAudio();
+    const { options, setAudioFile } = useAudio();
 
     const jsx = (
         <div className='popover audio-selection-container'>
             {options.map((option) => (
                 <div
                     className={`audio-option ${option.selected ? 'selected' : ''}`}
-                    onClick={() => makeSelection(option)}
+                    onClick={() => setAudioFile(option.file)}
                     key={option.file}>
                     {option.name}
                 </div>

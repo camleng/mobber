@@ -4,35 +4,27 @@ import useStorage from '../hooks/useStorage';
 const AudioContext = createContext();
 
 const AudioProvider = (props) => {
-    const [audioFile, setAudioFile] = useStorage('audioFile', 'your-turn.mp3');
-    const [options, setOptions] = useState([
+    const initialOptions = [
         { name: 'Your Turn', file: 'your-turn.mp3', selected: false },
         { name: "Time's up", file: 'times-up.m4a', selected: false },
-    ]);
+        { name: 'No sound', file: '', selected: false },
+    ];
+    const [options, setOptions] = useState(initialOptions);
+    const [audioFile, setAudioFile] = useStorage('audioFile', initialOptions[0].file);
+
+    const selectOption = (selectionPredicate) => {
+        let _options = [...options].map((opt) => ({ ...opt, selected: false }));
+        let optionIndex = _options.findIndex(selectionPredicate);
+        if (optionIndex !== -1) _options[optionIndex].selected = true;
+        setOptions(_options);
+    };
 
     useEffect(() => {
-        setOption((opt) => opt.file === audioFile, true);
-    }, []);
-
-    const setOption = (predicate, value) => {
-        let _options = [...options];
-
-        let optionIndex = _options.findIndex(predicate);
-        _options[optionIndex].selected = value;
-    };
-
-    const makeSelection = (option) => {
-        let _options = [...options];
-
-        setOption((opt) => opt.selected === true, false);
-        setOption((opt) => opt === option, true);
-
-        setOptions(_options);
-        setAudioFile(option.file);
-    };
+        selectOption((opt) => opt.file === audioFile);
+    }, [audioFile]);
 
     return (
-        <AudioContext.Provider value={{ audioFile, options, makeSelection }}>
+        <AudioContext.Provider value={{ audioFile, options, setAudioFile }}>
             {props.children}
         </AudioContext.Provider>
     );
