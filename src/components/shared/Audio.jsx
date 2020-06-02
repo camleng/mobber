@@ -6,7 +6,7 @@ const Audio = () => {
     const { audioFile } = useAudio();
     const audioPath = `../../audio/${audioFile}`;
     let timeout;
-    const delaySeconds = 10;
+    const delaySeconds = 30;
 
     useEffect(() => {
         return () => {
