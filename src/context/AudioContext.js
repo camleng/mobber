@@ -30,8 +30,6 @@ const AudioProvider = (props) => {
     );
 };
 
-const useAudio = () => {
-    return useContext(AudioContext);
-};
+const useAudio = () => useContext(AudioContext);
 
 export { useAudio, AudioProvider };

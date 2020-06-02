@@ -21,14 +21,7 @@ const addMobber = (name, sessionId, broadcast) => {
 };
 
 const removeMobber = (mobber, sessionId, broadcast) => {
-    const _mobbers = mobbers[sessionId];
-    const mobberIndex = _mobbers.findIndex((m) => m.name === mobber.name);
-    if (mobberIndex === -1) {
-        console.log("Couldn't find the mobber");
-        return;
-    }
-
-    _mobbers.splice(mobberIndex, 1);
+    const _mobbers = mobbers[sessionId].filter((m) => m.name !== mobber.name);
     reassignAfterDeletion(_mobbers);
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
