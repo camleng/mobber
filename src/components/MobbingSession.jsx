@@ -122,11 +122,13 @@ const MobbingSession = () => {
         <h1>Activating</h1>
     ) : (
         <>
-            <FontAwesomeIcon
-                icon='stopwatch'
-                className='stopwatch'
-                onClick={() => setEditing(!editing)}
-            />
+            {isReset() && (
+                <FontAwesomeIcon
+                    icon='stopwatch'
+                    className='stopwatch'
+                    onClick={() => setEditing(!editing)}
+                />
+            )}
             {mobbers.length >= 2 && isReset() && (
                 <Randomize randomize={randomizeMobbers} />
             )}

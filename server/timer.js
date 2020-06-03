@@ -63,8 +63,8 @@ const stop = (sessionId, broadcast) => {
 };
 
 const reset = (sessionId, broadcast) => {
-    console.log(`Timer reset to ${DEFAULT_SECONDS} seconds`);
     const { initialSeconds } = timers[sessionId];
+    console.log(`Timer reset to ${initialSeconds} seconds`);
 
     timers[sessionId] = {
         initialSeconds: initialSeconds,
@@ -75,6 +75,8 @@ const reset = (sessionId, broadcast) => {
 };
 
 const set = (sessionId, initialSeconds, broadcast) => {
+    console.log(`Timer set to ${initialSeconds}`);
+
     timers[sessionId] = {
         ...timers[sessionId],
         initialSeconds,
