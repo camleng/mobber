@@ -47,7 +47,12 @@ const start = (sessionId, changeRoles, broadcast) => {
         timer(sessionId, changeRoles, broadcast);
     }, 1000);
 
-    timers[sessionId] = { inProgress: true, remainingSeconds, interval };
+    timers[sessionId] = {
+        ...timers[sessionId],
+        inProgress: true,
+        remainingSeconds,
+        interval,
+    };
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
@@ -59,12 +64,23 @@ const stop = (sessionId, broadcast) => {
 
 const reset = (sessionId, broadcast) => {
     console.log(`Timer reset to ${DEFAULT_SECONDS} seconds`);
+    const { initialSeconds } = timers[sessionId];
+
     timers[sessionId] = {
+        initialSeconds: initialSeconds,
         inProgress: false,
-        initialSeconds: DEFAULT_SECONDS,
-        remainingSeconds: DEFAULT_SECONDS,
+        remainingSeconds: initialSeconds,
     };
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
-module.exports = { init, broadcastTimerUpdate, timer, start, stop, reset };
+const set = (sessionId, initialSeconds, broadcast) => {
+    timers[sessionId] = {
+        ...timers[sessionId],
+        initialSeconds,
+        remainingSeconds: initialSeconds,
+    };
+    broadcastTimerUpdate(sessionId, broadcast);
+};
+
+module.exports = { init, broadcastTimerUpdate, timer, start, stop, reset, set };

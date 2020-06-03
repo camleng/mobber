@@ -23,6 +23,10 @@ const addListeners = (io) => {
             timer.stop(data.sessionId, broadcast);
         });
 
+        socket.on('TIMER:SET', (data) => {
+            timer.set(data.sessionId, data.initialSeconds, broadcast);
+        });
+
         socket.on('TIMER:RESET', (data) => {
             timer.reset(data.sessionId, broadcast);
         });

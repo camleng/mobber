@@ -1,10 +1,10 @@
-import React from "react";
-import "./RoundedRect.scss";
+import React from 'react';
+import './RoundedRect.scss';
 
-const RoundedRect = ({ title, className, onClick }) => {
+const RoundedRect = ({ title, className, onClick, children }) => {
     return (
         <div className={`rounded-rect ${className}`} onClick={onClick}>
-            {title}
+            {children || title}
         </div>
     );
 };

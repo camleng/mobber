@@ -14,6 +14,7 @@ import { useSession } from '../context/SessionContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
@@ -24,6 +25,7 @@ const MobbingSession = () => {
     const { socket, sessionId } = useSession();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
+    const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         checkIfActive();
@@ -99,32 +101,61 @@ const MobbingSession = () => {
         reassignMobbers(_mobbers);
     };
 
+    const incrementCountdown = () => {
+        const newCountdown = countdown + 60;
+        updateCountdown(newCountdown);
+    };
+
+    const decrementCountdown = () => {
+        const newCountdown = countdown - 60;
+        if (newCountdown <= 0) return;
+        updateCountdown(newCountdown);
+    };
+
+    const updateCountdown = (newCountdown) => {
+        setInitialSeconds(newCountdown);
+        setCountdown(newCountdown);
+        sendMessage('TIMER:SET', { initialSeconds: newCountdown });
+    };
+
     return activating ? (
         <h1>Activating</h1>
     ) : (
         <>
-            <AudioSelection />
-
+            <FontAwesomeIcon
+                icon='stopwatch'
+                className='stopwatch'
+                onClick={() => setEditing(!editing)}
+            />
             {mobbers.length >= 2 && isReset() && (
                 <Randomize randomize={randomizeMobbers} />
             )}
-
+            <AudioSelection />
             <Clipboard />
-
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
                 <div className='buttons'>
-                    {isStopped() && (
+                    {editing && (
+                        <RoundedRect className='start' onClick={incrementCountdown}>
+                            <FontAwesomeIcon icon='chevron-up' />
+                        </RoundedRect>
+                    )}
+                    {editing && (
+                        <RoundedRect className='next' onClick={decrementCountdown}>
+                            <FontAwesomeIcon icon='chevron-down' />
+                        </RoundedRect>
+                    )}
+                    {!editing && isStopped() && (
                         <RoundedRect title='Start' className='start' onClick={start} />
                     )}
-                    {inProgress && (
+                    {!editing && inProgress && (
                         <RoundedRect title='Stop' className='stop' onClick={stop} />
                     )}
-                    {!inProgress && hasElapsed() && (
+                    {!editing && !inProgress && hasElapsed() && (
                         <RoundedRect title='Reset' className='reset' onClick={reset} />
                     )}
-                    {isReset() && (
+                    {!editing && isReset() && (
                         <RoundedRect
                             title='Next'
                             className='next'
@@ -133,9 +164,7 @@ const MobbingSession = () => {
                     )}
                 </div>
             </div>
-
             <CurrentMobbers />
-
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
                 <Mobbers />
