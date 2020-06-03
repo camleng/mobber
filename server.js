@@ -4,6 +4,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const compression = require('compression');
 const session = require('./server/session');
 require('dotenv').config();
 
@@ -28,6 +29,8 @@ if (NODE_ENV === 'production') {
     app.use(cors(corsOptions));
 
     app.use(express.static(path.join(__dirname, 'build')));
+
+    app.use(compression());
 
     app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
