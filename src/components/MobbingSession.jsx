@@ -61,40 +61,33 @@ const MobbingSession = () => {
     };
 
     const start = () => {
-        if (hasEnoughMobbers(mobbers)) sendMessage('TIMER:START');
-    };
-
-    const stop = () => {
-        const event = 'TIMER:STOP';
+        if (!hasEnoughMobbers(mobbers)) return;
+        const event = 'TIMER:START';
         sendMessage(event);
     };
 
-    const reset = () => {
-        const event = 'TIMER:RESET';
-        sendMessage(event);
-    };
+    const stop = () => sendMessage('TIMER:STOP');
 
-    const connect = () => {
-        const event = 'SESSION:CONNECT';
-        sendMessage(event);
-    };
+    const reset = () => sendMessage('TIMER:RESET');
 
-    const randomizeMobbers = () => {
-        const event = 'MOBBERS:RANDOMIZE';
-        sendMessage(event);
-    };
+    const connect = () => sendMessage('SESSION:CONNECT');
 
-    const reassignMobbers = (mobbers) => {
-        const event = 'MOBBERS:REASSIGN';
-        sendMessage(event, { mobbers });
-    };
+    const randomizeMobbers = () => sendMessage('MOBBERS:RANDOMIZE');
+
+    const reassignMobbers = (mobbers) => sendMessage('MOBBERS:REASSIGN', { mobbers });
+
+    const isReset = () => !inProgress && !timeHasElapsed();
+
+    const isStopped = () => !inProgress && countdown > 0;
+
+    const timeHasElapsed = () => countdown !== initialSeconds;
 
     const onDragEnd = (result) => {
         const { destination, source } = result;
 
         if (!destination || destination.index === source.index) return;
 
-        const _mobbers = Array.from(mobbers);
+        const _mobbers = [...mobbers];
         const movedMobber = _mobbers.splice(source.index, 1)[0];
 
         _mobbers.splice(destination.index, 0, movedMobber);
@@ -108,22 +101,26 @@ const MobbingSession = () => {
         <>
             <AudioSelection />
 
-            {mobbers.length >= 2 && <Randomize randomize={randomizeMobbers} />}
+            {mobbers.length >= 2 && isReset() && (
+                <Randomize randomize={randomizeMobbers} />
+            )}
+
             <Clipboard />
+
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
                 <div className='buttons'>
-                    {!inProgress && countdown > 0 && (
+                    {isStopped() && (
                         <RoundedRect title='Start' className='start' onClick={start} />
                     )}
                     {inProgress && (
                         <RoundedRect title='Stop' className='stop' onClick={stop} />
                     )}
-                    {!inProgress && countdown !== initialSeconds && (
+                    {!inProgress && timeHasElapsed() && (
                         <RoundedRect title='Reset' className='reset' onClick={reset} />
                     )}
-                    {!inProgress && countdown === initialSeconds && (
+                    {isReset() && (
                         <RoundedRect
                             title='Next'
                             className='next'
