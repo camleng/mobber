@@ -7,6 +7,7 @@ import Randomize from './Randomize';
 import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
 import AudioSelection from './AudioSelection';
+import Menu from './Menu';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
@@ -122,18 +123,22 @@ const MobbingSession = () => {
         <h1>Activating</h1>
     ) : (
         <>
-            {isReset() && (
-                <FontAwesomeIcon
-                    icon='stopwatch'
-                    className='stopwatch'
-                    onClick={() => setEditing(!editing)}
-                />
-            )}
-            {mobbers.length >= 2 && isReset() && (
-                <Randomize randomize={randomizeMobbers} />
-            )}
-            <AudioSelection />
-            <Clipboard />
+            <Menu>
+                {mobbers.length >= 2 && isReset() && (
+                    <Randomize randomize={randomizeMobbers} />
+                )}
+                {isReset() && (
+                    <div>
+                        <FontAwesomeIcon
+                            icon='stopwatch'
+                            className='stopwatch'
+                            onClick={() => setEditing(!editing)}
+                        />
+                    </div>
+                )}
+                <AudioSelection />
+                <Clipboard />
+            </Menu>
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Popover from './shared/Popover';
-import './AudioSelection.scss';
 import { useAudio } from '../context/AudioContext';
 
 const AudioSelection = () => {
