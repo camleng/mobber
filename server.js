@@ -4,11 +4,13 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-const compression = require('compression');
 const session = require('./server/session');
+const compression = require('compression');
 require('dotenv').config();
 
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
+
+app.use(compression());
 
 app.get('/session/generate', (req, res) => {
     const sessionId = session.activateRandomSession();
@@ -29,8 +31,6 @@ if (NODE_ENV === 'production') {
     app.use(cors(corsOptions));
 
     app.use(express.static(path.join(__dirname, 'build')));
-
-    app.use(compression());
 
     app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
