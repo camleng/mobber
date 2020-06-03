@@ -76,13 +76,17 @@ const MobbingSession = () => {
 
     const reassignMobbers = (mobbers) => sendMessage('MOBBERS:REASSIGN', { mobbers });
 
-    const isReset = () => !inProgress && !timeHasElapsed();
+    const isReset = () => !inProgress && !hasElapsed();
 
     const isStopped = () => !inProgress && countdown > 0;
 
-    const timeHasElapsed = () => countdown !== initialSeconds;
+    const hasElapsed = () => countdown !== initialSeconds;
 
-    const onDragEnd = (result) => {
+    const hasEnded = () => countdown === 0;
+
+    const noop = () => {};
+
+    const placeMobberInDroppedPosition = (result) => {
         const { destination, source } = result;
 
         if (!destination || destination.index === source.index) return;
@@ -117,7 +121,7 @@ const MobbingSession = () => {
                     {inProgress && (
                         <RoundedRect title='Stop' className='stop' onClick={stop} />
                     )}
-                    {!inProgress && timeHasElapsed() && (
+                    {!inProgress && hasElapsed() && (
                         <RoundedRect title='Reset' className='reset' onClick={reset} />
                     )}
                     {isReset() && (
@@ -132,7 +136,8 @@ const MobbingSession = () => {
 
             <CurrentMobbers />
 
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext
+                onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
                 <Mobbers />
             </DragDropContext>
             {!inProgress && countdown <= 0 && <Audio />}
