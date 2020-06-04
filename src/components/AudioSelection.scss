@@ -1,10 +1,4 @@
-.audio-selection {
-    font-size: 1.2rem;
-    cursor: pointer;
-    position: absolute;
-    top: 1.3rem;
-    right: 5rem;
-}
+@import "../Colors.scss";
 
 .audio-selection-container {
     padding: 0;
@@ -24,11 +18,11 @@
         border-bottom-right-radius: 0.5rem;
     }
 
-    &.selected {
-        background-color: lightgreen;
+    &:hover {
+        background-color: $lightgreen;
     }
 
-    &:hover {
-        background-color: lightgreen;
+    &.selected {
+        background-color: $lightgreen;
     }
 }

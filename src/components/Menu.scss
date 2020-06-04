@@ -1,0 +1,83 @@
+@import "../Colors.scss";
+@import "../mixins.scss";
+
+.menu {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 3rem;
+    font-size: 1.4rem;
+    background-color: $darkgray;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+
+    @include tablet {
+        flex-direction: row;
+        height: 2rem;
+        width: unset;
+    }
+}
+
+.menu-caret {
+    position: relative;
+    background-color: $darkgray;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include tablet {
+        display: none;
+    }
+
+    &.show {
+        height: 2.2rem;
+
+        @include tablet {
+            transform: translateX(-100%);
+            width: 2.2rem;
+        }
+    }
+
+    .icon {
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+}
+
+.menu-options {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin: 0.5rem;
+    top: -13rem;
+    transition: all 0.5s ease;
+
+    @include tablet {
+        flex-direction: row;
+    }
+
+    &.show {
+        transform: translateY(13rem);
+    }
+
+    > div {
+        cursor: pointer;
+
+        &:not(:last-child) {
+            margin-top: 1.5rem;
+        }
+
+        @include tablet {
+            &:not(:first-child) {
+                margin-left: 1.5rem;
+            }
+            &:not(:last-child) {
+                margin-top: 0;
+            }
+        }
+    }
+}

@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Mobber from './Mobber';
 import RoundedRect from './shared/RoundedRect';
 import { useMobbers } from '../context/MobbersContext';
 import { Droppable } from 'react-beautiful-dnd';
+import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './Mobbers.scss';
-
-const determineScreenSizeCategory = () => {
-    return window.innerWidth >= 768 ? 'tablet' : 'phone';
-};
 
 const Mobbers = () => {
     const { mobbers, addMobber } = useMobbers();
@@ -23,9 +20,11 @@ const Mobbers = () => {
         if (e.key === 'Enter') addMobberToMob();
     };
 
-    window.addEventListener('resize', (e) => {
-        setScreenSize(determineScreenSizeCategory());
-    });
+    useEffect(() => {
+        addResizeCallback((category) => {
+            setScreenSize(category);
+        });
+    }, []);
 
     return (
         <div className='mobbers-container'>

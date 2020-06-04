@@ -1,3 +1,5 @@
+@import "../Colors.scss";
+
 .buttons {
     display: flex;
     justify-content: center;
@@ -12,27 +14,19 @@
         }
 
         &.start {
-            background-color: rgb(4, 160, 4);
+            background-color: $green;
         }
 
         &.stop {
-            background-color: rgb(206, 33, 33);
+            background-color: $red;
         }
 
         &.reset {
-            background-color: rgb(40, 40, 250);
+            background-color: $blue;
         }
 
         &.next {
-            background-color: rgb(212, 212, 0);
+            background-color: $yellow;
         }
     }
-}
-
-.stopwatch {
-    font-size: 1.4rem;
-    cursor: pointer;
-    position: absolute;
-    top: 1.4rem;
-    right: 8rem;
 }

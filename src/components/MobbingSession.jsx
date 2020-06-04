@@ -7,6 +7,7 @@ import Randomize from './Randomize';
 import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
 import AudioSelection from './AudioSelection';
+import Menu from './Menu';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
@@ -15,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
@@ -26,9 +28,15 @@ const MobbingSession = () => {
     const [activating, setActivating] = useState(true);
     const history = useHistory();
     const [editing, setEditing] = useState(false);
+    const category = determineScreenSizeCategory();
+    const [isTablet, setIsTablet] = useState(category === 'tablet');
 
     useEffect(() => {
         checkIfActive();
+
+        addResizeCallback((category) => {
+            setIsTablet(category === 'tablet');
+        });
     }, []);
 
     const checkIfActive = async () => {
@@ -122,18 +130,26 @@ const MobbingSession = () => {
         <h1>Activating</h1>
     ) : (
         <>
-            {isReset() && (
-                <FontAwesomeIcon
-                    icon='stopwatch'
-                    className='stopwatch'
-                    onClick={() => setEditing(!editing)}
-                />
-            )}
-            {mobbers.length >= 2 && isReset() && (
-                <Randomize randomize={randomizeMobbers} />
-            )}
-            <AudioSelection />
-            <Clipboard />
+            <Menu>
+                {mobbers.length >= 2 && isReset() && (
+                    <Randomize
+                        randomize={randomizeMobbers}
+                        position={isTablet ? 'bottom' : 'left'}
+                    />
+                )}
+                {isReset() && (
+                    <div>
+                        <FontAwesomeIcon
+                            icon='stopwatch'
+                            className='stopwatch'
+                            onClick={() => setEditing(!editing)}
+                        />
+                    </div>
+                )}
+                <AudioSelection position={isTablet ? 'bottom' : 'left'} />
+                <Clipboard position={isTablet ? 'bottom' : 'left'} />
+            </Menu>
+
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 

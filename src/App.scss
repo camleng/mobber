@@ -1,3 +1,5 @@
+@import "./Colors.scss";
+
 .App {
     display: flex;
     flex-direction: column;
@@ -5,8 +7,12 @@
     width: 100vw;
     align-items: center;
     justify-content: space-between;
-    background-color: rgb(46, 46, 46);
-    color: white;
+    background-color: $darkgray;
+    color: $white;
     padding: 1rem;
     box-sizing: border-box;
+}
+
+input {
+    color: $white;
 }
