@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './MobbingSession.scss';
 
 const MobbingSession = () => {
@@ -27,9 +28,15 @@ const MobbingSession = () => {
     const [activating, setActivating] = useState(true);
     const history = useHistory();
     const [editing, setEditing] = useState(false);
+    const category = determineScreenSizeCategory();
+    const [isTablet, setIsTablet] = useState(category === 'tablet');
 
     useEffect(() => {
         checkIfActive();
+
+        addResizeCallback((category) => {
+            setIsTablet(category === 'tablet');
+        });
     }, []);
 
     const checkIfActive = async () => {
@@ -125,7 +132,10 @@ const MobbingSession = () => {
         <>
             <Menu>
                 {mobbers.length >= 2 && isReset() && (
-                    <Randomize randomize={randomizeMobbers} />
+                    <Randomize
+                        randomize={randomizeMobbers}
+                        position={isTablet ? 'bottom' : 'left'}
+                    />
                 )}
                 {isReset() && (
                     <div>
@@ -136,9 +146,10 @@ const MobbingSession = () => {
                         />
                     </div>
                 )}
-                <AudioSelection />
-                <Clipboard />
+                <AudioSelection position={isTablet ? 'bottom' : 'left'} />
+                <Clipboard position={isTablet ? 'bottom' : 'left'} />
             </Menu>
+
             <div className='countdown-and-controls'>
                 <Countdown countdown={countdown} inProgress={inProgress} />
 

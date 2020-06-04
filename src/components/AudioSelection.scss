@@ -1,0 +1,28 @@
+@import "../Colors.scss";
+
+.audio-selection-container {
+    padding: 0;
+}
+
+.audio-option {
+    padding: 0.5rem;
+    cursor: pointer;
+
+    &:first-child {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    &:last-child {
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+
+    &:hover {
+        background-color: $lightgreen;
+    }
+
+    &.selected {
+        background-color: $lightgreen;
+    }
+}

@@ -2,8 +2,9 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Popover from './shared/Popover';
 import { useAudio } from '../context/AudioContext';
+import './AudioSelection.scss';
 
-const AudioSelection = () => {
+const AudioSelection = ({ position = 'bottom' }) => {
     const { options, setAudioFile } = useAudio();
 
     const jsx = (
@@ -23,7 +24,7 @@ const AudioSelection = () => {
         <Popover
             jsx={jsx}
             className='audio-selection'
-            position={['bottom', 'left']}
+            position={position}
             render={() => <FontAwesomeIcon icon='volume-up' />}
         />
     );
