@@ -34,8 +34,8 @@ const MobbersProvider = (props) => {
         sendMessage('MOBBERS:ADD', { name });
     };
 
-    const removeMobber = (mobber) => {
-        sendMessage('MOBBERS:REMOVE', { mobber });
+    const removeMobber = (name) => {
+        sendMessage('MOBBERS:REMOVE', { name });
     };
 
     const getDriver = (mobbers) => {

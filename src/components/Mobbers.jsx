@@ -7,12 +7,20 @@ import { determineScreenSizeCategory, addResizeCallback } from '../services/scre
 import './Mobbers.scss';
 
 const Mobbers = ({ name }) => {
-    const { mobbers, addMobber } = useMobbers();
+    const { mobbers, addMobber, removeMobber } = useMobbers();
     const [newMobberName, setNewMobberName] = useState('');
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     useEffect(() => {
+        addResizeCallback((category) => {
+            setScreenSize(category);
+        });
+
         addMobber(name);
+
+        window.addEventListener('beforeunload', () => {
+            removeMobber(name);
+        });
     }, []);
 
     const addMobberToMob = () => {
@@ -23,12 +31,6 @@ const Mobbers = ({ name }) => {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') addMobberToMob();
     };
-
-    useEffect(() => {
-        addResizeCallback((category) => {
-            setScreenSize(category);
-        });
-    }, []);
 
     return (
         <div className='mobbers-container'>

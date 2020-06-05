@@ -36,7 +36,7 @@ const addListeners = (io) => {
         });
 
         socket.on('MOBBERS:REMOVE', (data) => {
-            mobbers.removeMobber(data.mobber, data.sessionId, broadcast);
+            mobbers.removeMobber(data.name, data.sessionId, broadcast);
         });
 
         socket.on('MOBBERS:CHANGE', (data) => {

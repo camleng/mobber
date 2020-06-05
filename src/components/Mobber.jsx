@@ -31,7 +31,7 @@ const Mobber = ({ mobber, index }) => {
                     <FontAwesomeIcon
                         icon='times'
                         className='close'
-                        onClick={() => removeMobber(mobber)}
+                        onClick={() => removeMobber(mobber.name)}
                     />
                 </div>
             )}
