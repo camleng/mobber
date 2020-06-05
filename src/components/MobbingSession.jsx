@@ -19,6 +19,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './MobbingSession.scss';
+import useStorage from '../hooks/useStorage';
 
 const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
@@ -31,7 +32,7 @@ const MobbingSession = () => {
     const [editing, setEditing] = useState(false);
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
-    const [name, setName] = useState('');
+    const [name, setName] = useStorage('mobber:name', '');
 
     useEffect(() => {
         checkIfActive();

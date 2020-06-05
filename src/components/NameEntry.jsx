@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import RoundedRect from './shared/RoundedRect';
 import './NameEntry.scss';
+import useStorage from '../hooks/useStorage';
 
 const NameEntry = ({ setName }) => {
-    const [enteredName, setEnteredName] = useState('');
+    const [enteredName, setEnteredName] = useStorage('mobber:name', '');
 
     const submitName = () => {
-        setName(enteredName.trim());
+        setName(enteredName);
     };
 
     const handleKeyPress = (e) => {
@@ -18,7 +19,7 @@ const NameEntry = ({ setName }) => {
             <label>What should we call you?</label>
             <input
                 value={enteredName}
-                onChange={(e) => setEnteredName(e.target.value)}
+                onChange={(e) => setEnteredName(e.target.value.trim())}
                 onKeyPress={handleKeyPress}></input>
             <RoundedRect onClick={submitName} title='Enter' className='enter' />
         </div>

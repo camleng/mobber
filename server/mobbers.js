@@ -12,7 +12,13 @@ const broadcastMobbersUpdate = (sessionId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
 };
 
+const mobberAlreadyExits = (name, sessionId) => {
+    return mobbers[sessionId].map((m) => m.name).includes(name);
+};
+
 const addMobber = (name, sessionId, broadcast) => {
+    if (mobberAlreadyExits(name, sessionId)) return;
+
     const role = determineRole(sessionId);
 
     mobbers[sessionId].push({ name, role });

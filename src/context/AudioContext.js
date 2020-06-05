@@ -10,7 +10,10 @@ const AudioProvider = (props) => {
         { name: 'No sound', file: '', selected: false },
     ];
     const [options, setOptions] = useState(initialOptions);
-    const [audioFile, setAudioFile] = useStorage('audioFile', initialOptions[0].file);
+    const [audioFile, setAudioFile] = useStorage(
+        'mobber:audioFile',
+        initialOptions[0].file
+    );
 
     const selectOption = (selectionPredicate) => {
         let _options = [...options].map((opt) => ({ ...opt, selected: false }));
