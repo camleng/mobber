@@ -9,7 +9,6 @@ import Audio from './shared/Audio';
 import AudioSelection from './AudioSelection';
 import Menu from './Menu';
 import NameEntry from './NameEntry';
-import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
@@ -74,7 +73,6 @@ const MobbingSession = () => {
     };
 
     const start = () => {
-        if (!hasEnoughMobbers(mobbers)) return;
         const event = 'TIMER:START';
         sendMessage(event);
     };

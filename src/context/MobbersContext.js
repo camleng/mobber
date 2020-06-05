@@ -1,7 +1,6 @@
 import React, { useState, useContext, createContext } from 'react';
 import { toast } from 'react-toastify';
 import { useSession } from './SessionContext';
-import { hasEnoughMobbers } from '../services/mobberCountChecker';
 
 const MobbersContext = createContext();
 
@@ -18,7 +17,7 @@ const MobbersProvider = (props) => {
     });
 
     const changeRoles = () => {
-        if (hasEnoughMobbers(mobbers)) sendMessage('MOBBERS:CHANGE');
+        sendMessage('MOBBERS:CHANGE');
     };
 
     const addMobber = (name) => {

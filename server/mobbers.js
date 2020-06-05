@@ -27,6 +27,7 @@ const addMobber = (name, sessionId, broadcast) => {
 };
 
 const removeMobber = (name, sessionId, broadcast) => {
+    if (mobbers[sessionId] === null) return;
     const _mobbers = mobbers[sessionId].filter((m) => m.name !== name);
     reassignAfterDeletion(_mobbers);
     mobbers[sessionId] = _mobbers;
@@ -38,9 +39,11 @@ const changeRoles = (sessionId, broadcast) => {
 
     const [newDriverIndex, newNavigatorIndex] = incrementIndices(_mobbers);
 
-    clearRoles(_mobbers);
-    _mobbers[newDriverIndex].role = 'driver';
-    _mobbers[newNavigatorIndex].role = 'navigator';
+    if (_mobbers.length > 1) {
+        clearRoles(_mobbers);
+        _mobbers[newDriverIndex].role = 'driver';
+        _mobbers[newNavigatorIndex].role = 'navigator';
+    }
 
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);
