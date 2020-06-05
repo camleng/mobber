@@ -21,20 +21,13 @@ const Menu = ({ children }) => {
         <div className='menu'>
             {
                 <div className={`menu-caret`}>
-                    {!shown && (
+                    {
                         <FontAwesomeIcon
                             icon='chevron-down'
                             onClick={toggle}
-                            className='icon'
+                            className={`icon ${shown ? 'show' : ''}`}
                         />
-                    )}
-                    {shown && (
-                        <FontAwesomeIcon
-                            icon='chevron-up'
-                            onClick={toggle}
-                            className='icon'
-                        />
-                    )}
+                    }
                 </div>
             }
             <div className={`menu-options ${shown || isTablet ? 'show' : ''}`}>
