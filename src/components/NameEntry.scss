@@ -1,0 +1,18 @@
+@import "../colors.scss";
+
+.name-entry {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        margin-bottom: 1rem;
+    }
+
+    input {
+        margin-bottom: 1.75rem;
+    }
+
+    .enter {
+        background-color: $burntorange;
+    }
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import './RoundedRect.scss';
 
-const RoundedRect = ({ title, className, onClick, children }) => {
+const RoundedRect = ({ title, className, onClick, children, onKeyUp }) => {
     return (
         <div className={`rounded-rect ${className}`} onClick={onClick}>
             {children || title}

@@ -6,10 +6,14 @@ import { Droppable } from 'react-beautiful-dnd';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './Mobbers.scss';
 
-const Mobbers = () => {
+const Mobbers = ({ name }) => {
     const { mobbers, addMobber } = useMobbers();
     const [newMobberName, setNewMobberName] = useState('');
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
+
+    useEffect(() => {
+        addMobber(name);
+    }, []);
 
     const addMobberToMob = () => {
         addMobber(newMobberName);
