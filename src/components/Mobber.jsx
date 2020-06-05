@@ -28,11 +28,7 @@ const Mobber = ({ mobber, index }) => {
                     )}
                     {!isDriver() && !isNavigator() && <div className='role'></div>}
                     <div className='name'>{mobber.name}</div>
-                    <FontAwesomeIcon
-                        icon='times'
-                        className='close'
-                        onClick={() => removeMobber(mobber.name)}
-                    />
+                    <div className='empty'></div>
                 </div>
             )}
         </Draggable>
