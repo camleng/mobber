@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import Mobber from './Mobber';
-import RoundedRect from './shared/RoundedRect';
 import { useMobbers } from '../context/MobbersContext';
 import { Droppable } from 'react-beautiful-dnd';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './Mobbers.scss';
 
-const Mobbers = () => {
-    const { mobbers, addMobber } = useMobbers();
-    const [newMobberName, setNewMobberName] = useState('');
+const Mobbers = ({ name }) => {
+    const { mobbers, addMobber, removeMobber } = useMobbers();
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
-
-    const addMobberToMob = () => {
-        addMobber(newMobberName);
-        setNewMobberName('');
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') addMobberToMob();
-    };
 
     useEffect(() => {
         addResizeCallback((category) => {
             setScreenSize(category);
+        });
+
+        addMobber(name);
+
+        window.addEventListener('beforeunload', () => {
+            removeMobber(name);
         });
     }, []);
 
@@ -43,14 +38,6 @@ const Mobbers = () => {
                     </div>
                 )}
             </Droppable>
-
-            <div className='add-mobber'>
-                <input
-                    onChange={(e) => setNewMobberName(e.target.value)}
-                    value={newMobberName}
-                    onKeyUp={handleKeyPress}></input>
-                <RoundedRect title='Add' className='add' onClick={addMobberToMob} />
-            </div>
         </div>
     );
 };

@@ -24,7 +24,7 @@ const MobbersProvider = (props) => {
     const addMobber = (name) => {
         if (name.trim() === '') return;
 
-        if (mobbers.find((m) => m.name === name)) {
+        if (mobbers.map((m) => m.name).includes(name)) {
             toast.error('This is getting out of hand -- now there are two of them!', {
                 position: toast.POSITION.TOP_RIGHT,
             });
@@ -34,8 +34,8 @@ const MobbersProvider = (props) => {
         sendMessage('MOBBERS:ADD', { name });
     };
 
-    const removeMobber = (mobber) => {
-        sendMessage('MOBBERS:REMOVE', { mobber });
+    const removeMobber = (name) => {
+        sendMessage('MOBBERS:REMOVE', { name });
     };
 
     const getDriver = (mobbers) => {

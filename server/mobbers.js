@@ -12,7 +12,13 @@ const broadcastMobbersUpdate = (sessionId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
 };
 
+const mobberAlreadyExits = (name, sessionId) => {
+    return mobbers[sessionId].map((m) => m.name).includes(name);
+};
+
 const addMobber = (name, sessionId, broadcast) => {
+    if (mobberAlreadyExits(name, sessionId)) return;
+
     const role = determineRole(sessionId);
 
     mobbers[sessionId].push({ name, role });
@@ -20,8 +26,8 @@ const addMobber = (name, sessionId, broadcast) => {
     broadcastMobbersUpdate(sessionId, broadcast);
 };
 
-const removeMobber = (mobber, sessionId, broadcast) => {
-    const _mobbers = mobbers[sessionId].filter((m) => m.name !== mobber.name);
+const removeMobber = (name, sessionId, broadcast) => {
+    const _mobbers = mobbers[sessionId].filter((m) => m.name !== name);
     reassignAfterDeletion(_mobbers);
     mobbers[sessionId] = _mobbers;
     broadcastMobbersUpdate(sessionId, broadcast);

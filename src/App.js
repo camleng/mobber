@@ -30,6 +30,7 @@ function App() {
                         <Redirect to='/' />
                     </Route>
                 </Switch>
+                <div></div>
             </div>
         </Router>
     );

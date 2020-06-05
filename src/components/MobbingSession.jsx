@@ -8,6 +8,7 @@ import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
 import AudioSelection from './AudioSelection';
 import Menu from './Menu';
+import NameEntry from './NameEntry';
 import { hasEnoughMobbers } from '../services/mobberCountChecker';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
@@ -18,6 +19,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './MobbingSession.scss';
+import useStorage from '../hooks/useStorage';
 
 const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
@@ -30,6 +32,7 @@ const MobbingSession = () => {
     const [editing, setEditing] = useState(false);
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
+    const [name, setName] = useStorage('mobber:name', '');
 
     useEffect(() => {
         checkIfActive();
@@ -126,8 +129,16 @@ const MobbingSession = () => {
         sendMessage('TIMER:SET', { initialSeconds: newCountdown });
     };
 
+    const hasName = () => {
+        return name.trim() !== '';
+    };
+
     return activating ? (
         <h1>Activating</h1>
+    ) : !hasName() ? (
+        <div>
+            <NameEntry setName={setName} name={name} />
+        </div>
     ) : (
         <>
             <Menu>
@@ -185,7 +196,7 @@ const MobbingSession = () => {
             <CurrentMobbers />
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
-                <Mobbers />
+                <Mobbers name={name} />
             </DragDropContext>
             {!inProgress && countdown <= 0 && <Audio />}
         </>

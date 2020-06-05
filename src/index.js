@@ -11,6 +11,7 @@ import {
     faDice,
     faVolumeUp,
     faStopwatch,
+    faChevronUp,
     faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -24,6 +25,7 @@ library.add(
     faDice,
     faVolumeUp,
     faStopwatch,
+    faChevronUp,
     faChevronDown
 );
 toast.configure();
