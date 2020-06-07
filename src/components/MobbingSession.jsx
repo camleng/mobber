@@ -24,7 +24,7 @@ const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
     const [countdown, setCountdown] = useState();
     const [inProgress, setInProgress] = useState();
-    const { mobbers, driver, changeRoles } = useMobbers();
+    const { mobbers, driver, changeRoles, addMobber, removeMobber } = useMobbers();
     const { socket, sessionId } = useSession();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
@@ -32,6 +32,7 @@ const MobbingSession = () => {
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [name, setName] = useStorage('mobber:name', '');
+    const [hasDuplicateName, setHasDuplicateName] = useState(false);
 
     useEffect(() => {
         checkIfActive();
@@ -41,8 +42,25 @@ const MobbingSession = () => {
         });
     }, []);
 
+    useEffect(() => {
+        fetch(`/api/session/${sessionId}/name-exists?name=${name}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists) {
+                    toast.error('Looks like someone with your name is already in this session. Please choose a different name.');
+                    setHasDuplicateName(true);
+                } else {
+                    setHasDuplicateName(false);
+                    addMobber(name);
+                    window.addEventListener('beforeunload', () => {
+                        removeMobber(name);
+                    });
+                }
+            });
+    }, [name])
+
     const checkIfActive = async () => {
-        const res = await fetch(`/session/${sessionId}/is-active`);
+        const res = await fetch(`/api/session/${sessionId}/is-active`);
         const data = await res.json();
 
         if (data.isActive) {
@@ -128,7 +146,7 @@ const MobbingSession = () => {
     };
 
     const hasName = () => {
-        return name.trim() !== '';
+        return name.trim() !== '' && !hasDuplicateName;
     };
 
     return activating ? (
@@ -194,7 +212,7 @@ const MobbingSession = () => {
             <CurrentMobbers />
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
-                <Mobbers name={name} />
+                <Mobbers name={name} sessionId={sessionId} />
             </DragDropContext>
             {!inProgress && countdown <= 0 && <Audio />}
         </>

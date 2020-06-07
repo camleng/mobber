@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const session = require('./server/session');
+const mobbers = require('./server/mobbers');
 const compression = require('compression');
 require('dotenv').config();
 
@@ -12,15 +13,24 @@ const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
 app.use(compression());
 
-app.get('/session/generate', (req, res) => {
+app.get('/api/session/generate', (req, res) => {
     const sessionId = session.activateRandomSession();
     res.send({ sessionId });
 });
 
-app.get('/session/:sessionId/is-active', (req, res) => {
+app.get('/api/session/:sessionId/is-active', (req, res) => {
     const isActive = session.isSessionActive(req.params.sessionId);
     res.send({ isActive });
 });
+
+app.get('/api/session/:sessionId/name-exists', (req, res) => {
+    console.log(req.query.name);
+    console.log(req.params.sessionId);
+
+    const exists = mobbers.mobberAlreadyExists(req.query.name, req.params.sessionId);
+    console.log(exists);
+    res.send({ exists });
+})
 
 if (NODE_ENV === 'production') {
     var corsOptions = {

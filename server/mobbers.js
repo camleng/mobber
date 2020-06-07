@@ -12,12 +12,12 @@ const broadcastMobbersUpdate = (sessionId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
 };
 
-const mobberAlreadyExits = (name, sessionId) => {
+const mobberAlreadyExists = (name, sessionId) => {
     return mobbers[sessionId].map((m) => m.name).includes(name);
 };
 
 const addMobber = (name, sessionId, broadcast) => {
-    if (mobberAlreadyExits(name, sessionId)) return;
+    if (mobberAlreadyExists(name, sessionId)) return false;
 
     const role = determineRole(sessionId);
 
@@ -162,4 +162,5 @@ module.exports = {
     reassign,
     randomize,
     broadcastMobbersUpdate,
+    mobberAlreadyExists
 };

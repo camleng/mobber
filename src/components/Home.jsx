@@ -8,7 +8,7 @@ const Home = () => {
     const history = useHistory();
 
     const activateRandomSession = () => {
-        fetch('/session/generate').then(async (res) => {
+        fetch('/api/session/generate').then(async (res) => {
             const { sessionId } = await res.json();
             history.push(`/session/${sessionId}`);
         });

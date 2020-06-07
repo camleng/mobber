@@ -3,21 +3,17 @@ import Mobber from './Mobber';
 import { useMobbers } from '../context/MobbersContext';
 import { Droppable } from 'react-beautiful-dnd';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
+import { toast } from 'react-toastify';
+
 import './Mobbers.scss';
 
-const Mobbers = ({ name }) => {
+const Mobbers = ({ name, sessionId }) => {
     const { mobbers, addMobber, removeMobber } = useMobbers();
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     useEffect(() => {
         addResizeCallback((category) => {
             setScreenSize(category);
-        });
-
-        addMobber(name);
-
-        window.addEventListener('beforeunload', () => {
-            removeMobber(name);
         });
     }, []);
 
