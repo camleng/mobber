@@ -1,25 +1,26 @@
 @import "../colors.scss";
+@import "../mixins.scss";
 
-.connect {
-    background-color: $blue;
-    width: 100%;
+.container {
     display: flex;
-    justify-content: center;
-    font-size: 1.2rem;
-}
+    flex-direction: column;
 
-.create {
-    background-color: $green;
-    font-size: 1.2rem;
-}
+    @include desktop {
+        flex-direction: row;
+        align-items: center;
 
-label {
-    font-size: 1.6rem;
+        > div:not(:last-child) {
+            margin-right: 5rem;
+        }
+    }
 }
 
 .connect-to-session {
+    display: flex;
+    flex-direction: column;
+
     div {
-        margin-top: 0.5rem;
+        margin-top: 1rem;
         display: flex;
 
         input {
@@ -29,23 +30,88 @@ label {
             margin-right: 2rem;
             padding-left: 0.5rem;
             font-size: 1.2rem;
-            width: 4.6rem;
+            width: 8.6rem;
 
             &:focus {
                 outline: none;
             }
         }
     }
-}
 
-.or {
-    font-size: 1.4rem;
-    margin: 2rem 0;
-    text-align: center;
+    .connect {
+        background-color: $blue;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
 }
 
 .create-session {
+    display: flex;
+    flex-direction: column;
+
     div {
         margin-top: 1rem;
+    }
+}
+
+.create {
+    background-color: $green;
+    font-size: 1.2rem;
+}
+
+label {
+    font-size: 2rem;
+    align-self: center;
+
+    @include desktop {
+        font-size: 2.4rem;
+    }
+}
+
+.separators {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 5rem 0;
+    position: relative;
+    top: 0.25rem;
+
+    > div:not(:last-child) {
+        margin-right: 2rem;
+
+        @include desktop {
+            margin-right: 0;
+        }
+    }
+
+    @include desktop {
+        flex-direction: column;
+    }
+
+    .sep {
+        border: 1px solid $white;
+        width: 100%;
+        height: 0;
+
+        @include desktop {
+            height: 6rem;
+            width: 0;
+        }
+    }
+
+    .or {
+        position: relative;
+        top: -0.25rem;
+        font-size: 1.4rem;
+        text-align: center;
+        line-height: unset;
+
+        @include desktop {
+            margin: 2rem 0;
+            top: 0;
+        }
     }
 }

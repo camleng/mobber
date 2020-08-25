@@ -16,7 +16,7 @@ const Home = () => {
 
     return (
         <>
-            <div>
+            <div className='container'>
                 <div className='connect-to-session'>
                     <label>Connect to an existing session</label>
                     <div>
@@ -30,7 +30,11 @@ const Home = () => {
                         />
                     </div>
                 </div>
-                <p className='or'>or</p>
+                <div className='separators'>
+                    <div className='sep'></div>
+                    <div className='or'>or</div>
+                    <div className='sep'></div>
+                </div>
                 <div className='create-session'>
                     <label>Create a new session</label>
                     <div>
