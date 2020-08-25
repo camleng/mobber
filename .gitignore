@@ -26,3 +26,4 @@ yarn-error.log*
 *.sqlite3
 certs
 .env
+.well-known

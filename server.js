@@ -10,6 +10,11 @@ require('dotenv').config();
 
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
+app.use(
+   '/.well-known/acme-challenge', 
+   express.static(path.join(__dirname, '.well-known', 'acme-challenge'))
+);
+
 app.use(compression());
 
 app.get('/session/generate', (req, res) => {
