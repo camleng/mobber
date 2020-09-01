@@ -26,7 +26,18 @@ const MobbingSession = () => {
     const [countdown, setCountdown] = useState();
     const [inProgress, setInProgress] = useState();
     const { mobbers, driver, changeRoles } = useMobbers();
-    const { socket, sessionId } = useSession();
+    const {
+        socket,
+        sessionId,
+        sendMessage,
+        start,
+        stop,
+        reset,
+        connect,
+        randomizeMobbers,
+        reassignMobbers,
+        changeName,
+    } = useSession();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
     const [editing, setEditing] = useState(false);
@@ -68,17 +79,6 @@ const MobbingSession = () => {
         setInitialSeconds(update.initialSeconds);
     });
 
-    const sendMessage = (event, payload) => {
-        payload = payload || {};
-        payload.sessionId = sessionId;
-        socket.emit(event, payload);
-    };
-
-    const start = () => {
-        const event = strings.commands.timer.start;
-        sendMessage(event);
-    };
-
     const placeMobberInDroppedPosition = (result) => {
         const { destination, source } = result;
 
@@ -110,7 +110,7 @@ const MobbingSession = () => {
     };
 
     const hasName = () => {
-        return name !== undefined && name.trim() !== '' && !isEditingName;
+        return name.trim() !== '' && !isEditingName;
     };
 
     const submitNameChange = (newName) => {
@@ -120,20 +120,6 @@ const MobbingSession = () => {
         }
         setIsEditingName(false);
     };
-
-    const stop = () => sendMessage(strings.commands.timer.stop);
-
-    const reset = () => sendMessage(strings.commands.timer.reset);
-
-    const connect = () => sendMessage(strings.commands.session.connect);
-
-    const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
-
-    const reassignMobbers = (mobbers) =>
-        sendMessage(strings.commands.mobbers.reassign, { mobbers });
-
-    const changeName = (oldName, newName) =>
-        sendMessage(strings.commands.mobbers.changeName, { oldName, newName });
 
     const isReset = () => !inProgress && !hasElapsed();
 
