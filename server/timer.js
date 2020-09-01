@@ -11,15 +11,22 @@ const init = (sessionId) => {
             inProgress: false,
             initialSeconds: DEFAULT_SECONDS,
             remainingSeconds: DEFAULT_SECONDS,
+            isEditing: false,
         };
     }
 };
 
 const broadcastTimerUpdate = (sessionId, broadcast) => {
-    const { inProgress, remainingSeconds, initialSeconds } = timers[sessionId];
+    const {
+        inProgress,
+        remainingSeconds,
+        initialSeconds,
+        isEditing,
+        isEditingUsername,
+    } = timers[sessionId];
     broadcast(
         'TIMER:UPDATE',
-        { inProgress, remainingSeconds, initialSeconds },
+        { inProgress, remainingSeconds, initialSeconds, isEditing, isEditingUsername },
         sessionId
     );
 };
@@ -52,6 +59,8 @@ const start = (sessionId, changeRoles, broadcast) => {
         inProgress: true,
         remainingSeconds,
         interval,
+        isEditing: false,
+        isEditingUsername: '',
     };
     broadcastTimerUpdate(sessionId, broadcast);
 };
@@ -70,7 +79,20 @@ const reset = (sessionId, broadcast) => {
         initialSeconds: initialSeconds,
         inProgress: false,
         remainingSeconds: initialSeconds,
+        isEditing: false,
+        isEditingUsername: '',
     };
+    broadcastTimerUpdate(sessionId, broadcast);
+};
+
+const startModify = (sessionId, username, broadcast) => {
+    timers[sessionId].isEditing = true;
+    timers[sessionId].isEditingUsername = username;
+    broadcastTimerUpdate(sessionId, broadcast);
+};
+
+const stopModify = (sessionId, broadcast) => {
+    timers[sessionId].isEditing = false;
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
@@ -85,4 +107,14 @@ const set = (sessionId, initialSeconds, broadcast) => {
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
-module.exports = { init, broadcastTimerUpdate, timer, start, stop, reset, set };
+module.exports = {
+    init,
+    broadcastTimerUpdate,
+    timer,
+    start,
+    stop,
+    reset,
+    startModify,
+    stopModify,
+    set,
+};

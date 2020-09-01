@@ -9,6 +9,7 @@ import Audio from './shared/Audio';
 import AudioSelection from './AudioSelection';
 import Menu from './Menu';
 import NameEntry from './NameEntry';
+import ChangeTimer from './ChangeTimer';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useSession } from '../context/SessionContext';
@@ -33,6 +34,8 @@ const MobbingSession = () => {
         start,
         stop,
         reset,
+        startModifyingTime,
+        stopModifyingTime,
         connect,
         randomizeMobbers,
         reassignMobbers,
@@ -41,6 +44,8 @@ const MobbingSession = () => {
     const [activating, setActivating] = useState(true);
     const history = useHistory();
     const [editing, setEditing] = useState(false);
+    const [userIsEditingTimer, setUserIsEditingTimer] = useState(false);
+    const [usernameEditingTimer, setUsernameEditingTimer] = useState('');
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
@@ -77,6 +82,8 @@ const MobbingSession = () => {
         setInProgress(update.inProgress);
         setCountdown(update.remainingSeconds);
         setInitialSeconds(update.initialSeconds);
+        setUserIsEditingTimer(update.isEditing);
+        setUsernameEditingTimer(update.isEditingUsername);
     });
 
     const placeMobberInDroppedPosition = (result) => {
@@ -121,6 +128,21 @@ const MobbingSession = () => {
         setIsEditingName(false);
     };
 
+    const toggleEditing = () => {
+        if (editing) stopModifyingTime();
+        else startModifyingTime(name);
+        setEditing(!editing);
+    };
+
+    const startTimer = () => {
+        if (userIsEditingTimer) {
+            toast.error(`Timer is being modified by ${usernameEditingTimer}`);
+            return;
+        }
+
+        start();
+    };
+
     const isReset = () => !inProgress && !hasElapsed();
 
     const isStopped = () => !inProgress && countdown > 0;
@@ -147,13 +169,10 @@ const MobbingSession = () => {
                     />
                 )}
                 {isReset() && (
-                    <div>
-                        <FontAwesomeIcon
-                            icon='stopwatch'
-                            className='stopwatch'
-                            onClick={() => setEditing(!editing)}
-                        />
-                    </div>
+                    <ChangeTimer
+                        position={isTablet ? 'bottom' : 'left'}
+                        toggleEditing={toggleEditing}
+                    />
                 )}
                 <AudioSelection position={isTablet ? 'bottom' : 'left'} />
                 <Clipboard position={isTablet ? 'bottom' : 'left'} />
@@ -174,7 +193,11 @@ const MobbingSession = () => {
                         </RoundedRect>
                     )}
                     {!editing && isStopped() && (
-                        <RoundedRect title='Start' className='start' onClick={start} />
+                        <RoundedRect
+                            title='Start'
+                            className='start'
+                            onClick={startTimer}
+                        />
                     )}
                     {!editing && inProgress && (
                         <RoundedRect title='Stop' className='stop' onClick={stop} />

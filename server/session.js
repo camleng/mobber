@@ -31,6 +31,14 @@ const addListeners = (io) => {
             timer.reset(data.sessionId, broadcast);
         });
 
+        socket.on('TIMER:STARTMODIFY', (data) => {
+            timer.startModify(data.sessionId, data.username, broadcast);
+        });
+
+        socket.on('TIMER:STOPMODIFY', (data) => {
+            timer.stopModify(data.sessionId, broadcast);
+        });
+
         socket.on('MOBBERS:ADD', (data) => {
             mobbers.addMobber(data.name, data.sessionId, broadcast);
         });

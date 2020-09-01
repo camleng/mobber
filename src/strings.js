@@ -18,6 +18,8 @@ export const strings = {
             reset: 'TIMER:RESET',
             set: 'TIMER:SET',
             stop: 'TIMER:STOP',
+            startModify: 'TIMER:STARTMODIFY',
+            stopModify: 'TIMER:STOPMODIFY',
         },
         session: {
             connect: 'SESSION:CONNECT',

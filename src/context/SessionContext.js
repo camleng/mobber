@@ -31,6 +31,11 @@ const SessionProvider = (props) => {
 
     const reset = () => sendMessage(strings.commands.timer.reset);
 
+    const startModifyingTime = (username) =>
+        sendMessage(strings.commands.timer.startModify, { username });
+
+    const stopModifyingTime = () => sendMessage(strings.commands.timer.stopModify);
+
     const connect = () => sendMessage(strings.commands.session.connect);
 
     const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
@@ -50,6 +55,8 @@ const SessionProvider = (props) => {
                 start,
                 stop,
                 reset,
+                startModifyingTime,
+                stopModifyingTime,
                 connect,
                 randomizeMobbers,
                 reassignMobbers,
