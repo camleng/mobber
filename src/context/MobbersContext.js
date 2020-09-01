@@ -5,7 +5,7 @@ import { useSession } from './SessionContext';
 const MobbersContext = createContext();
 
 const MobbersProvider = (props) => {
-    const [mobbers, setMobbers] = useState([]);
+    const [mobbers, setMobbers] = useState([{ name: 'Taylor' }]);
     const { socket, sendMessage } = useSession();
     const [driver, setDriver] = useState();
     const [navigator, setNavigator] = useState();
@@ -22,13 +22,7 @@ const MobbersProvider = (props) => {
 
     const addMobber = (name) => {
         if (name.trim() === '') return;
-
-        if (mobbers.map((m) => m.name).includes(name)) {
-            toast.error('This is getting out of hand -- now there are two of them!', {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-            return;
-        }
+        if (mobbers.map((m) => m.name).includes(name)) return;
 
         sendMessage('MOBBERS:ADD', { name });
     };

@@ -32,6 +32,7 @@ const MobbingSession = () => {
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [name, setName] = useStorage('mobber:name', '');
+    const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
         checkIfActive();
@@ -77,26 +78,6 @@ const MobbingSession = () => {
         sendMessage(event);
     };
 
-    const stop = () => sendMessage('TIMER:STOP');
-
-    const reset = () => sendMessage('TIMER:RESET');
-
-    const connect = () => sendMessage('SESSION:CONNECT');
-
-    const randomizeMobbers = () => sendMessage('MOBBERS:RANDOMIZE');
-
-    const reassignMobbers = (mobbers) => sendMessage('MOBBERS:REASSIGN', { mobbers });
-
-    const isReset = () => !inProgress && !hasElapsed();
-
-    const isStopped = () => !inProgress && countdown > 0;
-
-    const hasElapsed = () => countdown !== initialSeconds;
-
-    const hasEnded = () => countdown === 0;
-
-    const noop = () => {};
-
     const placeMobberInDroppedPosition = (result) => {
         const { destination, source } = result;
 
@@ -128,14 +109,46 @@ const MobbingSession = () => {
     };
 
     const hasName = () => {
-        return name.trim() !== '';
+        return name.trim() !== '' && !isEditingName;
     };
+
+    const submitNameChange = (newName) => {
+        if (name !== newName) {
+            changeName(name, newName);
+            setName(newName);
+            console.log('it equals');
+        }
+        setIsEditingName(false);
+    };
+
+    const stop = () => sendMessage('TIMER:STOP');
+
+    const reset = () => sendMessage('TIMER:RESET');
+
+    const connect = () => sendMessage('SESSION:CONNECT');
+
+    const randomizeMobbers = () => sendMessage('MOBBERS:RANDOMIZE');
+
+    const reassignMobbers = (mobbers) => sendMessage('MOBBERS:REASSIGN', { mobbers });
+
+    const changeName = (oldName, newName) =>
+        sendMessage('MOBBERS:CHANGENAME', { oldName, newName });
+
+    const isReset = () => !inProgress && !hasElapsed();
+
+    const isStopped = () => !inProgress && countdown > 0;
+
+    const hasElapsed = () => countdown !== initialSeconds;
+
+    const hasEnded = () => countdown === 0;
+
+    const noop = () => {};
 
     return activating ? (
         <h1>Activating</h1>
     ) : !hasName() ? (
         <div>
-            <NameEntry setName={setName} name={name} />
+            <NameEntry submitNameChange={submitNameChange} name={name} />
         </div>
     ) : (
         <>
@@ -194,7 +207,7 @@ const MobbingSession = () => {
             <CurrentMobbers />
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
-                <Mobbers name={name} />
+                <Mobbers name={name} setIsEditingName={setIsEditingName} />
             </DragDropContext>
             {!inProgress && countdown <= 0 && <Audio />}
         </>

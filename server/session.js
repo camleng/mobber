@@ -43,6 +43,10 @@ const addListeners = (io) => {
             mobbers.changeRoles(data.sessionId, broadcast);
         });
 
+        socket.on('MOBBERS:CHANGENAME', (data) => {
+            mobbers.changeName(data.sessionId, data.oldName, data.newName, broadcast);
+        });
+
         socket.on('MOBBERS:REASSIGN', (data) => {
             mobbers.reassign(data.sessionId, data.mobbers, broadcast);
         });

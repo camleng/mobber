@@ -5,7 +5,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './Mobbers.scss';
 
-const Mobbers = ({ name }) => {
+const Mobbers = ({ name, setIsEditingName }) => {
     const { mobbers, addMobber, removeMobber } = useMobbers();
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
@@ -32,7 +32,12 @@ const Mobbers = ({ name }) => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}>
                         {mobbers.map((mobber, index) => (
-                            <Mobber mobber={mobber} key={mobber.name} index={index} />
+                            <Mobber
+                                mobber={mobber}
+                                key={mobber.name}
+                                index={index}
+                                setIsEditingName={setIsEditingName}
+                            />
                         ))}
                         {provided.placeholder}
                     </div>

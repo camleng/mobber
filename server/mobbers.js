@@ -49,6 +49,15 @@ const changeRoles = (sessionId, broadcast) => {
     broadcastMobbersUpdate(sessionId, broadcast);
 };
 
+const changeName = (sessionId, oldName, newName, broadcast) => {
+    let _mobbers = mobbers[sessionId];
+    let index = _mobbers.findIndex((m) => m.name === oldName);
+    if (index === -1) return;
+
+    _mobbers[index].name = newName;
+    broadcastMobbersUpdate(sessionId, broadcast);
+};
+
 const reassign = (sessionId, _mobbers, broadcast) => {
     reassignAfterDragAndDrop(_mobbers);
 
@@ -159,6 +168,7 @@ module.exports = {
     addMobber,
     removeMobber,
     changeRoles,
+    changeName,
     reassign,
     randomize,
     broadcastMobbersUpdate,

@@ -1,10 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMobbers } from '../context/MobbersContext';
 import { Draggable } from 'react-beautiful-dnd';
+import { useEffect } from 'react';
 
-const Mobber = ({ mobber, index }) => {
-    const { removeMobber } = useMobbers();
+const Mobber = ({ mobber, index, setIsEditingName }) => {
+    const isCurrentUser = (name) => {
+        return localStorage.getItem('mobber:name') === name;
+    };
 
     const isDriver = () => {
         return mobber.role === 'driver';
@@ -28,7 +30,14 @@ const Mobber = ({ mobber, index }) => {
                     )}
                     {!isDriver() && !isNavigator() && <div className='role'></div>}
                     <div className='name'>{mobber.name}</div>
-                    <div className='empty'></div>
+                    <div>
+                        {isCurrentUser(mobber.name) && (
+                            <FontAwesomeIcon
+                                icon='pencil-alt'
+                                onClick={() => setIsEditingName(true)}
+                            />
+                        )}
+                    </div>
                 </div>
             )}
         </Draggable>
