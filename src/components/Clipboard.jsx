@@ -6,12 +6,12 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 const Clipboard = ({ position = 'bottom' }) => {
     return (
         <Popover
-            text='Copied!'
+            text='Link copied to clipboard'
             className='share'
             position={position}
             render={() => (
                 <CopyToClipboard text={window.location}>
-                    <FontAwesomeIcon icon='copy' />
+                    <FontAwesomeIcon icon='user-plus' />
                 </CopyToClipboard>
             )}
         />

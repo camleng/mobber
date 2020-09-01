@@ -1,17 +1,30 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import useStorage from '../hooks/useStorage';
+import { strings } from '../strings';
 
 const AudioContext = createContext();
 
 const AudioProvider = (props) => {
     const initialOptions = [
-        { name: 'Your Turn', file: 'your-turn.mp3', selected: false },
-        { name: "Time's up", file: 'times-up.m4a', selected: false },
-        { name: 'No sound', file: '', selected: false },
+        {
+            name: strings.audioFiles.yourTurn.name,
+            file: strings.audioFiles.yourTurn.file,
+            selected: false,
+        },
+        {
+            name: strings.audioFiles.timesUp.name,
+            file: strings.audioFiles.timesUp.file,
+            selected: false,
+        },
+        {
+            name: strings.audioFiles.noSound.name,
+            file: strings.audioFiles.noSound.file,
+            selected: false,
+        },
     ];
     const [options, setOptions] = useState(initialOptions);
     const [audioFile, setAudioFile] = useStorage(
-        'mobber:audioFile',
+        strings.storageKeys.audioFile,
         initialOptions[0].file
     );
 

@@ -10,10 +10,12 @@ import {
     faCopy,
     faDice,
     faVolumeUp,
+    faVolumeMute,
     faStopwatch,
     faChevronUp,
     faChevronDown,
     faPencilAlt,
+    faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,10 +27,12 @@ library.add(
     faCopy,
     faDice,
     faVolumeUp,
+    faVolumeMute,
     faStopwatch,
     faChevronUp,
     faChevronDown,
-    faPencilAlt
+    faPencilAlt,
+    faUserPlus
 );
 toast.configure();
 

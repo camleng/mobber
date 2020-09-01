@@ -19,6 +19,7 @@ const Audio = () => {
     }, [audioRef]);
 
     const setDelay = () => {
+        if (!audioRef.current) return;
         audioRef.current.onended = () => {
             timeout = setTimeout(() => {
                 audioRef.current.play();

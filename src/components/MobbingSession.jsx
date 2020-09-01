@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
 import './MobbingSession.scss';
 import useStorage from '../hooks/useStorage';
+import { strings } from '../strings';
 
 const MobbingSession = () => {
     const [initialSeconds, setInitialSeconds] = useState(0);
@@ -31,18 +32,18 @@ const MobbingSession = () => {
     const [editing, setEditing] = useState(false);
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
-    const [name, setName] = useStorage('mobber:name', '');
+    const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
     const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
-        checkIfActive();
+        checkIfSessionIsActive();
 
         addResizeCallback((category) => {
             setIsTablet(category === 'tablet');
         });
     }, []);
 
-    const checkIfActive = async () => {
+    const checkIfSessionIsActive = async () => {
         const res = await fetch(`/session/${sessionId}/is-active`);
         const data = await res.json();
 
@@ -61,7 +62,7 @@ const MobbingSession = () => {
         document.title = title;
     }, [countdown]);
 
-    socket.on('TIMER:UPDATE', (update) => {
+    socket.on(strings.commands.timer.update, (update) => {
         setInProgress(update.inProgress);
         setCountdown(update.remainingSeconds);
         setInitialSeconds(update.initialSeconds);
@@ -74,7 +75,7 @@ const MobbingSession = () => {
     };
 
     const start = () => {
-        const event = 'TIMER:START';
+        const event = strings.commands.timer.start;
         sendMessage(event);
     };
 
@@ -105,34 +106,34 @@ const MobbingSession = () => {
     const updateCountdown = (newCountdown) => {
         setInitialSeconds(newCountdown);
         setCountdown(newCountdown);
-        sendMessage('TIMER:SET', { initialSeconds: newCountdown });
+        sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
     };
 
     const hasName = () => {
-        return name.trim() !== '' && !isEditingName;
+        return name !== undefined && name.trim() !== '' && !isEditingName;
     };
 
     const submitNameChange = (newName) => {
         if (name !== newName) {
             changeName(name, newName);
             setName(newName);
-            console.log('it equals');
         }
         setIsEditingName(false);
     };
 
-    const stop = () => sendMessage('TIMER:STOP');
+    const stop = () => sendMessage(strings.commands.timer.stop);
 
-    const reset = () => sendMessage('TIMER:RESET');
+    const reset = () => sendMessage(strings.commands.timer.reset);
 
-    const connect = () => sendMessage('SESSION:CONNECT');
+    const connect = () => sendMessage(strings.commands.session.connect);
 
-    const randomizeMobbers = () => sendMessage('MOBBERS:RANDOMIZE');
+    const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
 
-    const reassignMobbers = (mobbers) => sendMessage('MOBBERS:REASSIGN', { mobbers });
+    const reassignMobbers = (mobbers) =>
+        sendMessage(strings.commands.mobbers.reassign, { mobbers });
 
     const changeName = (oldName, newName) =>
-        sendMessage('MOBBERS:CHANGENAME', { oldName, newName });
+        sendMessage(strings.commands.mobbers.changeName, { oldName, newName });
 
     const isReset = () => !inProgress && !hasElapsed();
 

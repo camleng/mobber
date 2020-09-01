@@ -1,42 +1,42 @@
 import React, { useState, useContext, createContext } from 'react';
-import { toast } from 'react-toastify';
 import { useSession } from './SessionContext';
+import { strings } from '../strings';
 
 const MobbersContext = createContext();
 
 const MobbersProvider = (props) => {
-    const [mobbers, setMobbers] = useState([{ name: 'Taylor' }]);
+    const [mobbers, setMobbers] = useState([]);
     const { socket, sendMessage } = useSession();
     const [driver, setDriver] = useState();
     const [navigator, setNavigator] = useState();
 
-    socket.on('MOBBERS:UPDATE', (mobbers) => {
+    socket.on(strings.commands.mobbers.update, (mobbers) => {
         setMobbers(mobbers);
         setDriver(getDriver(mobbers));
         setNavigator(getNavigator(mobbers));
     });
 
     const changeRoles = () => {
-        sendMessage('MOBBERS:CHANGE');
+        sendMessage(strings.commands.mobbers.change);
     };
 
     const addMobber = (name) => {
         if (name.trim() === '') return;
         if (mobbers.map((m) => m.name).includes(name)) return;
 
-        sendMessage('MOBBERS:ADD', { name });
+        sendMessage(strings.commands.mobbers.add, { name });
     };
 
     const removeMobber = (name) => {
-        sendMessage('MOBBERS:REMOVE', { name });
+        sendMessage(strings.commands.mobbers.remove, { name });
     };
 
     const getDriver = (mobbers) => {
-        return mobbers.find((m) => m.role === 'driver');
+        return mobbers.find((m) => m.role === strings.roles.driver);
     };
 
     const getNavigator = (mobbers) => {
-        return mobbers.find((m) => m.role === 'navigator');
+        return mobbers.find((m) => m.role === strings.roles.navigator);
     };
 
     return (

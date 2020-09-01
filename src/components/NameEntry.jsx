@@ -2,16 +2,20 @@ import React from 'react';
 import RoundedRect from './shared/RoundedRect';
 import './NameEntry.scss';
 import useStorage from '../hooks/useStorage';
+import { strings } from '../strings';
 
 const NameEntry = ({ submitNameChange }) => {
-    const [enteredName, setEnteredName] = useStorage('mobber:name', '');
+    const [enteredName, setEnteredName] = useStorage(
+        strings.storageKeys.mobberNameKey,
+        ''
+    );
 
     const submitName = () => {
         submitNameChange(enteredName.trim());
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === 'Enter') submitName();
+        if (e.key === strings.keyboardKeys.enter) submitName();
     };
 
     return (
