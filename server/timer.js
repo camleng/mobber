@@ -93,6 +93,7 @@ const startModify = (sessionId, username, broadcast) => {
 
 const stopModify = (sessionId, broadcast) => {
     timers[sessionId].isEditing = false;
+    timers[sessionId].isEditingUsername = '';
     broadcastTimerUpdate(sessionId, broadcast);
 };
 
