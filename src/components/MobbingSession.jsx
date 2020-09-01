@@ -153,6 +153,10 @@ const MobbingSession = () => {
 
     const noop = () => {};
 
+    const noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer = () => {
+        return !usernameEditingTimer || usernameEditingTimer === name;
+    };
+
     return activating ? (
         <h1>Activating</h1>
     ) : !hasName() ? (
@@ -168,7 +172,7 @@ const MobbingSession = () => {
                         position={isTablet ? 'bottom' : 'left'}
                     />
                 )}
-                {isReset() && (
+                {isReset() && noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer() && (
                     <ChangeTimer
                         position={isTablet ? 'bottom' : 'left'}
                         toggleEditing={toggleEditing}
