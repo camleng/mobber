@@ -25,6 +25,7 @@ import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
 import './MobbingSession.scss';
 import { useTimer } from '../context/TimerContext';
+import Stepper from '../components/shared/Stepper';
 
 const MobbingSession = () => {
     const { mobbers, driver, changeRoles } = useMobbers();
@@ -48,8 +49,6 @@ const MobbingSession = () => {
         isStopped,
         hasElapsed,
         hasEnded,
-        incrementCountdown,
-        decrementCountdown,
     } = useTimer();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
@@ -154,7 +153,7 @@ const MobbingSession = () => {
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
                 <div className='buttons'>
-                    {!editing && isStopped() && (
+                    {isStopped() && (
                         <RoundedRect
                             title='Start'
                             className='start'
@@ -162,7 +161,7 @@ const MobbingSession = () => {
                         />
                     )}
 
-                    {!editing && isReset() && (
+                    {isReset() && (
                         <RoundedRect
                             title='Next'
                             className='next'
@@ -170,24 +169,12 @@ const MobbingSession = () => {
                         />
                     )}
 
-                    {!editing && inProgress && (
+                    {inProgress && (
                         <RoundedRect title='Stop' className='stop' onClick={stop} />
                     )}
 
                     {!editing && !inProgress && hasElapsed() && (
                         <RoundedRect title='Reset' className='reset' onClick={reset} />
-                    )}
-
-                    {editing && (
-                        <RoundedRect className='start' onClick={incrementCountdown}>
-                            <FontAwesomeIcon icon='chevron-up' />
-                        </RoundedRect>
-                    )}
-
-                    {editing && (
-                        <RoundedRect className='next' onClick={decrementCountdown}>
-                            <FontAwesomeIcon icon='chevron-down' />
-                        </RoundedRect>
                     )}
                 </div>
             </div>

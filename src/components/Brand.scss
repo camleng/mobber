@@ -11,6 +11,7 @@
     line-height: 0.7;
     margin-top: 0.5rem;
     cursor: pointer;
+    user-select: none;
 
     @include desktop {
         margin-left: 2rem;

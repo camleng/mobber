@@ -5,6 +5,7 @@
     justify-content: space-evenly;
     width: 100%;
     font-size: 1.6rem;
+    user-select: none;
 
     @include modern-iphone {
         font-size: 2rem;

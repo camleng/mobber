@@ -8,7 +8,7 @@ const TimerContext = createContext();
 const TimerProvider = (props) => {
     const [inProgress, setInProgress] = useState(false);
     const [initialSeconds, setInitialSeconds] = useState(0);
-    const [countdown, setCountdown] = useState();
+    const [countdown, setCountdown] = useState(0);
     const [userIsEditingTimer, setUserIsEditingTimer] = useState(false);
     const [usernameEditingTimer, setUsernameEditingTimer] = useState('');
     const { socket, sendMessage } = useSession();
@@ -75,6 +75,7 @@ const TimerProvider = (props) => {
                 stopModifyingTime,
                 inProgress,
                 countdown,
+                setCountdown,
                 usernameEditingTimer,
                 startTimer,
                 isReset,

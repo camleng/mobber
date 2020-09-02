@@ -8,6 +8,7 @@
         margin-top: 1rem;
         width: 100%;
         line-height: 1rem;
+        user-select: none;
 
         &:not(:first-child) {
             margin-left: 1rem;
