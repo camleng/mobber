@@ -154,16 +154,6 @@ const MobbingSession = () => {
                 <Countdown countdown={countdown} inProgress={inProgress} />
 
                 <div className='buttons'>
-                    {editing && (
-                        <RoundedRect className='start' onClick={incrementCountdown}>
-                            <FontAwesomeIcon icon='chevron-up' />
-                        </RoundedRect>
-                    )}
-                    {editing && (
-                        <RoundedRect className='next' onClick={decrementCountdown}>
-                            <FontAwesomeIcon icon='chevron-down' />
-                        </RoundedRect>
-                    )}
                     {!editing && isStopped() && (
                         <RoundedRect
                             title='Start'
@@ -171,12 +161,7 @@ const MobbingSession = () => {
                             onClick={startTimer}
                         />
                     )}
-                    {!editing && inProgress && (
-                        <RoundedRect title='Stop' className='stop' onClick={stop} />
-                    )}
-                    {!editing && !inProgress && hasElapsed() && (
-                        <RoundedRect title='Reset' className='reset' onClick={reset} />
-                    )}
+
                     {!editing && isReset() && (
                         <RoundedRect
                             title='Next'
@@ -184,9 +169,31 @@ const MobbingSession = () => {
                             onClick={changeRoles}
                         />
                     )}
+
+                    {!editing && inProgress && (
+                        <RoundedRect title='Stop' className='stop' onClick={stop} />
+                    )}
+
+                    {!editing && !inProgress && hasElapsed() && (
+                        <RoundedRect title='Reset' className='reset' onClick={reset} />
+                    )}
+
+                    {editing && (
+                        <RoundedRect className='start' onClick={incrementCountdown}>
+                            <FontAwesomeIcon icon='chevron-up' />
+                        </RoundedRect>
+                    )}
+
+                    {editing && (
+                        <RoundedRect className='next' onClick={decrementCountdown}>
+                            <FontAwesomeIcon icon='chevron-down' />
+                        </RoundedRect>
+                    )}
                 </div>
             </div>
+
             <CurrentMobbers />
+
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
                 <Mobbers name={name} setIsEditingName={setIsEditingName} />

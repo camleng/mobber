@@ -1,19 +1,19 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Draggable } from 'react-beautiful-dnd';
-import { useEffect } from 'react';
+import { strings } from '../strings';
 
 const Mobber = ({ mobber, index, setIsEditingName }) => {
     const isCurrentUser = (name) => {
-        return localStorage.getItem('mobber:name') === name;
+        return localStorage.getItem(strings.storageKeys.mobberNameKey) === name;
     };
 
     const isDriver = () => {
-        return mobber.role === 'driver';
+        return mobber.role === strings.roles.driver;
     };
 
     const isNavigator = () => {
-        return mobber.role === 'navigator';
+        return mobber.role === strings.roles.navigator;
     };
 
     return (

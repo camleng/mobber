@@ -69,22 +69,18 @@ const TimerProvider = (props) => {
     return (
         <TimerContext.Provider
             value={{
-                inProgress,
-                countdown,
-                initialSeconds,
-                userIsEditingTimer,
-                usernameEditingTimer,
-                updateCountdown,
-                start,
                 stop,
                 reset,
                 startModifyingTime,
                 stopModifyingTime,
+                inProgress,
+                countdown,
+                usernameEditingTimer,
+                startTimer,
                 isReset,
                 isStopped,
                 hasElapsed,
                 hasEnded,
-                startTimer,
                 incrementCountdown,
                 decrementCountdown,
             }}>
