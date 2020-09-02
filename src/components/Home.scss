@@ -22,17 +22,25 @@
     div {
         margin-top: 1rem;
         display: flex;
-        align-items: baseline;
+        flex-direction: column;
+
+        @include desktop {
+            flex-direction: row;
+            align-items: baseline;
+        }
 
         input {
             background-color: $darkgray;
             border: none;
             border-bottom: 1px solid $lightgray;
-            margin-right: 2rem;
             padding-left: 0.5rem;
             font-size: 1.2rem;
-            width: 8.6rem;
             height: 2rem;
+
+            @include desktop {
+                margin-right: 2rem;
+                width: 8.6rem;
+            }
 
             &:focus {
                 outline: none;
@@ -42,10 +50,13 @@
 
     .join {
         background-color: $blue;
-        width: 12rem;
         display: flex;
         justify-content: center;
         font-size: 1.2rem;
+
+        @include desktop {
+            width: 12rem;
+        }
     }
 }
 
@@ -61,7 +72,10 @@
 .create {
     background-color: $green;
     font-size: 1.2rem;
-    width: 12rem;
+
+    @include desktop {
+        width: 12rem;
+    }
 }
 
 label {
