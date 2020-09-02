@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import LogRocket from 'logrocket';
+import './index.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faCar,
@@ -35,6 +36,7 @@ library.add(
     faUserPlus
 );
 toast.configure();
+LogRocket.init('3ukxle/mobber');
 
 ReactDOM.render(
     <React.StrictMode>
