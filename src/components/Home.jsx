@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import RoundedRect from './shared/RoundedRect';
+import { strings } from '../strings';
 import './Home.scss';
 
 const Home = () => {
@@ -14,6 +15,14 @@ const Home = () => {
         });
     };
 
+    const joinMob = () => {
+        history.push(`/mob/${mobId}`);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === strings.keyboardKeys.enter) joinMob();
+    };
+
     return (
         <>
             <div className='container'>
@@ -23,12 +32,9 @@ const Home = () => {
                         <input
                             placeholder='Mob ID'
                             onChange={(e) => setMobId(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             value={mobId}></input>
-                        <RoundedRect
-                            title='Join'
-                            className='join'
-                            onClick={() => history.push(`/mob/${mobId}`)}
-                        />
+                        <RoundedRect title='Join' className='join' onClick={joinMob} />
                     </div>
                 </div>
                 <div className='separators'>
