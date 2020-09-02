@@ -21,8 +21,8 @@ export const strings = {
             startModify: 'TIMER:STARTMODIFY',
             stopModify: 'TIMER:STOPMODIFY',
         },
-        session: {
-            connect: 'SESSION:CONNECT',
+        mob: {
+            connect: 'MOB:CONNECT',
         },
         mobbers: {
             randomize: 'MOBBERS:RANDOMIZE',

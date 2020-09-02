@@ -20,6 +20,7 @@ const Mobber = ({ mobber, index, setIsEditingName }) => {
         <Draggable draggableId={mobber.name} index={index}>
             {(provided) => (
                 <div
+                    data-private
                     className={`mobber ${mobber.role}`}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}

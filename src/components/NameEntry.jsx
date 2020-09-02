@@ -22,6 +22,7 @@ const NameEntry = ({ submitNameChange }) => {
         <div className='name-entry'>
             <label>What should we call you?</label>
             <input
+                data-private
                 value={enteredName}
                 onChange={(e) => setEnteredName(e.target.value)}
                 onKeyPress={handleKeyPress}></input>

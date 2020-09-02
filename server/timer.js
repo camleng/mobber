@@ -5,9 +5,9 @@ const DEFAULT_SECONDS = NODE_ENV === 'production' ? 900 : 4;
 
 let timers = {};
 
-const init = (sessionId) => {
-    if (!timers.hasOwnProperty(sessionId)) {
-        timers[sessionId] = {
+const init = (mobId) => {
+    if (!timers.hasOwnProperty(mobId)) {
+        timers[mobId] = {
             inProgress: false,
             initialSeconds: DEFAULT_SECONDS,
             remainingSeconds: DEFAULT_SECONDS,
@@ -16,96 +16,96 @@ const init = (sessionId) => {
     }
 };
 
-const broadcastTimerUpdate = (sessionId, broadcast) => {
+const broadcastTimerUpdate = (mobId, broadcast) => {
     const {
         inProgress,
         remainingSeconds,
         initialSeconds,
         isEditing,
         isEditingUsername,
-    } = timers[sessionId];
+    } = timers[mobId];
     broadcast(
         'TIMER:UPDATE',
         { inProgress, remainingSeconds, initialSeconds, isEditing, isEditingUsername },
-        sessionId
+        mobId
     );
 };
 
-const timer = (sessionId, changeRoles, broadcast) => {
-    timers[sessionId].remainingSeconds -= 1;
+const timer = (mobId, changeRoles, broadcast) => {
+    timers[mobId].remainingSeconds -= 1;
 
-    let { remainingSeconds } = timers[sessionId];
+    let { remainingSeconds } = timers[mobId];
 
     if (remainingSeconds === 0) {
         const timesUpMessage = "Time's up!";
         console.log(timesUpMessage);
-        stop(sessionId, broadcast);
-        changeRoles(sessionId, broadcast);
+        stop(mobId, broadcast);
+        changeRoles(mobId, broadcast);
     } else {
-        broadcastTimerUpdate(sessionId, broadcast);
+        broadcastTimerUpdate(mobId, broadcast);
     }
 };
 
-const start = (sessionId, changeRoles, broadcast) => {
-    const { remainingSeconds } = timers[sessionId];
+const start = (mobId, changeRoles, broadcast) => {
+    const { remainingSeconds } = timers[mobId];
     if (remainingSeconds < 0) return;
 
     const interval = setInterval(() => {
-        timer(sessionId, changeRoles, broadcast);
+        timer(mobId, changeRoles, broadcast);
     }, 1000);
 
-    timers[sessionId] = {
-        ...timers[sessionId],
+    timers[mobId] = {
+        ...timers[mobId],
         inProgress: true,
         remainingSeconds,
         interval,
         isEditing: false,
         isEditingUsername: '',
     };
-    broadcastTimerUpdate(sessionId, broadcast);
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
-const stop = (sessionId, broadcast) => {
-    clearInterval(timers[sessionId].interval);
-    timers[sessionId].inProgress = false;
-    broadcastTimerUpdate(sessionId, broadcast);
+const stop = (mobId, broadcast) => {
+    clearInterval(timers[mobId].interval);
+    timers[mobId].inProgress = false;
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
-const reset = (sessionId, broadcast) => {
-    const { initialSeconds } = timers[sessionId];
+const reset = (mobId, broadcast) => {
+    const { initialSeconds } = timers[mobId];
     console.log(`Timer reset to ${initialSeconds} seconds`);
 
-    timers[sessionId] = {
+    timers[mobId] = {
         initialSeconds: initialSeconds,
         inProgress: false,
         remainingSeconds: initialSeconds,
         isEditing: false,
         isEditingUsername: '',
     };
-    broadcastTimerUpdate(sessionId, broadcast);
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
-const startModify = (sessionId, username, broadcast) => {
-    timers[sessionId].isEditing = true;
-    timers[sessionId].isEditingUsername = username;
-    broadcastTimerUpdate(sessionId, broadcast);
+const startModify = (mobId, username, broadcast) => {
+    timers[mobId].isEditing = true;
+    timers[mobId].isEditingUsername = username;
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
-const stopModify = (sessionId, broadcast) => {
-    timers[sessionId].isEditing = false;
-    timers[sessionId].isEditingUsername = '';
-    broadcastTimerUpdate(sessionId, broadcast);
+const stopModify = (mobId, broadcast) => {
+    timers[mobId].isEditing = false;
+    timers[mobId].isEditingUsername = '';
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
-const set = (sessionId, initialSeconds, broadcast) => {
+const set = (mobId, initialSeconds, broadcast) => {
     console.log(`Timer set to ${initialSeconds}`);
 
-    timers[sessionId] = {
-        ...timers[sessionId],
+    timers[mobId] = {
+        ...timers[mobId],
         initialSeconds,
         remainingSeconds: initialSeconds,
     };
-    broadcastTimerUpdate(sessionId, broadcast);
+    broadcastTimerUpdate(mobId, broadcast);
 };
 
 module.exports = {

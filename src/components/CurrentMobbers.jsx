@@ -7,7 +7,7 @@ const CurrentMobbers = () => {
     const { driver, navigator } = useMobbers();
 
     return (
-        <div className='current-mobbers'>
+        <div className='current-mobbers' data-private>
             {driver && (
                 <div className='current-role'>
                     <FontAwesomeIcon icon='car' className='role' />

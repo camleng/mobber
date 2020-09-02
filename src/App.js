@@ -4,30 +4,37 @@ import Home from './components/Home';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Brand from './components/Brand';
 import { MobbersProvider } from './context/MobbersContext';
-import { SessionProvider } from './context/SessionContext';
+import { MobProvider } from './context/MobContext';
 import { AudioProvider } from './context/AudioContext';
-import MobbingSession from './components/MobbingSession';
+import Mob from './components/Mob';
 import { TimerProvider } from './context/TimerContext';
 
 function App() {
     return (
         <Router>
             <div className='App'>
-                <Brand />
+                <Switch>
+                    <Route exact path='/mob/:mobId'>
+                        <Brand />
+                    </Route>
+                    <Route>
+                        <Brand />
+                    </Route>
+                </Switch>
                 <Switch>
                     <Route exact path='/'>
                         <Home />
                     </Route>
-                    <Route exact path='/session/:sessionId'>
-                        <SessionProvider>
+                    <Route exact path='/mob/:mobId'>
+                        <MobProvider>
                             <TimerProvider>
                                 <AudioProvider>
                                     <MobbersProvider>
-                                        <MobbingSession />
+                                        <Mob />
                                     </MobbersProvider>
                                 </AudioProvider>
                             </TimerProvider>
-                        </SessionProvider>
+                        </MobProvider>
                     </Route>
                     <Route path='*'>
                         <Redirect to='/' />
