@@ -13,7 +13,14 @@ function App() {
     return (
         <Router>
             <div className='App'>
-                <Brand />
+                <Switch>
+                    <Route exact path='/mob/:mobId'>
+                        <Brand />
+                    </Route>
+                    <Route>
+                        <Brand />
+                    </Route>
+                </Switch>
                 <Switch>
                     <Route exact path='/'>
                         <Home />

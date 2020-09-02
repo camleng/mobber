@@ -9,6 +9,10 @@
     border-radius: 0.5rem;
     width: 100%;
 
+    @include phone {
+        width: unset;
+    }
+
     @include tablet {
         width: unset;
         max-width: 100%;
