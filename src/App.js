@@ -7,6 +7,7 @@ import { MobbersProvider } from './context/MobbersContext';
 import { SessionProvider } from './context/SessionContext';
 import { AudioProvider } from './context/AudioContext';
 import MobbingSession from './components/MobbingSession';
+import { TimerProvider } from './context/TimerContext';
 
 function App() {
     return (
@@ -19,11 +20,13 @@ function App() {
                     </Route>
                     <Route exact path='/session/:sessionId'>
                         <SessionProvider>
-                            <AudioProvider>
-                                <MobbersProvider>
-                                    <MobbingSession />
-                                </MobbersProvider>
-                            </AudioProvider>
+                            <TimerProvider>
+                                <AudioProvider>
+                                    <MobbersProvider>
+                                        <MobbingSession />
+                                    </MobbersProvider>
+                                </AudioProvider>
+                            </TimerProvider>
                         </SessionProvider>
                     </Route>
                     <Route path='*'>

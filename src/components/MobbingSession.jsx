@@ -17,49 +17,57 @@ import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
-import './MobbingSession.scss';
+import {
+    determineScreenSizeCategory,
+    addWindowResizeCallback,
+} from '../services/screenSize';
 import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
+import './MobbingSession.scss';
+import { useTimer } from '../context/TimerContext';
 
 const MobbingSession = () => {
-    const [initialSeconds, setInitialSeconds] = useState(0);
-    const [countdown, setCountdown] = useState();
-    const [inProgress, setInProgress] = useState();
     const { mobbers, driver, changeRoles } = useMobbers();
     const {
-        socket,
         sessionId,
-        sendMessage,
-        start,
-        stop,
-        reset,
-        startModifyingTime,
-        stopModifyingTime,
         connect,
         randomizeMobbers,
         reassignMobbers,
         changeName,
     } = useSession();
+    const {
+        stop,
+        reset,
+        startModifyingTime,
+        stopModifyingTime,
+        inProgress,
+        countdown,
+        usernameEditingTimer,
+        startTimer,
+        isReset,
+        isStopped,
+        hasElapsed,
+        hasEnded,
+        incrementCountdown,
+        decrementCountdown,
+    } = useTimer();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
     const [editing, setEditing] = useState(false);
-    const [userIsEditingTimer, setUserIsEditingTimer] = useState(false);
-    const [usernameEditingTimer, setUsernameEditingTimer] = useState('');
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
     const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
-        checkIfSessionIsActive();
+        connectToSessionIfActive();
 
-        addResizeCallback((category) => {
+        addWindowResizeCallback((category) => {
             setIsTablet(category === 'tablet');
         });
     }, []);
 
-    const checkIfSessionIsActive = async () => {
+    const connectToSessionIfActive = async () => {
         const res = await fetch(`/session/${sessionId}/is-active`);
         const data = await res.json();
 
@@ -67,7 +75,7 @@ const MobbingSession = () => {
             connect();
             setActivating(false);
         } else {
-            toast.error(`Session "${sessionId}" is not active`);
+            toast.error(`Mob "${sessionId}" is not active`);
             history.push('/');
         }
     };
@@ -77,14 +85,6 @@ const MobbingSession = () => {
         if (driver) title += ` | ${driver.name}`;
         document.title = title;
     }, [countdown]);
-
-    socket.on(strings.commands.timer.update, (update) => {
-        setInProgress(update.inProgress);
-        setCountdown(update.remainingSeconds);
-        setInitialSeconds(update.initialSeconds);
-        setUserIsEditingTimer(update.isEditing);
-        setUsernameEditingTimer(update.isEditingUsername);
-    });
 
     const placeMobberInDroppedPosition = (result) => {
         const { destination, source } = result;
@@ -97,23 +97,6 @@ const MobbingSession = () => {
         _mobbers.splice(destination.index, 0, movedMobber);
 
         reassignMobbers(_mobbers);
-    };
-
-    const incrementCountdown = () => {
-        const newCountdown = countdown + 60;
-        updateCountdown(newCountdown);
-    };
-
-    const decrementCountdown = () => {
-        const newCountdown = countdown - 60;
-        if (newCountdown <= 0) return;
-        updateCountdown(newCountdown);
-    };
-
-    const updateCountdown = (newCountdown) => {
-        setInitialSeconds(newCountdown);
-        setCountdown(newCountdown);
-        sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
     };
 
     const hasName = () => {
@@ -134,28 +117,13 @@ const MobbingSession = () => {
         setEditing(!editing);
     };
 
-    const startTimer = () => {
-        if (userIsEditingTimer) {
-            toast.error(`Timer is being modified by ${usernameEditingTimer}`);
-            return;
-        }
-
-        start();
-    };
-
-    const isReset = () => !inProgress && !hasElapsed();
-
-    const isStopped = () => !inProgress && countdown > 0;
-
-    const hasElapsed = () => countdown !== initialSeconds;
-
-    const hasEnded = () => countdown === 0;
-
     const noop = () => {};
 
     const noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer = () => {
         return !usernameEditingTimer || usernameEditingTimer === name;
     };
+
+    const getPopupPosition = () => (isTablet ? 'bottom' : 'left');
 
     return activating ? (
         <h1>Activating</h1>
@@ -169,17 +137,17 @@ const MobbingSession = () => {
                 {mobbers.length >= 2 && isReset() && (
                     <Randomize
                         randomize={randomizeMobbers}
-                        position={isTablet ? 'bottom' : 'left'}
+                        position={getPopupPosition()}
                     />
                 )}
                 {isReset() && noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer() && (
                     <ChangeTimer
-                        position={isTablet ? 'bottom' : 'left'}
+                        position={getPopupPosition()}
                         toggleEditing={toggleEditing}
                     />
                 )}
-                <AudioSelection position={isTablet ? 'bottom' : 'left'} />
-                <Clipboard position={isTablet ? 'bottom' : 'left'} />
+                <AudioSelection position={getPopupPosition()} />
+                <Clipboard position={getPopupPosition()} />
             </Menu>
 
             <div className='countdown-and-controls'>
@@ -223,6 +191,7 @@ const MobbingSession = () => {
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
                 <Mobbers name={name} setIsEditingName={setIsEditingName} />
             </DragDropContext>
+
             {!inProgress && countdown <= 0 && <Audio />}
         </>
     );

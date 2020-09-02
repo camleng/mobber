@@ -25,17 +25,6 @@ const SessionProvider = (props) => {
         socket.emit(event, payload);
     };
 
-    const start = () => sendMessage(strings.commands.timer.start);
-
-    const stop = () => sendMessage(strings.commands.timer.stop);
-
-    const reset = () => sendMessage(strings.commands.timer.reset);
-
-    const startModifyingTime = (username) =>
-        sendMessage(strings.commands.timer.startModify, { username });
-
-    const stopModifyingTime = () => sendMessage(strings.commands.timer.stopModify);
-
     const connect = () => sendMessage(strings.commands.session.connect);
 
     const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
@@ -52,11 +41,6 @@ const SessionProvider = (props) => {
                 socket,
                 sessionId,
                 sendMessage,
-                start,
-                stop,
-                reset,
-                startModifyingTime,
-                stopModifyingTime,
                 connect,
                 randomizeMobbers,
                 reassignMobbers,

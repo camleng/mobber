@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
+import {
+    determineScreenSizeCategory,
+    addWindowResizeCallback,
+} from '../services/screenSize';
 import './Menu.scss';
 
 const Menu = ({ children }) => {
@@ -11,7 +14,7 @@ const Menu = ({ children }) => {
     const toggle = () => setShown(!shown);
 
     useEffect(() => {
-        addResizeCallback((category) => {
+        addWindowResizeCallback((category) => {
             const isTablet = category === 'tablet';
             setIsTablet(isTablet);
         });

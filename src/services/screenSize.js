@@ -4,7 +4,7 @@ export const determineScreenSizeCategory = () => {
 
 let callbacks = [];
 
-export const addResizeCallback = (callback) => {
+export const addWindowResizeCallback = (callback) => {
     callbacks.push(callback);
     window.addEventListener('resize', () => {
         const category = determineScreenSizeCategory();

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Mobber from './Mobber';
 import { useMobbers } from '../context/MobbersContext';
 import { Droppable } from 'react-beautiful-dnd';
-import { determineScreenSizeCategory, addResizeCallback } from '../services/screenSize';
+import {
+    determineScreenSizeCategory,
+    addWindowResizeCallback,
+} from '../services/screenSize';
 import './Mobbers.scss';
 
 const Mobbers = ({ name, setIsEditingName }) => {
@@ -10,7 +13,7 @@ const Mobbers = ({ name, setIsEditingName }) => {
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     useEffect(() => {
-        addResizeCallback((category) => {
+        addWindowResizeCallback((category) => {
             setScreenSize(category);
         });
 
