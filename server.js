@@ -4,26 +4,27 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-const session = require('./server/session');
+const mob = require('./server/mob');
 const compression = require('compression');
 require('dotenv').config();
 
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
 app.use(
-   '/.well-known/acme-challenge', 
-   express.static(path.join(__dirname, '.well-known', 'acme-challenge'))
+    '/.well-known/acme-challenge',
+    express.static(path.join(__dirname, '.well-known', 'acme-challenge'))
 );
 
 app.use(compression());
 
-app.get('/session/generate', (req, res) => {
-    const sessionId = session.activateRandomSession();
-    res.send({ sessionId });
+app.get('/mob/generate', (req, res) => {
+    console.log('Generating random mob');
+    const mobId = mob.activateRandomMob();
+    res.send({ mobId });
 });
 
-app.get('/session/:sessionId/is-active', (req, res) => {
-    const isActive = session.isSessionActive(req.params.sessionId);
+app.get('/mob/:mobId/is-active', (req, res) => {
+    const isActive = mob.isMobActive(req.params.mobId);
     res.send({ isActive });
 });
 
@@ -54,4 +55,4 @@ server.listen(PORT, () => {
     console.log(`HTTPS server running on port ${PORT}`);
 });
 
-session.init(server);
+mob.init(server);

@@ -15,13 +15,14 @@
     }
 }
 
-.connect-to-session {
+.join-mob {
     display: flex;
     flex-direction: column;
 
     div {
         margin-top: 1rem;
         display: flex;
+        align-items: baseline;
 
         input {
             background-color: $darkgray;
@@ -31,6 +32,7 @@
             padding-left: 0.5rem;
             font-size: 1.2rem;
             width: 8.6rem;
+            height: 2rem;
 
             &:focus {
                 outline: none;
@@ -38,16 +40,16 @@
         }
     }
 
-    .connect {
+    .join {
         background-color: $blue;
-        width: 100%;
+        width: 12rem;
         display: flex;
         justify-content: center;
         font-size: 1.2rem;
     }
 }
 
-.create-session {
+.create-mob {
     display: flex;
     flex-direction: column;
 
@@ -59,6 +61,7 @@
 .create {
     background-color: $green;
     font-size: 1.2rem;
+    width: 12rem;
 }
 
 label {

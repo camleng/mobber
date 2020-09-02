@@ -4,29 +4,30 @@ import RoundedRect from './shared/RoundedRect';
 import './Home.scss';
 
 const Home = () => {
-    const [sessionId, setSessionId] = useState('');
+    const [mobId, setMobId] = useState('');
     const history = useHistory();
 
-    const activateRandomSession = () => {
-        fetch('/session/generate').then(async (res) => {
-            const { sessionId } = await res.json();
-            history.push(`/session/${sessionId}`);
+    const activateRandomMob = () => {
+        fetch('/mob/generate').then(async (res) => {
+            const { mobId } = await res.json();
+            history.push(`/mob/${mobId}`);
         });
     };
 
     return (
         <>
             <div className='container'>
-                <div className='connect-to-session'>
-                    <label>Connect to an existing session</label>
+                <div className='join-mob'>
+                    <label>Join a mob</label>
                     <div>
                         <input
-                            onChange={(e) => setSessionId(e.target.value)}
-                            value={sessionId}></input>
+                            placeholder='Mob ID'
+                            onChange={(e) => setMobId(e.target.value)}
+                            value={mobId}></input>
                         <RoundedRect
-                            title='Connect'
-                            className='connect'
-                            onClick={() => history.push(`/session/${sessionId}`)}
+                            title='Join'
+                            className='join'
+                            onClick={() => history.push(`/mob/${mobId}`)}
                         />
                     </div>
                 </div>
@@ -35,13 +36,13 @@ const Home = () => {
                     <div className='or'>or</div>
                     <div className='sep'></div>
                 </div>
-                <div className='create-session'>
-                    <label>Create a new session</label>
+                <div className='create-mob'>
+                    <label>Create a mob</label>
                     <div>
                         <RoundedRect
                             title='Create'
                             className='create'
-                            onClick={activateRandomSession}
+                            onClick={activateRandomMob}
                         />
                     </div>
                 </div>

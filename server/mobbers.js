@@ -2,40 +2,40 @@ const randomizer = require('./randomizer');
 
 let mobbers = {};
 
-const init = (sessionId) => {
-    if (!mobbers.hasOwnProperty(sessionId)) {
-        mobbers[sessionId] = [];
+const init = (mobId) => {
+    if (!mobbers.hasOwnProperty(mobId)) {
+        mobbers[mobId] = [];
     }
 };
 
-const broadcastMobbersUpdate = (sessionId, broadcast) => {
-    broadcast('MOBBERS:UPDATE', mobbers[sessionId], sessionId);
+const broadcastMobbersUpdate = (mobId, broadcast) => {
+    broadcast('MOBBERS:UPDATE', mobbers[mobId], mobId);
 };
 
-const mobberAlreadyExits = (name, sessionId) => {
-    return mobbers[sessionId].map((m) => m.name).includes(name);
+const mobberAlreadyExits = (name, mobId) => {
+    return mobbers[mobId].map((m) => m.name).includes(name);
 };
 
-const addMobber = (name, sessionId, broadcast) => {
-    if (mobberAlreadyExits(name, sessionId)) return;
+const addMobber = (name, mobId, broadcast) => {
+    if (mobberAlreadyExits(name, mobId)) return;
 
-    const role = determineRole(sessionId);
+    const role = determineRole(mobId);
 
-    mobbers[sessionId].push({ name, role });
+    mobbers[mobId].push({ name, role });
 
-    broadcastMobbersUpdate(sessionId, broadcast);
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const removeMobber = (name, sessionId, broadcast) => {
-    if (mobbers[sessionId] === null) return;
-    const _mobbers = mobbers[sessionId].filter((m) => m.name !== name);
+const removeMobber = (name, mobId, broadcast) => {
+    if (mobbers[mobId] === null) return;
+    const _mobbers = mobbers[mobId].filter((m) => m.name !== name);
     reassignAfterDeletion(_mobbers);
-    mobbers[sessionId] = _mobbers;
-    broadcastMobbersUpdate(sessionId, broadcast);
+    mobbers[mobId] = _mobbers;
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const changeRoles = (sessionId, broadcast) => {
-    let _mobbers = mobbers[sessionId];
+const changeRoles = (mobId, broadcast) => {
+    let _mobbers = mobbers[mobId];
 
     const [newDriverIndex, newNavigatorIndex] = incrementIndices(_mobbers);
 
@@ -45,28 +45,28 @@ const changeRoles = (sessionId, broadcast) => {
         _mobbers[newNavigatorIndex].role = 'navigator';
     }
 
-    mobbers[sessionId] = _mobbers;
-    broadcastMobbersUpdate(sessionId, broadcast);
+    mobbers[mobId] = _mobbers;
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const changeName = (sessionId, oldName, newName, broadcast) => {
-    let _mobbers = mobbers[sessionId];
+const changeName = (mobId, oldName, newName, broadcast) => {
+    let _mobbers = mobbers[mobId];
     let index = _mobbers.findIndex((m) => m.name === oldName);
     if (index === -1) return;
 
     _mobbers[index].name = newName;
-    broadcastMobbersUpdate(sessionId, broadcast);
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const reassign = (sessionId, _mobbers, broadcast) => {
+const reassign = (mobId, _mobbers, broadcast) => {
     reassignAfterDragAndDrop(_mobbers);
 
-    mobbers[sessionId] = _mobbers;
-    broadcastMobbersUpdate(sessionId, broadcast);
+    mobbers[mobId] = _mobbers;
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const randomize = (sessionId, broadcast) => {
-    let _mobbers = mobbers[sessionId];
+const randomize = (mobId, broadcast) => {
+    let _mobbers = mobbers[mobId];
 
     clearRoles(_mobbers);
 
@@ -75,8 +75,8 @@ const randomize = (sessionId, broadcast) => {
     _mobbers[0].role = 'driver';
     _mobbers[1].role = 'navigator';
 
-    mobbers[sessionId] = _mobbers;
-    broadcastMobbersUpdate(sessionId, broadcast);
+    mobbers[mobId] = _mobbers;
+    broadcastMobbersUpdate(mobId, broadcast);
 };
 
 const incrementIndices = (_mobbers) => {
@@ -157,9 +157,9 @@ const getDriverIndex = (_mobbers) => {
     return _mobbers.findIndex((m) => m.role === 'driver');
 };
 
-const determineRole = (sessionId) => {
-    if (mobbers[sessionId].length === 0) return 'driver';
-    else if (mobbers[sessionId].length === 1) return 'navigator';
+const determineRole = (mobIdId) => {
+    if (mobbers[mobIdId].length === 0) return 'driver';
+    else if (mobbers[mobIdId].length === 1) return 'navigator';
     else return '';
 };
 

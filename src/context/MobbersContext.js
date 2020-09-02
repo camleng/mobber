@@ -1,12 +1,12 @@
 import React, { useState, useContext, createContext } from 'react';
-import { useSession } from './SessionContext';
+import { useMob } from './MobContext';
 import { strings } from '../strings';
 
 const MobbersContext = createContext();
 
 const MobbersProvider = (props) => {
     const [mobbers, setMobbers] = useState([]);
-    const { socket, sendMessage } = useSession();
+    const { socket, sendMessage } = useMob();
     const [driver, setDriver] = useState();
     const [navigator, setNavigator] = useState();
 

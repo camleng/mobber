@@ -3,10 +3,10 @@ import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { strings } from '../strings';
 
-const SessionContext = createContext();
+const MobContext = createContext();
 
-const SessionProvider = (props) => {
-    const { sessionId } = useParams();
+const MobProvider = (props) => {
+    const { mobId } = useParams();
     var connectionOptions = {
         'force new connection': true,
         reconnectionAttempts: 6,
@@ -21,11 +21,11 @@ const SessionProvider = (props) => {
 
     const sendMessage = (event, payload) => {
         payload = payload || {};
-        payload.sessionId = sessionId;
+        payload.mobId = mobId;
         socket.emit(event, payload);
     };
 
-    const connect = () => sendMessage(strings.commands.session.connect);
+    const connect = () => sendMessage(strings.commands.mob.connect);
 
     const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
 
@@ -36,10 +36,10 @@ const SessionProvider = (props) => {
         sendMessage(strings.commands.mobbers.changeName, { oldName, newName });
 
     return (
-        <SessionContext.Provider
+        <MobContext.Provider
             value={{
                 socket,
-                sessionId,
+                mobId,
                 sendMessage,
                 connect,
                 randomizeMobbers,
@@ -47,12 +47,12 @@ const SessionProvider = (props) => {
                 changeName,
             }}>
             {props.children}
-        </SessionContext.Provider>
+        </MobContext.Provider>
     );
 };
 
-const useSession = () => {
-    return useContext(SessionContext);
+const useMob = () => {
+    return useContext(MobContext);
 };
 
-export { useSession, SessionProvider };
+export { useMob, MobProvider };

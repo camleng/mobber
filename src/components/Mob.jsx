@@ -12,7 +12,7 @@ import NameEntry from './NameEntry';
 import ChangeTimer from './ChangeTimer';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
-import { useSession } from '../context/SessionContext';
+import { useMob } from '../context/MobContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -23,18 +23,12 @@ import {
 } from '../services/screenSize';
 import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
-import './MobbingSession.scss';
 import { useTimer } from '../context/TimerContext';
+import './Mob.scss';
 
-const MobbingSession = () => {
+const Mob = () => {
     const { mobbers, driver, changeRoles } = useMobbers();
-    const {
-        sessionId,
-        connect,
-        randomizeMobbers,
-        reassignMobbers,
-        changeName,
-    } = useSession();
+    const { mobId, connect, randomizeMobbers, reassignMobbers, changeName } = useMob();
     const {
         stop,
         reset,
@@ -60,22 +54,22 @@ const MobbingSession = () => {
     const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
-        connectToSessionIfActive();
+        connectToMobIfActive();
 
         addWindowResizeCallback((category) => {
             setIsTablet(category === 'tablet');
         });
     }, []);
 
-    const connectToSessionIfActive = async () => {
-        const res = await fetch(`/session/${sessionId}/is-active`);
+    const connectToMobIfActive = async () => {
+        const res = await fetch(`/mob/${mobId}/is-active`);
         const data = await res.json();
 
         if (data.isActive) {
             connect();
             setActivating(false);
         } else {
-            toast.error(`Mob "${sessionId}" is not active`);
+            toast.error(`Mob "${mobId}" is not active`);
             history.push('/');
         }
     };
@@ -204,4 +198,4 @@ const MobbingSession = () => {
     );
 };
 
-export default MobbingSession;
+export default Mob;

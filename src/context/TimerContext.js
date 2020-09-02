@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
-import { useSession } from './SessionContext';
+import { useMob } from './MobContext';
 import { strings } from '../strings';
 import { toast } from 'react-toastify';
 
@@ -11,7 +11,7 @@ const TimerProvider = (props) => {
     const [countdown, setCountdown] = useState();
     const [userIsEditingTimer, setUserIsEditingTimer] = useState(false);
     const [usernameEditingTimer, setUsernameEditingTimer] = useState('');
-    const { socket, sendMessage } = useSession();
+    const { socket, sendMessage } = useMob();
 
     socket.on(strings.commands.timer.update, (update) => {
         setInProgress(update.inProgress);
