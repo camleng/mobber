@@ -156,7 +156,7 @@ const Mob = () => {
                         />
                     )}
 
-                    {!editing && isReset() && (
+                    {!editing && isReset() && mobbers.length > 1 && (
                         <RoundedRect
                             title='Next'
                             className='next'
