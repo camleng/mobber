@@ -15,6 +15,7 @@ const ChangeTimer = ({ position, toggleEditing }) => {
                     <div className='mob-length'>Mob Length</div>
                     <Stepper
                         initialNumber={Math.floor(countdown / 60)}
+                        minimum={1}
                         callback={(number) => updateCountdown(number * 60)}
                     />
                 </div>

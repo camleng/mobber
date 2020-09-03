@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import './Stepper.scss';
 import { useEffect } from 'react';
 
-const Stepper = ({ initialNumber = 0, callback }) => {
+const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     const [number, setNumber] = useState(initialNumber);
 
     useEffect(() => {
         if (callback && number !== initialNumber) callback(number);
     }, [number]);
 
-    const decrement = () => setNumber(number - 1);
+    const isAboveMinimum = (num) => minimum === undefined || num >= minimum;
+
+    const decrement = () => {
+        if (isAboveMinimum(number - 1)) setNumber(number - 1);
+    };
+
     const increment = () => setNumber(number + 1);
 
     return (

@@ -22,6 +22,7 @@ const TimerProvider = (props) => {
     });
 
     const updateCountdown = (newCountdown) => {
+        if (newCountdown <= 0) return;
         setInitialSeconds(newCountdown);
         setCountdown(newCountdown);
         sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
