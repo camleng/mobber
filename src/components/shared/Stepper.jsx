@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './Stepper.scss';
 import { useEffect } from 'react';
+import './Stepper.scss';
 
 const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     const [number, setNumber] = useState(initialNumber);
