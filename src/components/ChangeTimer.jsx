@@ -27,6 +27,7 @@ const ChangeTimer = ({ position, toggleEditing }) => {
                     icon='stopwatch'
                     className='stopwatch'
                     onClick={toggleEditing}
+                    title='Change Mob Length'
                 />
             )}
         />

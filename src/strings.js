@@ -5,7 +5,7 @@ export const strings = {
     },
     audioFiles: {
         yourTurn: { name: 'Your Turn', file: 'your-turn.mp3' },
-        timesUp: { name: "Times's up", file: 'times-up.m4a' },
+        timesUp: { name: "Time's up", file: 'times-up.m4a' },
         noSound: { name: 'No sound', file: '' },
     },
     keyboardKeys: {

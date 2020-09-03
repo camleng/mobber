@@ -16,7 +16,6 @@ import { useMob } from '../context/MobContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     determineScreenSizeCategory,
     addWindowResizeCallback,
@@ -24,7 +23,6 @@ import {
 import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
 import { useTimer } from '../context/TimerContext';
-import Stepper from '../components/shared/Stepper';
 import './Mob.scss';
 
 const Mob = () => {

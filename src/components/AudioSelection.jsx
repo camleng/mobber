@@ -32,7 +32,9 @@ const AudioSelection = ({ position = 'bottom' }) => {
             jsx={jsx}
             className='audio-selection'
             position={position}
-            render={() => <FontAwesomeIcon icon={getIconName()} />}
+            render={() => (
+                <FontAwesomeIcon icon={getIconName()} title='Select notification sound' />
+            )}
         />
     );
 };

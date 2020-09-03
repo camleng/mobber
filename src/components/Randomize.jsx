@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Randomize = ({ randomize, position = 'bottom' }) => {
     return (
         <Popover
-            text='Randomized!'
+            text='Randomized'
             className='randomize'
             position={position}
             render={() => (
                 <div onClick={randomize}>
-                    <FontAwesomeIcon icon='dice' />
+                    <FontAwesomeIcon icon='dice' title='Randomize Mobbers' />
                 </div>
             )}
         />
