@@ -27,17 +27,6 @@ const TimerProvider = (props) => {
         sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
     };
 
-    const incrementCountdown = () => {
-        const newCountdown = countdown + 60;
-        updateCountdown(newCountdown);
-    };
-
-    const decrementCountdown = () => {
-        const newCountdown = countdown - 60;
-        if (newCountdown <= 0) return;
-        updateCountdown(newCountdown);
-    };
-
     const start = () => sendMessage(strings.commands.timer.start);
 
     const stop = () => sendMessage(strings.commands.timer.stop);
@@ -75,15 +64,13 @@ const TimerProvider = (props) => {
                 stopModifyingTime,
                 inProgress,
                 countdown,
-                setCountdown,
                 usernameEditingTimer,
                 startTimer,
                 isReset,
                 isStopped,
                 hasElapsed,
                 hasEnded,
-                incrementCountdown,
-                decrementCountdown,
+                updateCountdown,
             }}>
             {props.children}
         </TimerContext.Provider>

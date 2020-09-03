@@ -6,7 +6,7 @@ const Stepper = ({ initialNumber = 0, callback }) => {
     const [number, setNumber] = useState(initialNumber);
 
     useEffect(() => {
-        if (callback) callback(number);
+        if (callback && number !== initialNumber) callback(number);
     }, [number]);
 
     const decrement = () => setNumber(number - 1);

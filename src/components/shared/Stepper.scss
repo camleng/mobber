@@ -2,13 +2,13 @@
 
 .stepper {
     display: flex;
-    color: $blue;
+    color: $black;
     justify-content: center;
     align-items: center;
 
     > div {
         padding: 0.35rem 0.5rem;
-        border: 1px solid $blue;
+        border: 1px solid $black;
         line-height: 0.1;
         display: flex;
         justify-content: center;
