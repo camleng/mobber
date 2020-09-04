@@ -16,7 +16,6 @@ const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     };
 
     const increment = () => setNumber(number + 1);
-
     return (
         <div className='stepper'>
             <div onClick={decrement}>
