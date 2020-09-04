@@ -32,6 +32,7 @@
         "server": "node server.js",
         "client": "cross-env PORT=3000 react-scripts start",
         "build": "react-scripts build",
+        "deploy": "git pull && yarn build && cp -r build prod",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
