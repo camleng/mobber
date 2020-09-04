@@ -6,7 +6,6 @@ const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     const [number, setNumber] = useState(initialNumber);
 
     useEffect(() => {
-        console.log(`Called with ${number}`);
         if (callback) callback(number);
     }, [number]);
 
@@ -17,6 +16,7 @@ const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     };
 
     const increment = () => setNumber(number + 1);
+
     return (
         <div className='stepper'>
             <div onClick={decrement}>
