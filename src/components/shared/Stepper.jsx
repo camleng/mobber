@@ -6,7 +6,8 @@ const Stepper = ({ initialNumber = 0, callback, minimum }) => {
     const [number, setNumber] = useState(initialNumber);
 
     useEffect(() => {
-        if (callback && number !== initialNumber) callback(number);
+        console.log(`Called with ${number}`);
+        if (callback) callback(number);
     }, [number]);
 
     const isAboveMinimum = (num) => minimum === undefined || num >= minimum;
