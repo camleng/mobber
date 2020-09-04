@@ -2,15 +2,19 @@ import React from 'react';
 import Popover from './shared/Popover';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Randomize = ({ randomize, position = 'bottom' }) => {
+const Randomize = ({ randomize, position = 'bottom', disabled = false }) => {
     return (
         <Popover
-            text='Randomized'
+            text={!disabled && 'Randomized'}
             className='randomize'
             position={position}
             render={() => (
-                <div onClick={randomize}>
-                    <FontAwesomeIcon icon='dice' title='Randomize Mobbers' />
+                <div onClick={disabled ? undefined : randomize}>
+                    <FontAwesomeIcon
+                        icon='dice'
+                        title='Randomize Mobbers'
+                        className={disabled && 'disabled'}
+                    />
                 </div>
             )}
         />

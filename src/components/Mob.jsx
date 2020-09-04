@@ -125,18 +125,19 @@ const Mob = () => {
     ) : (
         <>
             <Menu>
-                {mobbers.length >= 2 && isReset() && (
-                    <Randomize
-                        randomize={randomizeMobbers}
-                        position={getPopupPosition()}
-                    />
-                )}
-                {isReset() && noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer() && (
-                    <ChangeTimer
-                        position={getPopupPosition()}
-                        toggleEditing={toggleEditing}
-                    />
-                )}
+                <Randomize
+                    randomize={randomizeMobbers}
+                    position={getPopupPosition()}
+                    disabled={mobbers.length < 2 || !isReset()}
+                />
+                <ChangeTimer
+                    position={getPopupPosition()}
+                    toggleEditing={toggleEditing}
+                    disabled={
+                        !isReset() ||
+                        !noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer()
+                    }
+                />
                 <AudioSelection position={getPopupPosition()} />
                 <Clipboard position={getPopupPosition()} />
             </Menu>
