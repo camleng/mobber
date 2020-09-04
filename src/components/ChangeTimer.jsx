@@ -27,7 +27,7 @@ const ChangeTimer = ({ position, toggleEditing, disabled = false }) => {
             render={() => (
                 <FontAwesomeIcon
                     icon='stopwatch'
-                    className={`stopwatch ${disabled && 'disabled'}`}
+                    className={`stopwatch ${disabled ? 'disabled' : ''}`}
                     onClick={disabled ? undefined : toggleEditing}
                     title='Change Mob Length'
                 />

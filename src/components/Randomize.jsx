@@ -13,7 +13,7 @@ const Randomize = ({ randomize, position = 'bottom', disabled = false }) => {
                     <FontAwesomeIcon
                         icon='dice'
                         title='Randomize Mobbers'
-                        className={disabled && 'disabled'}
+                        className={disabled ? 'disabled' : ''}
                     />
                 </div>
             )}
