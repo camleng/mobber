@@ -38,6 +38,10 @@ export const strings = {
         driver: 'driver',
         navigator: 'navigator',
     },
+    errors: {
+        nameLength: 'Please enter a name with fewer than 50 characters',
+        duplicateMobberName: 'A mobber with that name is already in this mob. Please choose a different name'
+    }
 };
 
 // export default {

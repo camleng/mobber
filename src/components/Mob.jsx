@@ -60,7 +60,7 @@ const Mob = () => {
 
     useEffect(() => {
         if (name.length > 50) {
-            toast.error('Please enter a name with fewer than 50 characters');
+            toast.error(strings.errors.nameLength);
             setIsEditingName(true);
         }
     }, [])
