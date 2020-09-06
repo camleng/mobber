@@ -99,7 +99,7 @@ const activateRandomMob = () => {
     let randomMobId;
 
     do {
-        randomMobId = Math.floor(Math.random() * 1000000);
+        randomMobId = [1, 2, 3, 4, 5, 6].map(_ => Math.floor(Math.random() * 10)).join('')
     } while (clients.hasOwnProperty(randomMobId));
 
     initializeMob(randomMobId);
