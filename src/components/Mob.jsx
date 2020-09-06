@@ -58,6 +58,13 @@ const Mob = () => {
         });
     }, []);
 
+    useEffect(() => {
+        if (name.length > 50) {
+            toast.error('Please enter a name with fewer than 50 characters');
+            setIsEditingName(true);
+        }
+    }, [])
+
     const connectToMobIfActive = async () => {
         const res = await fetch(`/mob/${mobId}/is-active`);
         const data = await res.json();
@@ -120,7 +127,7 @@ const Mob = () => {
         <h1>Activating</h1>
     ) : !hasName() ? (
         <div>
-            <NameEntry submitNameChange={submitNameChange} name={name} />
+            <NameEntry name={name} submitNameChange={submitNameChange} />
         </div>
     ) : (
         <>

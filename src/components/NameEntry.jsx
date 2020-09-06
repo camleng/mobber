@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import RoundedRect from './shared/RoundedRect';
-import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
 import './NameEntry.scss';
+import { toast } from 'react-toastify';
 
-const NameEntry = ({ submitNameChange }) => {
-    const [enteredName, setEnteredName] = useStorage(
-        strings.storageKeys.mobberNameKey,
-        ''
-    );
+const NameEntry = ({ name, submitNameChange }) => {
+    const [enteredName, setEnteredName] = useState(name);
 
     const submitName = () => {
+        const trimmedName = enteredName.trim();
+        if (trimmedName.length > 50) {
+            toast.error('Please enter a name that is less than 50 characters')
+            return;
+        }
         submitNameChange(enteredName.trim());
     };
 
