@@ -63,7 +63,7 @@ const Mob = () => {
             toast.error(strings.errors.nameLength);
             setIsEditingName(true);
         }
-    }, [])
+    }, []);
 
     const connectToMobIfActive = async () => {
         const res = await fetch(`/mob/${mobId}/is-active`);
@@ -161,7 +161,7 @@ const Mob = () => {
                         />
                     )}
 
-                    {!editing && isReset() && mobbers.length > 1 && (
+                    {isReset() && mobbers.length > 1 && (
                         <RoundedRect
                             title='Next'
                             className='next'
