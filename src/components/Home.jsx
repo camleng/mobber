@@ -20,12 +20,17 @@ const Home = () => {
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === strings.keyboardKeys.enter) joinMob();
+        if (e.key === strings.keyboardKeys.enter && mobId.length === 6) joinMob();
     };
 
     return (
         <>
-            <div className='container'>
+            <ul className='skip-links'>
+                <li>
+                    <a href='#main-content'>Skip to main content</a>
+                </li>
+            </ul>
+            <div className='container' id='main-content'>
                 <div className='join-mob'>
                     <label>Join a mob</label>
                     <div>
@@ -33,7 +38,8 @@ const Home = () => {
                             placeholder='Mob ID'
                             onChange={(e) => setMobId(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            value={mobId}></input>
+                            value={mobId}
+                            title='Mob ID'></input>
                         <RoundedRect title='Join' className='join' onClick={joinMob} />
                     </div>
                 </div>

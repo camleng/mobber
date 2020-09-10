@@ -8,8 +8,6 @@
 
     > div {
         @include desktop {
-            margin-top: 0.5rem;
-            margin-left: 2rem;
             width: 11rem;
         }
 
@@ -19,7 +17,9 @@
 
         .title {
             font-size: 2.4rem;
+            font-weight: 400;
             line-height: 0.7;
+            margin: 0.5rem 0 0 0;
             cursor: pointer;
         }
 

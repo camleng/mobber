@@ -9,9 +9,9 @@ const Brand = () => {
     return (
         <div className='title-bar'>
             <div>
-                <div className='title' onClick={() => history.push('/')}>
+                <h1 className='title' onClick={() => history.push('/')}>
                     Mobber
-                </div>
+                </h1>
                 {mobId && <div className='mob-id'>Mob ID: {mobId}</div>}
             </div>
         </div>

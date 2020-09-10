@@ -20,7 +20,7 @@
     flex-direction: column;
 
     div {
-        margin-top: 1rem;
+        margin-top: 2rem;
         display: flex;
         flex-direction: column;
 
@@ -35,7 +35,7 @@
             border-bottom: 1px solid $lightgray;
             padding-left: 0.5rem;
             font-size: 1.2rem;
-            height: 2rem;
+            height: 2.6rem;
 
             @include desktop {
                 margin-right: 2rem;
@@ -43,7 +43,8 @@
             }
 
             &:focus {
-                outline: none;
+                border: 1px solid $lightgray;
+                border-radius: 0.5rem;
             }
         }
     }
@@ -53,9 +54,11 @@
         display: flex;
         justify-content: center;
         font-size: 1.2rem;
+        margin-top: 2rem;
 
         @include desktop {
             width: 12rem;
+            margin-top: 0;
         }
     }
 }
@@ -63,9 +66,15 @@
 .create-mob {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     div {
-        margin-top: 1rem;
+        margin-top: 2rem;
+        width: 100%;
+
+        button {
+            width: 100%;
+        }
     }
 }
 
@@ -128,6 +137,25 @@ label {
 
         @include desktop {
             margin: 2rem 0;
+            top: 0;
+        }
+    }
+}
+
+.skip-links {
+    list-style: none;
+
+    a {
+        padding: 0.5rem 0.75rem;
+        position: absolute;
+        top: -3rem;
+        left: 2rem;
+        text-decoration: none;
+        color: $black;
+        background-color: white;
+        border: none;
+
+        &:focus {
             top: 0;
         }
     }
