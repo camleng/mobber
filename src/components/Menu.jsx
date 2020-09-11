@@ -29,6 +29,7 @@ const Menu = ({ children }) => {
                             icon='chevron-down'
                             onClick={toggle}
                             className={`icon ${shown ? 'show' : ''}`}
+                            title='toggle menu'
                         />
                     }
                 </div>

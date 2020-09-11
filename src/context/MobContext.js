@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { strings } from '../strings';
@@ -19,11 +19,14 @@ const MobProvider = (props) => {
         connectionOptions
     );
 
-    const sendMessage = (event, payload) => {
-        payload = payload || {};
-        payload.mobId = mobId;
-        socket.emit(event, payload);
-    };
+    const sendMessage = useCallback(
+        (event, payload) => {
+            payload = payload || {};
+            payload.mobId = mobId;
+            socket.emit(event, payload);
+        },
+        [mobId, socket]
+    );
 
     const connect = () => sendMessage(strings.commands.mob.connect);
 

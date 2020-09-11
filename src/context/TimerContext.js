@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useCallback } from 'react';
 import { useMob } from './MobContext';
 import { strings } from '../strings';
 import { toast } from 'react-toastify';
@@ -21,12 +21,15 @@ const TimerProvider = (props) => {
         setUsernameEditingTimer(update.isEditingUsername);
     });
 
-    const updateCountdown = (newCountdown) => {
-        if (newCountdown <= 0) return;
-        setInitialSeconds(newCountdown);
-        setCountdown(newCountdown);
-        sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
-    };
+    const updateCountdown = useCallback(
+        (newCountdown) => {
+            if (newCountdown <= 0) return;
+            setInitialSeconds(newCountdown);
+            setCountdown(newCountdown);
+            sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
+        },
+        [sendMessage]
+    );
 
     const start = () => sendMessage(strings.commands.timer.start);
 

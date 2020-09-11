@@ -10,10 +10,10 @@ const MobbersProvider = (props) => {
     const [driver, setDriver] = useState();
     const [navigator, setNavigator] = useState();
 
-    socket.on(strings.commands.mobbers.update, (mobbers) => {
-        setMobbers(mobbers);
-        setDriver(getDriver(mobbers));
-        setNavigator(getNavigator(mobbers));
+    socket.on(strings.commands.mobbers.update, (_mobbers) => {
+        setMobbers(_mobbers);
+        setDriver(getDriver(_mobbers));
+        setNavigator(getNavigator(_mobbers));
     });
 
     const changeRoles = () => {

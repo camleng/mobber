@@ -10,13 +10,17 @@ const CurrentMobbers = () => {
         <div className='current-mobbers' data-private>
             {driver && (
                 <div className='current-role'>
-                    <FontAwesomeIcon icon='car' className='role' />
+                    <FontAwesomeIcon icon='car' className='role' title='driver' />
                     <div className='name'>{driver.name}</div>
                 </div>
             )}
             {navigator && (
                 <div className='current-role'>
-                    <FontAwesomeIcon icon='map-signs' className='role' />
+                    <FontAwesomeIcon
+                        icon='map-signs'
+                        className='role'
+                        title='navigator'
+                    />
                     <div className='name'>{navigator.name}</div>
                 </div>
             )}

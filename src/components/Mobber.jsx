@@ -25,9 +25,15 @@ const Mobber = ({ mobber, index, setIsEditingName }) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}>
-                    {isDriver() && <FontAwesomeIcon icon='car' className='role' />}
+                    {isDriver() && (
+                        <FontAwesomeIcon icon='car' className='role' title='driver' />
+                    )}
                     {isNavigator() && (
-                        <FontAwesomeIcon icon='map-signs' className='role' />
+                        <FontAwesomeIcon
+                            icon='map-signs'
+                            className='role'
+                            title='navigator'
+                        />
                     )}
                     {!isDriver() && !isNavigator() && <div className='role'></div>}
                     <div className='name'>{mobber.name}</div>
@@ -36,6 +42,8 @@ const Mobber = ({ mobber, index, setIsEditingName }) => {
                             <FontAwesomeIcon
                                 icon='pencil-alt'
                                 onClick={() => setIsEditingName(true)}
+                                title='edit name'
+                                tabIndex={0}
                             />
                         )}
                     </div>
