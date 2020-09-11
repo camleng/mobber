@@ -12,7 +12,7 @@ const NameEntry = ({ name, submitNameChange }) => {
     const submitName = () => {
         const trimmedName = enteredName.trim();
         if (trimmedName.length > 50) {
-            toast.error(strings.errors.nameLength)
+            toast.error(strings.errors.nameLength);
             return;
         }
         if (isUnique(trimmedName)) {
@@ -23,10 +23,9 @@ const NameEntry = ({ name, submitNameChange }) => {
         submitNameChange(enteredName.trim());
     };
 
-    const isUnique = newName => {
-        return name !== newName && 
-            mobbers.map(m => m.name).includes(newName)
-    }
+    const isUnique = (newName) => {
+        return name !== newName && mobbers.map((m) => m.name).includes(newName);
+    };
 
     const handleKeyPress = (e) => {
         if (e.key === strings.keyboardKeys.enter) submitName();
@@ -41,7 +40,7 @@ const NameEntry = ({ name, submitNameChange }) => {
                 onChange={(e) => setEnteredName(e.target.value)}
                 onKeyPress={handleKeyPress}
                 autoFocus></input>
-            <RoundedRect onClick={submitName} title='Enter' className='enter' />
+            <RoundedRect onClick={submitName} title='Save' className='save' />
         </div>
     );
 };

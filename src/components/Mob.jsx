@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Countdown from './Countdown';
 import Mobbers from './Mobbers';
 import RoundedRect from './shared/RoundedRect';
@@ -50,22 +50,7 @@ const Mob = () => {
     const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
     const [isEditingName, setIsEditingName] = useState(false);
 
-    useEffect(() => {
-        connectToMobIfActive();
-
-        addWindowResizeCallback((category) => {
-            setIsTablet(category === 'tablet');
-        });
-    }, []);
-
-    useEffect(() => {
-        if (name.length > 50) {
-            toast.error(strings.errors.nameLength);
-            setIsEditingName(true);
-        }
-    }, []);
-
-    const connectToMobIfActive = async () => {
+    const connectToMobIfActive = useCallback(async () => {
         const res = await fetch(`/mob/${mobId}/is-active`);
         const data = await res.json();
 
@@ -76,13 +61,28 @@ const Mob = () => {
             toast.error(`Mob "${mobId}" is not active`);
             history.push('/');
         }
-    };
+    }, [connect, history, mobId]);
+
+    useEffect(() => {
+        connectToMobIfActive();
+
+        addWindowResizeCallback((category) => {
+            setIsTablet(category === 'tablet');
+        });
+    }, [connectToMobIfActive]);
+
+    useEffect(() => {
+        if (name.length > 50) {
+            toast.error(strings.errors.nameLength);
+            setIsEditingName(true);
+        }
+    }, [name.length]);
 
     useEffect(() => {
         let title = `Mobber - ${formatTime(countdown)}`;
         if (driver) title += ` | ${driver.name}`;
         document.title = title;
-    }, [countdown]);
+    }, [countdown, driver]);
 
     const placeMobberInDroppedPosition = (result) => {
         const { destination, source } = result;
