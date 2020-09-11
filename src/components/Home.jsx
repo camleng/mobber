@@ -39,7 +39,8 @@ const Home = () => {
                             onChange={(e) => setMobId(e.target.value)}
                             onKeyPress={handleKeyPress}
                             value={mobId}
-                            title='Mob ID'></input>
+                            title='Mob ID'
+                            maxlength={6}></input>
                         <RoundedRect title='Join' className='join' onClick={joinMob} />
                     </div>
                 </div>
