@@ -82,6 +82,10 @@ const Mob = () => {
         let title = `Mobber - ${formatTime(countdown)}`;
         if (driver) title += ` | ${driver.name}`;
         document.title = title;
+
+        return () => {
+            document.title = strings.title;
+        };
     }, [countdown, driver]);
 
     const placeMobberInDroppedPosition = (result) => {
