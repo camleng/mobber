@@ -19,10 +19,12 @@
     }
 
     &:hover {
-        background-color: $lightgreen;
+        color: $white;
+        background-color: $green;
     }
 
     &.selected {
-        background-color: $lightgreen;
+        color: $white;
+        background-color: $green;
     }
 }
