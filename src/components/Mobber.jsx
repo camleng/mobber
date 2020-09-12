@@ -35,7 +35,7 @@ const Mobber = ({ mobber, index, setIsEditingName }) => {
                             title='navigator'
                         />
                     )}
-                    {!isDriver() && !isNavigator() && <div className='role'></div>}
+                    {!isDriver() && !isNavigator() && <div className='placeholder'></div>}
                     <div className='name'>{mobber.name}</div>
                     <div>
                         {isCurrentUser(mobber.name) && (
