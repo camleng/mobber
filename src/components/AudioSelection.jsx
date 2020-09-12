@@ -9,10 +9,12 @@ import './AudioSelection.scss';
 const AudioSelection = ({ position = 'bottom' }) => {
     const { audioFile, options, setAudioFile } = useAudio();
     const [previewAudioFile, setPreviewAudioFile] = useState(false);
+    let timeout;
 
     useEffect(() => {
         if (previewAudioFile) {
-            setTimeout(() => {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(() => {
                 setPreviewAudioFile(false);
             }, 1000);
         }
