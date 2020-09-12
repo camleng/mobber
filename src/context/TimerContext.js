@@ -9,6 +9,8 @@ const TimerProvider = (props) => {
     const [inProgress, setInProgress] = useState(false);
     const [initialSeconds, setInitialSeconds] = useState(0);
     const [countdown, setCountdown] = useState(0);
+    const [sessionsPerBreak, setSessionsPerBreak] = useState(4);
+    const [minutesPerBreak, setMinutesPerBreak] = useState(5);
     const [userIsEditingTimer, setUserIsEditingTimer] = useState(false);
     const [usernameEditingTimer, setUsernameEditingTimer] = useState('');
     const { socket, sendMessage } = useMob();
@@ -27,6 +29,26 @@ const TimerProvider = (props) => {
             setInitialSeconds(newCountdown);
             setCountdown(newCountdown);
             sendMessage(strings.commands.timer.set, { initialSeconds: newCountdown });
+        },
+        [sendMessage]
+    );
+
+    const updateSessionsPerBreak = useCallback(
+        (newSessionsPerBreak) => {
+            setSessionsPerBreak(newSessionsPerBreak);
+            sendMessage(strings.commands.timer.setSessionsPerBreak, {
+                sessionsPerBreak: newSessionsPerBreak,
+            });
+        },
+        [sendMessage]
+    );
+
+    const updateMinutesPerBreak = useCallback(
+        (newMinutesPerBreak) => {
+            setMinutesPerBreak(newMinutesPerBreak);
+            sendMessage(strings.commands.timer.setMinutesPerBreak, {
+                minutesPerBreak: newMinutesPerBreak,
+            });
         },
         [sendMessage]
     );
@@ -75,6 +97,10 @@ const TimerProvider = (props) => {
                 hasElapsed,
                 hasEnded,
                 updateCountdown,
+                sessionsPerBreak,
+                updateSessionsPerBreak,
+                minutesPerBreak,
+                updateMinutesPerBreak,
             }}>
             {props.children}
         </TimerContext.Provider>

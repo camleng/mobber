@@ -23,10 +23,20 @@ const broadcastTimerUpdate = (mobId, broadcast) => {
         initialSeconds,
         isEditing,
         isEditingUsername,
+        sessionsPerBreak,
+        minutesPerBreak,
     } = timers[mobId];
     broadcast(
         'TIMER:UPDATE',
-        { inProgress, remainingSeconds, initialSeconds, isEditing, isEditingUsername },
+        {
+            inProgress,
+            remainingSeconds,
+            initialSeconds,
+            isEditing,
+            isEditingUsername,
+            sessionsPerBreak,
+            minutesPerBreak,
+        },
         mobId
     );
 };
@@ -97,14 +107,20 @@ const stopModify = (mobId, broadcast) => {
     broadcastTimerUpdate(mobId, broadcast);
 };
 
+const setSessionsPerBreak = (mobId, sessionsPerBreak, broadcast) => {
+    timers[mobId].sessionsPerBreak = sessionsPerBreak;
+    broadcastTimerUpdate(mobId, broadcast);
+};
+
+const setMinutesPerBreak = (mobId, minutesPerBreak, broadcast) => {
+    timers[mobId].minutesPerBreak = minutesPerBreak;
+    broadcastTimerUpdate(mobId, broadcast);
+};
+
 const set = (mobId, initialSeconds, broadcast) => {
     console.log(`Timer set to ${initialSeconds}`);
-
-    timers[mobId] = {
-        ...timers[mobId],
-        initialSeconds,
-        remainingSeconds: initialSeconds,
-    };
+    timers[mobId].initialSeconds = initialSeconds;
+    timers[mobId].remainingSeconds = initialSeconds;
     broadcastTimerUpdate(mobId, broadcast);
 };
 
@@ -117,5 +133,7 @@ module.exports = {
     reset,
     startModify,
     stopModify,
+    setSessionsPerBreak,
+    setMinutesPerBreak,
     set,
 };
