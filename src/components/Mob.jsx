@@ -6,10 +6,9 @@ import CurrentMobbers from './CurrentMobbers';
 import Randomize from './Randomize';
 import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
-import AudioSelection from './AudioSelection';
 import Menu from './Menu';
 import NameEntry from './NameEntry';
-import ChangeTimer from './ChangeTimer';
+import Settings from './Settings';
 import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import { useMob } from '../context/MobContext';
@@ -44,7 +43,6 @@ const Mob = () => {
     } = useTimer();
     const [activating, setActivating] = useState(true);
     const history = useHistory();
-    const [editing, setEditing] = useState(false);
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
@@ -113,17 +111,7 @@ const Mob = () => {
         setIsEditingName(false);
     };
 
-    const toggleEditing = () => {
-        if (editing) stopModifyingTime();
-        else startModifyingTime(name);
-        setEditing(!editing);
-    };
-
     const noop = () => {};
-
-    const noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer = () => {
-        return !usernameEditingTimer || usernameEditingTimer === name;
-    };
 
     const getPopupPosition = () => (isTablet ? 'bottom' : 'left');
 
@@ -141,16 +129,8 @@ const Mob = () => {
                     position={getPopupPosition()}
                     disabled={mobbers.length < 2 || !isReset()}
                 />
-                <ChangeTimer
-                    position={getPopupPosition()}
-                    toggleEditing={toggleEditing}
-                    disabled={
-                        !isReset() ||
-                        !noOneIsEditingTheTimerOrCurrentUserIsEditingTheTimer()
-                    }
-                />
-                <AudioSelection position={getPopupPosition()} />
                 <Clipboard position={getPopupPosition()} />
+                <Settings position={getPopupPosition()} isReset={isReset} />
             </Menu>
 
             <div className='countdown-and-controls'>
@@ -177,7 +157,7 @@ const Mob = () => {
                         <RoundedRect title='Stop' className='stop' onClick={stop} />
                     )}
 
-                    {!editing && !inProgress && hasElapsed() && (
+                    {!inProgress && hasElapsed() && (
                         <RoundedRect title='Reset' className='reset' onClick={reset} />
                     )}
                 </div>

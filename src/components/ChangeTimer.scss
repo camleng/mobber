@@ -1,3 +1,5 @@
+@import "../colors.scss";
+
 .popover-body {
     background-color: white;
     padding: 1rem;
@@ -7,4 +9,13 @@
 .mob-length {
     text-align: center;
     margin-bottom: 0.5rem;
+}
+
+.disabled {
+    color: $lightgray;
+}
+
+.note {
+    font-size: 0.8rem;
+    margin: 0;
 }

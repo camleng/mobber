@@ -16,11 +16,6 @@ const AudioProvider = (props) => {
             file: strings.audioFiles.timesUp.file,
             selected: false,
         },
-        {
-            name: strings.audioFiles.noSound.name,
-            file: strings.audioFiles.noSound.file,
-            selected: false,
-        },
     ];
     const [options, setOptions] = useState(initialOptions);
     const [audioFile, setAudioFile] = useStorage(

@@ -8,28 +8,31 @@ const Popover = ({
     jsx,
     className = '',
     position = ['left', 'bottom'],
+    isOpen = true,
+    closeOnClickOutside = true,
     callback,
 }) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-    const getContent = () => {
-        if (jsx) return jsx;
-        if (text) return <div className='popover'>{text}</div>;
-    };
+    const content = jsx ? jsx : <div className='popover'>{text}</div>;
 
     const onClose = () => {
-        setIsPopoverOpen(false);
-        if (callback) callback();
+        if (closeOnClickOutside) {
+            setIsPopoverOpen(false);
+            if (callback) callback();
+        }
     };
 
-    const togglePopover = () => setIsPopoverOpen(!isPopoverOpen);
+    const togglePopover = () => {
+        setIsPopoverOpen(!isPopoverOpen);
+    };
 
     return (
         <TinyPopover
-            isOpen={isPopoverOpen}
+            isOpen={isPopoverOpen && isOpen}
             position={position}
             onClickOutside={onClose}
-            content={getContent()}>
+            content={content}>
             <div className={className} onClick={togglePopover}>
                 {render()}
             </div>

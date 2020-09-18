@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Popover from './shared/Popover';
 import Audio from './shared/Audio';
+import RoundedRect from './shared/RoundedRect';
 import { useAudio } from '../context/AudioContext';
 import { strings } from '../strings';
 import './AudioSelection.scss';
 
-const AudioSelection = ({ position = 'bottom' }) => {
+const AudioSelection = () => {
     const { audioFile, options, setAudioFile } = useAudio();
     const [previewAudioFile, setPreviewAudioFile] = useState(false);
+    const [previewIsEnabled, setPreviewIsEnabled] = useState(true);
     let timeout;
 
     useEffect(() => {
         if (previewAudioFile) {
+            setPreviewIsEnabled(false);
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
                 setPreviewAudioFile(false);
+                setPreviewIsEnabled(true);
             }, 1000);
         }
     }, [previewAudioFile]);
 
     const handleClick = (option) => {
         setAudioFile(option.file);
+    };
+
+    const previewNotificationSound = () => {
         setPreviewAudioFile(true);
     };
 
@@ -30,7 +36,6 @@ const AudioSelection = ({ position = 'bottom' }) => {
             {options.map((option) => (
                 <div
                     className={`audio-option ${option.selected ? 'selected' : ''}`}
-                    onClick={() => handleClick(option)}
                     key={option.file}>
                     {option.name}
                 </div>
@@ -46,17 +51,23 @@ const AudioSelection = ({ position = 'bottom' }) => {
 
     return (
         <>
-            <Popover
-                jsx={jsx}
-                className='audio-selection'
-                position={position}
-                render={() => (
-                    <FontAwesomeIcon
-                        icon={getIconName()}
-                        title='Select notification sound'
-                    />
-                )}
-            />
+            <RoundedRect
+                onClick={previewNotificationSound}
+                className='preview'
+                disabled={!previewIsEnabled}>
+                <FontAwesomeIcon icon='play-circle' />
+                Preview
+            </RoundedRect>
+            <div className='audio-selection-container'>
+                {options.map((option) => (
+                    <div
+                        className={`audio-option ${option.selected ? 'selected' : ''}`}
+                        onClick={() => handleClick(option)}
+                        key={option.file}>
+                        {option.name}
+                    </div>
+                ))}
+            </div>
             {previewAudioFile && <Audio />}
         </>
     );

@@ -45,9 +45,3 @@ export const strings = {
             'A mobber with that name is already in this mob. Please choose a different name',
     },
 };
-
-// export default {
-//     storageKeys: strings.storageKeys,
-//     keyboardKeys: strings.keyboardKeys,
-//     commands: strings.commands,
-// };
