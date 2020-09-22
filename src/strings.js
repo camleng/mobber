@@ -33,6 +33,9 @@ export const strings = {
             add: 'MOBBERS:ADD',
             remove: 'MOBBERS:REMOVE',
             update: 'MOBBERS:UPDATE',
+            nameUpdate: 'MOBBERS:NAME_UPDATE',
+            create: 'MOBBERS:CREATE',
+            creation: 'MOBBERS:CREATION',
         },
     },
     roles: {

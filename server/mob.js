@@ -1,6 +1,8 @@
 const socket = require('socket.io');
 const timer = require('./timer');
 const mobbers = require('./mobbers');
+const { createMob } = require('./database/services/mobService');
+const { createMobber } = require('./database/services/mobberService');
 
 let clients = {};
 
@@ -39,36 +41,39 @@ const addListeners = (io) => {
             timer.stopModify(data.mobId, broadcast);
         });
 
-        socket.on('MOBBERS:ADD', (data) => {
-            mobbers.addMobber(data.name, data.mobId, broadcast);
+        socket.on('MOBBERS:CREATE', async (data) => {
+            await mobbers.createNewMobber(data.name, broadcast);
         });
 
-        socket.on('MOBBERS:REMOVE', (data) => {
-            mobbers.removeMobber(data.name, data.mobId, broadcast);
+        socket.on('MOBBERS:ADD', async (data) => {
+            await mobbers.addMobber(data.id, data.name, data.mobId, broadcast);
         });
 
-        socket.on('MOBBERS:CHANGE', (data) => {
-            mobbers.changeRoles(data.mobId, broadcast);
+        socket.on('MOBBERS:REMOVE', async (data) => {
+            await mobbers.removeMobber(data.id, broadcast);
         });
 
-        socket.on('MOBBERS:CHANGENAME', (data) => {
-            mobbers.changeName(data.mobId, data.oldName, data.newName, broadcast);
+        socket.on('MOBBERS:CHANGE', async (data) => {
+            await mobbers.changeRoles(data.mobId, broadcast);
         });
 
-        socket.on('MOBBERS:REASSIGN', (data) => {
-            mobbers.reassign(data.mobId, data.mobbers, broadcast);
+        socket.on('MOBBERS:CHANGENAME', async (data) => {
+            await mobbers.changeName(data.mobId, data.newName, data.id, broadcast);
         });
 
-        socket.on('MOBBERS:RANDOMIZE', (data) => {
-            mobbers.randomize(data.mobId, broadcast);
+        socket.on('MOBBERS:REASSIGN', async (data) => {
+            await mobbers.reassign(data.mobId, data.mobbers, broadcast);
+        });
+
+        socket.on('MOBBERS:RANDOMIZE', async (data) => {
+            await mobbers.randomize(data.mobId, broadcast);
         });
     });
 };
 
 const broadcast = (event, message, mobId) => {
-    console.log(`Sending: ${JSON.stringify(message)}`);
-
     if (clients[mobId]) {
+        console.log(`Sending: ${JSON.stringify(message)}`);
         clients[mobId].forEach((client) => {
             client.emit(event, message);
         });
@@ -87,7 +92,9 @@ const addClientToMob = (mobId, socket) => {
     clients[mobId].push(socket);
 };
 
-const initializeMob = (mobId) => {
+const initializeMob = async (mobId) => {
+    await createMob(mobId);
+
     if (!clients[mobId]) {
         clients[mobId] = [];
     }
@@ -95,14 +102,16 @@ const initializeMob = (mobId) => {
     mobbers.init(mobId);
 };
 
-const activateRandomMob = () => {
+const activateRandomMob = async () => {
     let randomMobId;
 
     do {
-        randomMobId = [1, 2, 3, 4, 5, 6].map(_ => Math.floor(Math.random() * 10)).join('')
+        randomMobId = [1, 2, 3, 4, 5, 6]
+            .map((_) => Math.floor(Math.random() * 10))
+            .join('');
     } while (clients.hasOwnProperty(randomMobId));
 
-    initializeMob(randomMobId);
+    await initializeMob(randomMobId);
 
     return randomMobId;
 };

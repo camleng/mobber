@@ -22,20 +22,20 @@ function App() {
                     </Route>
                 </Switch>
                 <Switch>
-                    <Route exact path='/'>
-                        <Home />
-                    </Route>
-                    <Route exact path='/mob/:mobId'>
-                        <MobProvider>
-                            <TimerProvider>
-                                <AudioProvider>
-                                    <MobbersProvider>
+                    <MobProvider>
+                        <MobbersProvider>
+                            <Route exact path='/'>
+                                <Home />
+                            </Route>
+                            <Route exact path='/mob/:mobId'>
+                                <TimerProvider>
+                                    <AudioProvider>
                                         <Mob />
-                                    </MobbersProvider>
-                                </AudioProvider>
-                            </TimerProvider>
-                        </MobProvider>
-                    </Route>
+                                    </AudioProvider>
+                                </TimerProvider>
+                            </Route>
+                        </MobbersProvider>
+                    </MobProvider>
                     <Route path='*'>
                         <Redirect to='/' />
                     </Route>

@@ -1,3 +1,10 @@
+const {
+    addMobberToMob,
+    getAllInMob,
+    removeMobberFromMob,
+    createMobber,
+} = require('./database/services/mobberService');
+const { getById } = require('./database/services/mobberService');
 const randomizer = require('./randomizer');
 
 let mobbers = {};
@@ -8,33 +15,44 @@ const init = (mobId) => {
     }
 };
 
-const broadcastMobbersUpdate = (mobId, broadcast) => {
-    broadcast('MOBBERS:UPDATE', mobbers[mobId], mobId);
+const broadcastMobberCreationUpdate = (mobber, broadcast) => {
+    broadcast('MOBBERS:CREATION', mobber);
 };
 
-const mobberAlreadyExits = (name, mobId) => {
-    return mobbers[mobId].map((m) => m.name).includes(name);
+const broadcastMobbersUpdate = async (mobId, broadcast) => {
+    const mobbersInMob = await getAllInMob(mobId);
+    broadcast('MOBBERS:UPDATE', mobbersInMob, mobId);
 };
 
-const addMobber = (name, mobId, broadcast) => {
-    if (mobberAlreadyExits(name, mobId)) return;
-
-    const role = determineRole(mobId);
-
-    mobbers[mobId].push({ name, role });
-
-    broadcastMobbersUpdate(mobId, broadcast);
+const createNewMobber = async (name, broadcast) => {
+    const created = await createMobber(name);
+    console.log('created ', created.toJSON());
+    broadcastMobberCreationUpdate(created, broadcast);
 };
 
-const removeMobber = (name, mobId, broadcast) => {
-    if (mobbers[mobId] === null) return;
-    const _mobbers = mobbers[mobId].filter((m) => m.name !== name);
+const addMobber = async (id, name, mobId, broadcast) => {
+    const mobber = await addMobberToMob(id, name, mobId);
+
+    // TODO: Assign mobber to role
+    // const role = determineRole(mobId);
+    // mobbers[mobId].push({ name: id.name, role });
+
+    await broadcastMobberCreationUpdate(mobber, broadcast);
+    await broadcastMobbersUpdate(mobId, broadcast);
+};
+
+const removeMobber = async (id, broadcast) => {
+    // if (mobbers[mobId] === null) return;
+    // const _mobbers = mobbers[mobId].filter((m) => m.name !== name);
+    await removeMobberFromMob(id);
+
+    // TODO: Reassign roles after deletion
     reassignAfterDeletion(_mobbers);
-    mobbers[mobId] = _mobbers;
-    broadcastMobbersUpdate(mobId, broadcast);
+    // mobbers[mobId] = _mobbers;
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const changeRoles = (mobId, broadcast) => {
+const changeRoles = async (mobId, broadcast) => {
     let _mobbers = mobbers[mobId];
 
     const [newDriverIndex, newNavigatorIndex] = incrementIndices(_mobbers);
@@ -46,37 +64,43 @@ const changeRoles = (mobId, broadcast) => {
     }
 
     mobbers[mobId] = _mobbers;
-    broadcastMobbersUpdate(mobId, broadcast);
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const changeName = (mobId, oldName, newName, broadcast) => {
-    let _mobbers = mobbers[mobId];
-    let index = _mobbers.findIndex((m) => m.name === oldName);
-    if (index === -1) return;
+const changeName = async (mobId, newName, id, broadcast) => {
+    // let _mobbers = mobbers[mobId];
+    // let index = _mobbers.findIndex((m) => m.name === oldName);
+    // if (index === -1) return;
 
-    _mobbers[index].name = newName;
-    broadcastMobbersUpdate(mobId, broadcast);
+    // _mobbers[index].name = newName;
+    const mobber = await getById(id);
+    mobber.name = newName;
+    mobber.save();
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const reassign = (mobId, _mobbers, broadcast) => {
+const reassign = async (mobId, _mobbers, broadcast) => {
     reassignAfterDragAndDrop(_mobbers);
 
     mobbers[mobId] = _mobbers;
-    broadcastMobbersUpdate(mobId, broadcast);
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const randomize = (mobId, broadcast) => {
-    let _mobbers = mobbers[mobId];
+const randomize = async (mobId, broadcast) => {
+    console.log('Not implemented');
+    // let _mobbers = mobbers[mobId];
 
-    clearRoles(_mobbers);
+    // TODO: Clear roles
+    // clearRoles(_mobbers);
 
-    _mobbers = randomizer.shuffle(_mobbers);
+    // TODO: Randomize
+    // _mobbers = randomizer.shuffle(_mobbers);
 
-    _mobbers[0].role = 'driver';
-    _mobbers[1].role = 'navigator';
+    // _mobbers[0].role = 'driver';
+    // _mobbers[1].role = 'navigator';
 
-    mobbers[mobId] = _mobbers;
-    broadcastMobbersUpdate(mobId, broadcast);
+    // mobbers[mobId] = _mobbers;
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
 const incrementIndices = (_mobbers) => {
@@ -165,6 +189,7 @@ const determineRole = (mobIdId) => {
 
 module.exports = {
     init,
+    createNewMobber,
     addMobber,
     removeMobber,
     changeRoles,

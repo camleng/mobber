@@ -20,15 +20,19 @@ const MobbersProvider = (props) => {
         sendMessage(strings.commands.mobbers.change);
     };
 
-    const addMobber = (name) => {
-        if (name.trim() === '') return;
-        if (mobbers.map((m) => m.name).includes(name)) return;
-
-        sendMessage(strings.commands.mobbers.add, { name });
+    const createMobber = (name) => {
+        sendMessage(strings.commands.mobbers.create, { name });
     };
 
-    const removeMobber = (name) => {
-        sendMessage(strings.commands.mobbers.remove, { name });
+    const addMobber = (mobberId) => {
+        // if (mobberId.trim() === '') return;
+        if (mobbers.map((m) => m.id).includes(mobberId)) return;
+
+        sendMessage(strings.commands.mobbers.add, { id: mobberId });
+    };
+
+    const removeMobber = (mobberId) => {
+        sendMessage(strings.commands.mobbers.remove, { mobberId });
     };
 
     const getDriver = (mobbers) => {
@@ -44,6 +48,7 @@ const MobbersProvider = (props) => {
             value={{
                 mobbers,
                 changeRoles,
+                createMobber,
                 addMobber,
                 removeMobber,
                 driver,

@@ -47,8 +47,14 @@ const Mob = () => {
     const [editing, setEditing] = useState(false);
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
-    const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
+    // const [id, setId] = useStorage('mobber:id', null);
+    // const [currentMobber, setCurrentMobber] = useStorage(
+    //     strings.storageKeys.mobberNameKey,
+    //     ''
+    // );
+    const [name, setName] = useState('');
     const [isEditingName, setIsEditingName] = useState(false);
+    const mobberId = localStorage.getItem('mobber:id');
 
     const connectToMobIfActive = useCallback(async () => {
         const res = await fetch(`/mob/${mobId}/is-active`);
@@ -107,7 +113,7 @@ const Mob = () => {
 
     const submitNameChange = (newName) => {
         if (name !== newName) {
-            changeName(name, newName);
+            changeName(newName, mobberId);
             setName(newName);
         }
         setIsEditingName(false);
@@ -187,7 +193,7 @@ const Mob = () => {
 
             <DragDropContext
                 onDragEnd={isReset() || hasEnded() ? placeMobberInDroppedPosition : noop}>
-                <Mobbers name={name} setIsEditingName={setIsEditingName} />
+                <Mobbers mobberId={mobberId} setIsEditingName={setIsEditingName} />
             </DragDropContext>
 
             {!inProgress && countdown <= 0 && <Audio />}

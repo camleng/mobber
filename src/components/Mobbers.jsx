@@ -8,7 +8,7 @@ import {
 } from '../services/screenSize';
 import './Mobbers.scss';
 
-const Mobbers = ({ name, setIsEditingName }) => {
+const Mobbers = ({ mobberId, setIsEditingName }) => {
     const { mobbers, addMobber, removeMobber } = useMobbers();
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
@@ -17,10 +17,10 @@ const Mobbers = ({ name, setIsEditingName }) => {
             setScreenSize(category);
         });
 
-        addMobber(name);
+        addMobber(mobberId);
 
         window.addEventListener('beforeunload', () => {
-            removeMobber(name);
+            removeMobber(mobberId);
         });
     }, []);
 

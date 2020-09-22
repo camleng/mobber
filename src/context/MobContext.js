@@ -35,8 +35,8 @@ const MobProvider = (props) => {
     const reassignMobbers = (mobbers) =>
         sendMessage(strings.commands.mobbers.reassign, { mobbers });
 
-    const changeName = (oldName, newName) =>
-        sendMessage(strings.commands.mobbers.changeName, { oldName, newName });
+    const changeName = (newName, id) =>
+        sendMessage(strings.commands.mobbers.changeName, { newName, id });
 
     return (
         <MobContext.Provider
