@@ -22,6 +22,13 @@ const AudioProvider = (props) => {
         strings.storageKeys.audioFile,
         initialOptions[0].file
     );
+    const initialSelectedOption = options.find((opt) => opt.file === audioFile);
+    const [currentlySelectedOption, setCurrentlySelectedOption] = useState(
+        initialSelectedOption
+    );
+    const [previousSelectedOption, setPreviousSelectedOption] = useState(
+        initialSelectedOption
+    );
 
     const selectOption = (selectionPredicate) => {
         let _options = [...options].map((opt) => ({ ...opt, selected: false }));
@@ -30,12 +37,32 @@ const AudioProvider = (props) => {
         setOptions(_options);
     };
 
+    const resetOption = () => {
+        console.log('Resetting to ', previousSelectedOption.file);
+        selectOption((opt) => opt.file === previousSelectedOption.file);
+    };
+
     useEffect(() => {
-        selectOption((opt) => opt.file === audioFile);
+        if (currentlySelectedOption) {
+            selectOption((opt) => opt.file === currentlySelectedOption.file);
+        }
+    }, [currentlySelectedOption]);
+
+    useEffect(() => {
+        setPreviousSelectedOption(currentlySelectedOption);
     }, [audioFile]);
 
     return (
-        <AudioContext.Provider value={{ audioFile, options, setAudioFile }}>
+        <AudioContext.Provider
+            value={{
+                audioFile,
+                options,
+                resetOption,
+                setAudioFile,
+                currentlySelectedOption,
+                setCurrentlySelectedOption,
+                setPreviousSelectedOption,
+            }}>
             {props.children}
         </AudioContext.Provider>
     );

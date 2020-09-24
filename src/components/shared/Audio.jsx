@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { useAudio } from '../../context/AudioContext';
 
-const Audio = () => {
+const Audio = ({ previewAudioFile }) => {
     const audioRef = useRef(null);
     const { audioFile } = useAudio();
-    const audioPath = `../../audio/${audioFile}`;
+    const audioPath = `../../audio/${previewAudioFile ? previewAudioFile : audioFile}`;
     let timeout;
     const delaySeconds = 30;
 

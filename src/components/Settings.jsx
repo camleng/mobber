@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Popover from './shared/Popover';
 import ChangeTimer from './ChangeTimer';
@@ -12,20 +12,16 @@ const Settings = ({ position, isReset }) => {
     const { countdown, updateCountdown } = useTimer();
     const [newTimerLength, setNewTimerLength] = useState(countdown);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const [previewAudioFile, setPreviewAudioFile] = useState(false);
-    const { audioFile, options, setAudioFile } = useAudio();
-
-    const handleClick = (option) => {
-        setAudioFile(option.file);
-        setPreviewAudioFile(true);
-    };
+    const { resetOption, setAudioFile, currentlySelectedOption } = useAudio();
 
     const save = () => {
         updateCountdown(newTimerLength * 60);
+        setAudioFile(currentlySelectedOption.file);
         setIsPopoverOpen(false);
     };
 
     const cancel = () => {
+        resetOption();
         setIsPopoverOpen(false);
     };
 

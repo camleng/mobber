@@ -30,11 +30,8 @@ const Mob = () => {
     const {
         stop,
         reset,
-        startModifyingTime,
-        stopModifyingTime,
         inProgress,
         countdown,
-        usernameEditingTimer,
         startTimer,
         isReset,
         isStopped,

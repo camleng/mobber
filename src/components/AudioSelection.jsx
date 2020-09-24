@@ -3,11 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Audio from './shared/Audio';
 import RoundedRect from './shared/RoundedRect';
 import { useAudio } from '../context/AudioContext';
-import { strings } from '../strings';
 import './AudioSelection.scss';
 
 const AudioSelection = () => {
-    const { audioFile, options, setAudioFile } = useAudio();
+    const { options, setCurrentlySelectedOption, currentlySelectedOption } = useAudio();
     const [previewAudioFile, setPreviewAudioFile] = useState(false);
     const [previewIsEnabled, setPreviewIsEnabled] = useState(true);
     let timeout;
@@ -24,29 +23,11 @@ const AudioSelection = () => {
     }, [previewAudioFile]);
 
     const handleClick = (option) => {
-        setAudioFile(option.file);
+        setCurrentlySelectedOption(option);
     };
 
     const previewNotificationSound = () => {
         setPreviewAudioFile(true);
-    };
-
-    const jsx = (
-        <div className='popover audio-selection-container'>
-            {options.map((option) => (
-                <div
-                    className={`audio-option ${option.selected ? 'selected' : ''}`}
-                    key={option.file}>
-                    {option.name}
-                </div>
-            ))}
-        </div>
-    );
-
-    const getIconName = () => {
-        return audioFile === strings.audioFiles.noSound.file
-            ? 'volume-mute'
-            : 'volume-up';
     };
 
     return (
@@ -58,6 +39,7 @@ const AudioSelection = () => {
                 <FontAwesomeIcon icon='play-circle' />
                 Preview
             </RoundedRect>
+
             <div className='audio-selection-container'>
                 {options.map((option) => (
                     <div
@@ -68,7 +50,10 @@ const AudioSelection = () => {
                     </div>
                 ))}
             </div>
-            {previewAudioFile && <Audio />}
+
+            {previewAudioFile && (
+                <Audio previewAudioFile={currentlySelectedOption.file} />
+            )}
         </>
     );
 };
