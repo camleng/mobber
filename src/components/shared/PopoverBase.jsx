@@ -13,7 +13,10 @@ const PopoverBase = ({
     closeOnClickOutside = true,
     callback,
 }) => {
-    const content = jsx ? jsx : <div className='popover'>{text}</div>;
+    const content = () => {
+        if (jsx) return jsx;
+        if (text) return <div className='popover'>{text}</div>;
+    };
 
     const onClose = () => {
         if (closeOnClickOutside) {

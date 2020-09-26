@@ -1,8 +1,9 @@
 @import "../../colors.scss";
 
 .popover {
-    color: $black;
-    background-color: $white;
+    background-color: $darkgray;
+    color: $white;
+    box-shadow: 0 1px 5px 2px black;
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
 }
