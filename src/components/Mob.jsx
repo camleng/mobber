@@ -4,6 +4,7 @@ import Mobbers from './Mobbers';
 import RoundedRect from './shared/RoundedRect';
 import CurrentMobbers from './CurrentMobbers';
 import Randomize from './Randomize';
+import Volume from './Volume';
 import Clipboard from './Clipboard';
 import Audio from './shared/Audio';
 import Menu from './Menu';
@@ -126,6 +127,7 @@ const Mob = () => {
                     position={getPopupPosition()}
                     disabled={mobbers.length < 2 || !isReset()}
                 />
+                <Volume />
                 <Clipboard position={getPopupPosition()} />
                 <Settings position={getPopupPosition()} isReset={isReset} />
             </Menu>

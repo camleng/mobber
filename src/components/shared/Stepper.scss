@@ -3,9 +3,9 @@
 .stepper {
     display: flex;
     justify-content: center;
-    align-items: center;
 
     > div {
+        width: 4.3rem;
         padding: 0.35rem 0.5rem;
         border: 1px solid;
         line-height: 0.1;

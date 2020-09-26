@@ -6,28 +6,30 @@ import { useAudio } from '../context/AudioContext';
 import './AudioSelection.scss';
 
 const AudioSelection = () => {
-    const { options, setCurrentlySelectedOption, currentlySelectedOption } = useAudio();
-    const [previewAudioFile, setPreviewAudioFile] = useState(false);
-    const [previewIsEnabled, setPreviewIsEnabled] = useState(true);
+    const { options, setCurrentlySelectedOption } = useAudio();
+    const [isPreviewingAudioFile, setIsPreviewingAudioFile] = useState(false);
+    const [previewButtonIsEnabled, setPreviewButtonIsEnabled] = useState(true);
+    const [previewAudioFile, setPreviewAudioFile] = useState();
     let timeout;
 
     useEffect(() => {
-        if (previewAudioFile) {
-            setPreviewIsEnabled(false);
+        if (isPreviewingAudioFile) {
+            setPreviewButtonIsEnabled(false);
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
-                setPreviewAudioFile(false);
-                setPreviewIsEnabled(true);
+                setIsPreviewingAudioFile(false);
+                setPreviewButtonIsEnabled(true);
             }, 1000);
         }
-    }, [previewAudioFile]);
+    }, [isPreviewingAudioFile]);
 
     const handleClick = (option) => {
+        setPreviewAudioFile(option.file);
         setCurrentlySelectedOption(option);
     };
 
     const previewNotificationSound = () => {
-        setPreviewAudioFile(true);
+        setIsPreviewingAudioFile(true);
     };
 
     return (
@@ -35,7 +37,7 @@ const AudioSelection = () => {
             <RoundedRect
                 onClick={previewNotificationSound}
                 className='preview'
-                disabled={!previewIsEnabled}>
+                disabled={!previewButtonIsEnabled}>
                 <FontAwesomeIcon icon='play-circle' />
                 Preview
             </RoundedRect>
@@ -51,9 +53,7 @@ const AudioSelection = () => {
                 ))}
             </div>
 
-            {previewAudioFile && (
-                <Audio previewAudioFile={currentlySelectedOption.file} />
-            )}
+            {isPreviewingAudioFile && <Audio previewAudioFile={previewAudioFile} />}
         </>
     );
 };

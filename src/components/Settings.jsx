@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Popover from './shared/Popover';
+import PopoverBase from './shared/PopoverBase';
 import ChangeTimer from './ChangeTimer';
 import RoundedRect from './shared/RoundedRect';
 import AudioSelection from './AudioSelection';
@@ -12,7 +12,7 @@ const Settings = ({ position, isReset }) => {
     const { countdown, updateCountdown } = useTimer();
     const [newTimerLength, setNewTimerLength] = useState(countdown);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const { resetOption, setAudioFile, currentlySelectedOption } = useAudio();
+    const { resetSelectedOption, setAudioFile, currentlySelectedOption } = useAudio();
 
     const save = () => {
         updateCountdown(newTimerLength * 60);
@@ -21,19 +21,19 @@ const Settings = ({ position, isReset }) => {
     };
 
     const cancel = () => {
-        resetOption();
+        resetSelectedOption();
         setIsPopoverOpen(false);
     };
 
     const jsx = (
         <div className='popover settings'>
             <div className='settings-sections'>
-                <div className='settings-section'>
+                <div className='settings-section timer-section'>
                     <div className='setting-heading'>Timer</div>
                     <div className='setting-body'>
                         <ChangeTimer
                             initialNumber={Math.floor(countdown / 60)}
-                            disabled={!isReset()}
+                            timerControlsAreHidden={!isReset()}
                             callback={setNewTimerLength}
                         />
                     </div>
@@ -59,10 +59,11 @@ const Settings = ({ position, isReset }) => {
     );
 
     return (
-        <Popover
+        <PopoverBase
             jsx={jsx}
             position={position}
-            isOpen={isPopoverOpen}
+            isPopoverOpen={isPopoverOpen}
+            setIsPopoverOpen={setIsPopoverOpen}
             closeOnClickOutside={false}
             render={() => (
                 <FontAwesomeIcon

@@ -5,6 +5,7 @@
 }
 
 .setting-heading {
+    width: 10rem;
     font-weight: bold;
     margin-bottom: 1rem;
     text-align: center;
@@ -15,9 +16,6 @@
     }
 }
 
-.setting-body {
-}
-
 .settings {
     background-color: $darkgray;
     color: $white;
@@ -26,24 +24,27 @@
 
 .settings-sections {
     display: flex;
+    margin-bottom: 1.5rem;
 
     .settings-section:not(:first-child) {
         margin-left: 1rem;
+    }
+}
 
-        .setting-heading,
-        .setting-body {
-            padding-left: 1rem;
-        }
+.settings-section {
+    width: 50%;
 
+    &.timer-section {
         .setting-body {
-            border-left: 1px solid;
+            display: flex;
+            align-items: center;
+            text-align: center;
         }
     }
 }
 
 .settings-buttons {
     display: flex;
-    margin-top: 1.5rem;
 
     :not(:first-child) {
         margin-left: 1rem;

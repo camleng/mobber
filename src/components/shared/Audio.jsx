@@ -3,7 +3,7 @@ import { useAudio } from '../../context/AudioContext';
 
 const Audio = ({ previewAudioFile }) => {
     const audioRef = useRef(null);
-    const { audioFile } = useAudio();
+    const { audioFile, isMuted } = useAudio();
     const audioPath = `../../audio/${previewAudioFile ? previewAudioFile : audioFile}`;
     let timeout;
     const delaySeconds = 30;
@@ -28,7 +28,11 @@ const Audio = ({ previewAudioFile }) => {
         };
     };
 
-    return audioFile ? <audio src={audioPath} ref={audioRef} autoPlay></audio> : <></>;
+    return audioFile && !isMuted ? (
+        <audio src={audioPath} ref={audioRef} autoPlay></audio>
+    ) : (
+        <></>
+    );
 };
 
 export default Audio;
