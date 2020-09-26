@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { useAudio } from '../../context/AudioContext';
 
-const Audio = () => {
+const Audio = ({ previewAudioFile }) => {
     const audioRef = useRef(null);
-    const { audioFile } = useAudio();
-    const audioPath = `../../audio/${audioFile}`;
+    const { audioFile, isMuted } = useAudio();
+    const audioPath = `../../audio/${previewAudioFile ? previewAudioFile : audioFile}`;
     let timeout;
     const delaySeconds = 30;
 
@@ -28,7 +28,11 @@ const Audio = () => {
         };
     };
 
-    return audioFile ? <audio src={audioPath} ref={audioRef} autoPlay></audio> : <></>;
+    return audioFile && !isMuted ? (
+        <audio src={audioPath} ref={audioRef} autoPlay></audio>
+    ) : (
+        <></>
+    );
 };
 
 export default Audio;

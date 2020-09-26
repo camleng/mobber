@@ -1,4 +1,4 @@
-const randomizer = require('./randomizer');
+import { shuffle } from './randomizer.js';
 
 let mobbers = {};
 
@@ -70,7 +70,7 @@ const randomize = (mobId, broadcast) => {
 
     clearRoles(_mobbers);
 
-    _mobbers = randomizer.shuffle(_mobbers);
+    _mobbers = shuffle(_mobbers);
 
     _mobbers[0].role = 'driver';
     _mobbers[1].role = 'navigator';
@@ -163,7 +163,7 @@ const determineRole = (mobIdId) => {
     else return '';
 };
 
-module.exports = {
+export default {
     init,
     addMobber,
     removeMobber,

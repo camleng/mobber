@@ -17,6 +17,8 @@ import {
     faChevronDown,
     faPencilAlt,
     faUserPlus,
+    faSlidersH,
+    faPlayCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,7 +35,9 @@ library.add(
     faChevronUp,
     faChevronDown,
     faPencilAlt,
-    faUserPlus
+    faUserPlus,
+    faSlidersH,
+    faPlayCircle
 );
 toast.configure();
 LogRocket.init('3ukxle/mobber');

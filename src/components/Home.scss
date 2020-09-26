@@ -56,6 +56,10 @@
         font-size: 1.2rem;
         margin-top: 2rem;
 
+        &:active {
+            background-color: darken($blue, 10%);
+        }
+
         @include desktop {
             width: 12rem;
             margin-top: 0;
@@ -81,6 +85,10 @@
 .create {
     background-color: $green;
     font-size: 1.2rem;
+
+    &:active {
+        background-color: darken($green, 10%);
+    }
 
     @include desktop {
         width: 12rem;

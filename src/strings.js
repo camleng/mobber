@@ -5,7 +5,7 @@ export const strings = {
         audioFile: 'mobber:audioFile',
     },
     audioFiles: {
-        yourTurn: { name: 'Your Turn', file: 'your-turn.mp3' },
+        yourTurn: { name: 'Tick Tick Tick', file: 'your-turn.mp3' },
         timesUp: { name: "Time's up", file: 'times-up.m4a' },
         noSound: { name: 'No sound', file: '' },
     },
@@ -45,9 +45,3 @@ export const strings = {
             'A mobber with that name is already in this mob. Please choose a different name',
     },
 };
-
-// export default {
-//     storageKeys: strings.storageKeys,
-//     keyboardKeys: strings.keyboardKeys,
-//     commands: strings.commands,
-// };

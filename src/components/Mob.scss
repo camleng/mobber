@@ -16,18 +16,39 @@
 
         &.start {
             background-color: $green;
+
+            &:active {
+                background-color: darken($green, 10%);
+            }
+
+            &:disabled {
+                background-color: darken($green, 10%);
+                cursor: not-allowed;
+            }
         }
 
         &.stop {
             background-color: $red;
+
+            &:active {
+                background-color: darken($red, 10%);
+            }
         }
 
         &.reset {
             background-color: $blue;
+
+            &:active {
+                background-color: darken($blue, 10%);
+            }
         }
 
         &.next {
             background-color: $burntorange;
+
+            &:active {
+                background-color: darken($burntorange, 10%);
+            }
         }
     }
 }

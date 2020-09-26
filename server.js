@@ -1,12 +1,14 @@
-const express = require('express');
+import express from 'express';
 const app = express();
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const cors = require('cors');
-const mob = require('./server/mob');
-const compression = require('compression');
-require('dotenv').config();
+import { createServer } from 'https';
+import { readFileSync } from 'fs';
+import path from 'path';
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import cors from 'cors';
+import mob from './server/mob.js';
+import compression from 'compression';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const { NODE_ENV, PORT, SSL_KEY_FILE, SSL_CRT_FILE } = process.env;
 
@@ -43,10 +45,10 @@ if (NODE_ENV === 'production') {
     });
 }
 
-const server = https.createServer(
+const server = createServer(
     {
-        key: fs.readFileSync(SSL_KEY_FILE),
-        cert: fs.readFileSync(SSL_CRT_FILE),
+        key: readFileSync(SSL_KEY_FILE),
+        cert: readFileSync(SSL_CRT_FILE),
     },
     app
 );

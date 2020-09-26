@@ -1,6 +1,6 @@
-const socket = require('socket.io');
-const timer = require('./timer');
-const mobbers = require('./mobbers');
+import socket from 'socket.io';
+import timer from './timer.js';
+import mobbers from './mobbers.js';
 
 let clients = {};
 
@@ -99,7 +99,9 @@ const activateRandomMob = () => {
     let randomMobId;
 
     do {
-        randomMobId = [1, 2, 3, 4, 5, 6].map(_ => Math.floor(Math.random() * 10)).join('')
+        randomMobId = [1, 2, 3, 4, 5, 6]
+            .map((_) => Math.floor(Math.random() * 10))
+            .join('');
     } while (clients.hasOwnProperty(randomMobId));
 
     initializeMob(randomMobId);
@@ -112,7 +114,7 @@ const isMobActive = (mobId) => {
     return isActive;
 };
 
-module.exports = {
+export default {
     init,
     activateRandomMob,
     isMobActive,

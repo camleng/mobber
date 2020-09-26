@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import './Stepper.scss';
 
-const Stepper = ({ initialNumber = 0, callback, minimum }) => {
+const Stepper = ({ initialNumber = 0, onChange: callback, minimum, unit }) => {
     const [number, setNumber] = useState(initialNumber);
 
     useEffect(() => {
@@ -23,7 +23,9 @@ const Stepper = ({ initialNumber = 0, callback, minimum }) => {
                 <div>-</div>
             </div>
             <div>
-                <div>{number}</div>
+                <div>
+                    {number} {unit ? unit : ''}
+                </div>
             </div>
             <div onClick={increment}>
                 <div>+</div>

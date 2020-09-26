@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const { NODE_ENV } = process.env;
 const DEFAULT_SECONDS = NODE_ENV === 'production' ? 900 : 4;
@@ -108,7 +109,7 @@ const set = (mobId, initialSeconds, broadcast) => {
     broadcastTimerUpdate(mobId, broadcast);
 };
 
-module.exports = {
+export default {
     init,
     broadcastTimerUpdate,
     timer,

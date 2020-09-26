@@ -2,10 +2,13 @@
 
 .audio-selection-container {
     padding: 0;
+    border: 1px solid $white;
+    border-radius: 0.5rem;
 }
 
 .audio-option {
     padding: 0.5rem;
+    text-align: center;
     cursor: pointer;
 
     &:first-child {
@@ -20,11 +23,33 @@
 
     &:hover {
         color: $white;
-        background-color: $green;
+        background-color: $blue;
     }
 
     &.selected {
         color: $white;
-        background-color: $green;
+        background-color: $blue;
+    }
+}
+
+.preview {
+    background-color: $blue;
+    width: 100%;
+    font-size: 1rem;
+    height: 2rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+
+    svg {
+        margin-right: 0.5rem;
+    }
+
+    &:active {
+        background-color: darken($blue, 10%);
+    }
+
+    &:disabled {
+        background-color: darken($blue, 10%);
+        cursor: default;
     }
 }
