@@ -6,6 +6,7 @@ import path from 'path';
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 import cors from 'cors';
 import mob from './server/mob.js';
+import mobbers from './server/mobbers.js';
 import compression from 'compression';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -28,6 +29,12 @@ app.get('/mob/generate', (req, res) => {
 app.get('/mob/:mobId/is-active', (req, res) => {
     const isActive = mob.isMobActive(req.params.mobId);
     res.send({ isActive });
+});
+
+app.get('/mob/:mobId/is-duplicate/:name', (req, res) => {
+    const { name, mobId } = req.params;
+    const isDuplicate = mobbers.isDuplicate(name, mobId);
+    res.send({ isDuplicate });
 });
 
 if (NODE_ENV === 'production') {

@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext } from 'react';
 import { useMob } from './MobContext';
 import { strings } from '../strings';
+import useStorage from '../hooks/useStorage';
 
 const MobbersContext = createContext();
 
@@ -9,6 +10,7 @@ const MobbersProvider = (props) => {
     const { socket, sendMessage } = useMob();
     const [driver, setDriver] = useState();
     const [navigator, setNavigator] = useState();
+    const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
 
     socket.on(strings.commands.mobbers.update, (_mobbers) => {
         setMobbers(_mobbers);
@@ -42,6 +44,8 @@ const MobbersProvider = (props) => {
     return (
         <MobbersContext.Provider
             value={{
+                name,
+                setName,
                 mobbers,
                 changeRoles,
                 addMobber,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PopoverBase from './shared/PopoverBase';
+import Popover from './shared/Popover';
 import ChangeTimer from './ChangeTimer';
 import RoundedRect from './shared/RoundedRect';
 import AudioSelection from './AudioSelection';
@@ -59,7 +59,7 @@ const Settings = ({ position, isReset }) => {
     );
 
     return (
-        <PopoverBase
+        <Popover
             jsx={jsx}
             position={position}
             isPopoverOpen={isPopoverOpen}

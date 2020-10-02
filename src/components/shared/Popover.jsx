@@ -1,29 +1,44 @@
 import React, { useState } from 'react';
-import PopoverBase from './PopoverBase';
+import TinyPopover from 'react-tiny-popover';
+import './Popover.scss';
 
 const Popover = ({
     render,
     text,
     jsx,
-    className,
-    position,
-    closeOnClickOutside,
+    className = '',
+    position = ['left', 'bottom'],
+    isPopoverOpen,
+    setIsPopoverOpen,
+    closeOnClickOutside = true,
     callback,
 }) => {
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const content = () => {
+        if (jsx) return jsx;
+        if (text) return <div className='popover'>{text}</div>;
+    };
+
+    const onClose = () => {
+        if (closeOnClickOutside) {
+            setIsPopoverOpen(false);
+            if (callback) callback();
+        }
+    };
+
+    const togglePopover = () => {
+        setIsPopoverOpen(!isPopoverOpen);
+    };
 
     return (
-        <PopoverBase
-            render={render}
-            jsx={jsx}
-            text={text}
-            isPopoverOpen={isPopoverOpen}
-            setIsPopoverOpen={setIsPopoverOpen}
-            closeOnClickOutside={closeOnClickOutside}
+        <TinyPopover
+            isOpen={isPopoverOpen}
             position={position}
-            className={className}
-            callback={callback}
-        />
+            onClickOutside={onClose}
+            content={content()}>
+            <div className={className} onClick={togglePopover}>
+                {render()}
+            </div>
+        </TinyPopover>
     );
 };
 

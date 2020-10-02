@@ -8,6 +8,11 @@ const init = (mobId) => {
     }
 };
 
+const isDuplicate = (name, mobId) => {
+    const match = mobbers[mobId].find((m) => m.name === name);
+    return match !== undefined;
+};
+
 const broadcastMobbersUpdate = (mobId, broadcast) => {
     broadcast('MOBBERS:UPDATE', mobbers[mobId], mobId);
 };
@@ -165,6 +170,7 @@ const determineRole = (mobIdId) => {
 
 export default {
     init,
+    isDuplicate,
     addMobber,
     removeMobber,
     changeRoles,

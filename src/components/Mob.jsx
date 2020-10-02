@@ -20,13 +20,13 @@ import {
     determineScreenSizeCategory,
     addWindowResizeCallback,
 } from '../services/screenSize';
-import useStorage from '../hooks/useStorage';
 import { strings } from '../strings';
 import { useTimer } from '../context/TimerContext';
+import duplicateNameChecker from '../services/duplicateNameChecker';
 import './Mob.scss';
 
 const Mob = () => {
-    const { mobbers, driver, changeRoles } = useMobbers();
+    const { name, setName, mobbers, driver, changeRoles } = useMobbers();
     const { mobId, connect, randomizeMobbers, reassignMobbers, changeName } = useMob();
     const {
         stop,
@@ -43,29 +43,49 @@ const Mob = () => {
     const history = useHistory();
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
-    const [name, setName] = useStorage(strings.storageKeys.mobberNameKey, '');
     const [isEditingName, setIsEditingName] = useState(false);
 
-    const connectToMobIfActive = useCallback(async () => {
-        const res = await fetch(`/mob/${mobId}/is-active`);
-        const data = await res.json();
+    const isMobActive = async () => {
+        const isActiveResponse = await fetch(`/mob/${mobId}/is-active`);
+        const isActive = (await isActiveResponse.json()).isActive;
+        console.log('isActive:', isActive);
+        return isActive;
+    };
 
-        if (data.isActive) {
-            connect();
-            setActivating(false);
-        } else {
-            toast.error(`Mob "${mobId}" is not active`);
-            history.push('/');
-        }
-    }, [connect, history, mobId]);
+    const nameAlreadyExistsInMob = async () => {
+        const isDuplicateResponse = await fetch(`/mob/${mobId}/is-duplicate/${name}`);
+        const isDuplicate = (await isDuplicateResponse.json()).isDuplicate;
+        return isDuplicate;
+    };
 
     useEffect(() => {
-        connectToMobIfActive();
+        async function _isMobActive() {
+            if (!(await isMobActive())) {
+                toast.error(`Mob "${mobId}" is not active`);
+                history.push('/');
+                return;
+            }
+        }
+        _isMobActive();
+
+        async function _nameAlreadyExistsInMob() {
+            if (await duplicateNameChecker.nameAlreadyExistsInMob(name, mobId)) {
+                toast.error(strings.errors.duplicateMobberName);
+                setActivating(false);
+                setIsEditingName(true);
+            }
+        }
+        _nameAlreadyExistsInMob();
+
+        console.log('Connecting');
+        connect();
 
         addWindowResizeCallback((category) => {
             setIsTablet(category === 'tablet');
         });
-    }, [connectToMobIfActive]);
+
+        setActivating(false);
+    }, []);
 
     useEffect(() => {
         if (name.length > 50) {
@@ -117,7 +137,7 @@ const Mob = () => {
         <h1>Activating</h1>
     ) : !hasName() ? (
         <div>
-            <NameEntry name={name} submitNameChange={submitNameChange} />
+            <NameEntry name={name} callback={submitNameChange} />
         </div>
     ) : (
         <>
