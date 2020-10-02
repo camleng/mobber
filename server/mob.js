@@ -1,6 +1,8 @@
 import socket from 'socket.io';
 import timer from './timer.js';
 import mobbers from './mobbers.js';
+import prismaPkg from '@prisma/client';
+const prisma = new prismaPkg.PrismaClient();
 
 let clients = {};
 
@@ -83,7 +85,7 @@ const connectToMob = (mobId, socket) => {
     mobbers.broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const addClientToMob = (mobId, socket) => {
+const addClientToMob = async (mobId, socket) => {
     clients[mobId].push(socket);
 };
 
@@ -95,7 +97,7 @@ const initializeMob = (mobId) => {
     mobbers.init(mobId);
 };
 
-const activateRandomMob = () => {
+const activateRandomMob = async () => {
     let randomMobId;
 
     do {
@@ -105,6 +107,7 @@ const activateRandomMob = () => {
     } while (clients.hasOwnProperty(randomMobId));
 
     initializeMob(randomMobId);
+    await prisma.mob.create({ data: { code: randomMobId } });
 
     return randomMobId;
 };

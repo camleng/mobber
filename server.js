@@ -19,9 +19,9 @@ app.use(
 
 app.use(compression());
 
-app.get('/mob/generate', (req, res) => {
+app.get('/mob/generate', async (req, res) => {
     console.log('Generating random mob');
-    const mobId = mob.activateRandomMob();
+    const mobId = await mob.activateRandomMob();
     res.send({ mobId });
 });
 

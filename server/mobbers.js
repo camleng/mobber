@@ -1,4 +1,6 @@
 import { shuffle } from './randomizer.js';
+import prismaPkg from '@prisma/client';
+const prisma = new prismaPkg.PrismaClient();
 
 let mobbers = {};
 
@@ -8,30 +10,35 @@ const init = (mobId) => {
     }
 };
 
-const broadcastMobbersUpdate = (mobId, broadcast) => {
-    broadcast('MOBBERS:UPDATE', mobbers[mobId], mobId);
+const getMobbersInMob = async (mobId) => {
+    return await prisma.mobber.findMany({ where: { mob: { code: mobId } } });
+}
+
+const broadcastMobbersUpdate = async (mobId, broadcast) => {
+    const mobbersInMob = await getMobbersInMob(mobId);
+    broadcast('MOBBERS:UPDATE', mobbersInMob, mobId);
 };
 
-const mobberAlreadyExits = (name, mobId) => {
-    return mobbers[mobId].map((m) => m.name).includes(name);
+const mobberAlreadyExists = async (name, mobId) => {
+    const existingUser = await prisma.mobber.findFirst({ where: { name, mob: { code: mobId } } })
+    return existingUser !== null;
 };
 
-const addMobber = (name, mobId, broadcast) => {
-    if (mobberAlreadyExits(name, mobId)) return;
+const addMobber = async (name, mobId, broadcast) => {
+    if (await mobberAlreadyExists(name, mobId)) return;
 
-    const role = determineRole(mobId);
+    const role = await determineRole(mobId);
 
-    mobbers[mobId].push({ name, role });
+    await prisma.mobber.create({ data: { name, role, mob: { connect: { code: mobId } } } });
 
-    broadcastMobbersUpdate(mobId, broadcast);
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
-const removeMobber = (name, mobId, broadcast) => {
-    if (mobbers[mobId] === null) return;
-    const _mobbers = mobbers[mobId].filter((m) => m.name !== name);
-    reassignAfterDeletion(_mobbers);
-    mobbers[mobId] = _mobbers;
-    broadcastMobbersUpdate(mobId, broadcast);
+const removeMobber = async (name, mobId, broadcast) => {
+    await prisma.mobber.update({ data: { mobId: null }, where: { name, mob: { connect: { where: { code: mobId } } } } });
+
+    await reassignAfterDeletion(mobId);
+    await broadcastMobbersUpdate(mobId, broadcast);
 };
 
 const changeRoles = (mobId, broadcast) => {
@@ -128,23 +135,24 @@ const determineNewNavigatorIndex = (_mobbers, driverIndex) => {
     return driverIndex === _mobbers.length - 1 ? 0 : driverIndex + 1;
 };
 
-const reassignAfterDeletion = (_mobbers) => {
-    if (_mobbers.length === 0) {
-        return _mobbers;
-    } else if (_mobbers.length === 1) {
-        _mobbers[0].role = 'driver';
-        return _mobbers;
-    } else if (_mobbers.length >= 2) {
-        const navigatorIndex = getNavigatorIndex(_mobbers);
+const reassignAfterDeletion = async (mobId) => {
+    const mobbersInMob = await getMobbersInMob(mobId);
+    if (mobbersInMob.length === 0) {
+        return mobbersInMob;
+    } else if (mobbersInMob.length === 1) {
+        mobbersInMob[0].role = 'driver';
+        return mobbersInMob;
+    } else if (mobbersInMob.length >= 2) {
+        const navigatorIndex = getNavigatorIndex(mobbersInMob);
         if (navigatorIndex !== -1) {
             const driverIndex =
-                navigatorIndex === 0 ? _mobbers.length - 1 : navigatorIndex - 1;
-            _mobbers[driverIndex].role = 'driver';
+                navigatorIndex === 0 ? mobbersInMob.length - 1 : navigatorIndex - 1;
+            mobbersInMob[driverIndex].role = 'driver';
         } else {
-            const driverIndex = getDriverIndex(_mobbers);
+            const driverIndex = getDriverIndex(mobbersInMob);
             const navigatorIndex =
-                driverIndex === _mobbers.length - 1 ? 0 : driverIndex + 1;
-            _mobbers[navigatorIndex].role = 'navigator';
+                driverIndex === mobbersInMob.length - 1 ? 0 : driverIndex + 1;
+            mobbersInMob[navigatorIndex].role = 'navigator';
         }
     }
 };
@@ -157,9 +165,10 @@ const getDriverIndex = (_mobbers) => {
     return _mobbers.findIndex((m) => m.role === 'driver');
 };
 
-const determineRole = (mobIdId) => {
-    if (mobbers[mobIdId].length === 0) return 'driver';
-    else if (mobbers[mobIdId].length === 1) return 'navigator';
+const determineRole = async (mobId) => {
+    const mobbersInMob = await getMobbersInMob(mobId);
+    if (mobbersInMob.length === 0) return 'driver';
+    else if (mobbersInMob.length === 1) return 'navigator';
     else return '';
 };
 
