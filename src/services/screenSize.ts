@@ -2,9 +2,9 @@ export const determineScreenSizeCategory = () => {
     return window.innerWidth >= 768 ? 'tablet' : 'phone';
 };
 
-let callbacks = [];
+let callbacks: ((category: string) => any)[] = [];
 
-export const addWindowResizeCallback = (callback) => {
+export const addWindowResizeCallback = (callback: (category: string) => any) => {
     callbacks.push(callback);
     window.addEventListener('resize', () => {
         const category = determineScreenSizeCategory();

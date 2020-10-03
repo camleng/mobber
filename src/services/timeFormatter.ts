@@ -1,4 +1,4 @@
-const formatTime = (seconds) => {
+const formatTime = (seconds: number) => {
     if (seconds === undefined || seconds === null) return "00:00";
     const min = Math.floor(seconds / 60)
         .toString()

@@ -4,13 +4,14 @@ import Audio from './shared/Audio';
 import RoundedRect from './shared/RoundedRect';
 import { useAudio } from '../context/AudioContext';
 import './AudioSelection.scss';
+import { AudioNotificationOption } from '../models/AudioNotificationOption';
 
 const AudioSelection = () => {
     const { options, setCurrentlySelectedOption } = useAudio();
     const [isPreviewingAudioFile, setIsPreviewingAudioFile] = useState(false);
     const [previewButtonIsEnabled, setPreviewButtonIsEnabled] = useState(true);
-    const [previewAudioFile, setPreviewAudioFile] = useState();
-    let timeout;
+    const [previewAudioFile, setPreviewAudioFile] = useState('')
+    let timeout: NodeJS.Timeout;
 
     useEffect(() => {
         if (isPreviewingAudioFile) {
@@ -23,7 +24,7 @@ const AudioSelection = () => {
         }
     }, [isPreviewingAudioFile]);
 
-    const handleClick = (option) => {
+    const handleClick = (option: AudioNotificationOption) => {
         setPreviewAudioFile(option.file);
         setCurrentlySelectedOption(option);
     };
@@ -38,8 +39,10 @@ const AudioSelection = () => {
                 onClick={previewNotificationSound}
                 className='preview'
                 disabled={!previewButtonIsEnabled}>
-                <FontAwesomeIcon icon='play-circle' />
-                Preview
+                <>
+                    <FontAwesomeIcon icon='play-circle' />
+                    Preview
+                </>
             </RoundedRect>
 
             <div className='audio-selection-container'>

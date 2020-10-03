@@ -2,7 +2,7 @@ import React from "react";
 import "./Countdown.scss";
 import { formatTime } from "../services/timeFormatter";
 
-const Countdown = ({ countdown, inProgress }) => {
+const Countdown = ({ countdown, inProgress }: Props) => {
     return (
         <div className="countdown">
             {countdown > 0 && <div className="timer">{formatTime(countdown)}</div>}
@@ -12,3 +12,8 @@ const Countdown = ({ countdown, inProgress }) => {
 };
 
 export default Countdown;
+
+type Props = {
+    countdown: number,
+    inProgress: boolean
+}

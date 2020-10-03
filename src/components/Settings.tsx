@@ -8,7 +8,7 @@ import { useTimer } from '../context/TimerContext';
 import { useAudio } from '../context/AudioContext';
 import './Settings.scss';
 
-const Settings = ({ position, isReset }) => {
+const Settings = ({ position, isReset }: Props) => {
     const { countdown, updateCountdown } = useTimer();
     const [newTimerLength, setNewTimerLength] = useState(countdown);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -16,7 +16,8 @@ const Settings = ({ position, isReset }) => {
 
     const save = () => {
         updateCountdown(newTimerLength * 60);
-        setAudioFile(currentlySelectedOption.file);
+        if (currentlySelectedOption) 
+            setAudioFile(currentlySelectedOption.file);
         setIsPopoverOpen(false);
     };
 
@@ -33,7 +34,7 @@ const Settings = ({ position, isReset }) => {
                     <div className='setting-body'>
                         <ChangeTimer
                             initialNumber={Math.floor(countdown / 60)}
-                            timerControlsAreHidden={!isReset()}
+                            hideTimerControls={!isReset()}
                             callback={setNewTimerLength}
                         />
                     </div>
@@ -47,13 +48,9 @@ const Settings = ({ position, isReset }) => {
             </div>
 
             <div className='settings-buttons'>
-                <RoundedRect className='cancel' onClick={cancel}>
-                    Cancel
-                </RoundedRect>
+                <RoundedRect className='cancel' onClick={cancel} title="Cancel" />
 
-                <RoundedRect className='save' onClick={save}>
-                    Save
-                </RoundedRect>
+                <RoundedRect className='save' onClick={save} title="Save" />
             </div>
         </div>
     );
@@ -77,3 +74,8 @@ const Settings = ({ position, isReset }) => {
 };
 
 export default Settings;
+
+type Props = {
+    position?: "left" | "bottom" | "right" | "top",
+    isReset: () => boolean
+}

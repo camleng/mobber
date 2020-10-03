@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { useAudio } from '../../context/AudioContext';
 
-const Audio = ({ previewAudioFile }) => {
+const Audio = ({ previewAudioFile }: Props) => {
     const audioRef = useRef(null);
     const { audioFile, isMuted } = useAudio();
     const audioPath = `../../audio/${previewAudioFile ? previewAudioFile : audioFile}`;
-    let timeout;
+    let timeout: NodeJS.Timeout;
     const delaySeconds = 30;
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const Audio = ({ previewAudioFile }) => {
     }, [audioRef]);
 
     const setDelay = () => {
-        if (!audioRef.current) return;
+        if (audioRef !== null && audioRef.current === null) return;
         audioRef.current.onended = () => {
             timeout = setTimeout(() => {
                 audioRef.current.play();
@@ -36,3 +36,7 @@ const Audio = ({ previewAudioFile }) => {
 };
 
 export default Audio;
+
+type Props = {
+    previewAudioFile?: string
+}

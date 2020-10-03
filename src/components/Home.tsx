@@ -19,7 +19,7 @@ const Home = () => {
         history.push(`/mob/${mobId}`);
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === strings.keyboardKeys.enter && mobId.length === 6) joinMob();
     };
 

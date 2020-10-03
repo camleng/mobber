@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Popover from './shared/Popover';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const Clipboard = ({ position = 'bottom' }) => {
+const Clipboard = ({ position = 'bottom' }: Props) => {
     return (
         <Popover
             text='Invite link copied to clipboard'
@@ -19,3 +19,7 @@ const Clipboard = ({ position = 'bottom' }) => {
 };
 
 export default Clipboard;
+
+type Props = {
+    position?: "left" | "bottom" | "right" | "top",
+}

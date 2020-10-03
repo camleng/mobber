@@ -1,14 +1,14 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Stepper from './shared/Stepper';
 import './ChangeTimer.scss';
 
-const ChangeTimer = ({ initialNumber, timerControlsAreHidden = false, callback }) => {
+const ChangeTimer = ({ initialNumber, hideTimerControls = false, callback }: Props) => {
     return (
         <>
-            {timerControlsAreHidden && (
+            {hideTimerControls && (
                 <p className='note'>Reset timer to make changes</p>
             )}
-            <div hidden={timerControlsAreHidden}>
+            <div hidden={hideTimerControls}>
                 <div className='mob-length'>Mob Length</div>
                 <Stepper
                     initialNumber={initialNumber}
@@ -22,3 +22,9 @@ const ChangeTimer = ({ initialNumber, timerControlsAreHidden = false, callback }
 };
 
 export default ChangeTimer;
+
+type Props = {
+    initialNumber: number,
+    hideTimerControls: boolean,
+    callback?: (event: any) => void
+}

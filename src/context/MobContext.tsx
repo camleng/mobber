@@ -2,10 +2,11 @@ import React, { createContext, useContext, useCallback } from 'react';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { strings } from '../strings';
+import { Mobber } from '../models/Mobber';
 
-const MobContext = createContext();
+const MobContext = createContext<MobContextValue>({} as MobContextValue);
 
-const MobProvider = (props) => {
+const MobProvider = (props: Props) => {
     const { mobId } = useParams();
     var connectionOptions = {
         'force new connection': true,
@@ -20,8 +21,7 @@ const MobProvider = (props) => {
     );
 
     const sendMessage = useCallback(
-        (event, payload) => {
-            payload = payload || {};
+        (event: string, payload: any = {}) => {
             payload.mobId = mobId;
             socket.emit(event, payload);
         },
@@ -32,10 +32,10 @@ const MobProvider = (props) => {
 
     const randomizeMobbers = () => sendMessage(strings.commands.mobbers.randomize);
 
-    const reassignMobbers = (mobbers) =>
+    const reassignMobbers = (mobbers: Mobber[]) =>
         sendMessage(strings.commands.mobbers.reassign, { mobbers });
 
-    const changeName = (oldName, newName) =>
+    const changeName = (oldName: string, newName: string) =>
         sendMessage(strings.commands.mobbers.changeName, { oldName, newName });
 
     return (
@@ -59,3 +59,17 @@ const useMob = () => {
 };
 
 export { useMob, MobProvider };
+
+type Props = {
+    children: JSX.Element
+}
+
+export type MobContextValue = {
+    socket: SocketIOClient.Socket,
+    mobId: string,
+    sendMessage: (event: string, payload?: any) => void,
+    connect: () => void,
+    randomizeMobbers: () => void,
+    reassignMobbers: (mobbers: Mobber[]) => void,
+    changeName: (oldName: string, newName: string) => void,
+};

@@ -2,9 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Draggable } from 'react-beautiful-dnd';
 import { strings } from '../strings';
+import { Mobber } from '../models/Mobber';
 
-const Mobber = ({ mobber, index, setIsEditingName }) => {
-    const isCurrentUser = (name) => {
+const Mobber = ({ mobber, index, setIsEditingName }: Props) => {
+    const isCurrentUser = (name: string) => {
         return localStorage.getItem(strings.storageKeys.mobberNameKey) === name;
     };
 
@@ -54,3 +55,9 @@ const Mobber = ({ mobber, index, setIsEditingName }) => {
 };
 
 export default Mobber;
+
+type Props = {
+    mobber: Mobber,
+    index: number,
+    setIsEditingName: (value: boolean) => void
+}

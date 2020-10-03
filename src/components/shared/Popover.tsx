@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import PopoverBase from './PopoverBase';
 
+export interface IPopoverProps {
+    render: () => JSX.Element,
+    text?: string,
+    jsx?: JSX.Element,
+    className?: string,
+    position?: "left" | "bottom" | "right" | "top",
+    closeOnClickOutside?: boolean,
+    callback?: () => any,
+}
+
 const Popover = ({
     render,
     text,
@@ -9,7 +19,7 @@ const Popover = ({
     position,
     closeOnClickOutside,
     callback,
-}) => {
+}: IPopoverProps) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     return (

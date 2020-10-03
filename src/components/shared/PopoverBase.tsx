@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TinyPopover from 'react-tiny-popover';
+import { IPopoverProps } from './Popover';
 import './Popover.scss';
+
+export interface IPopoverBaseProps extends IPopoverProps {
+    isPopoverOpen: boolean,
+    setIsPopoverOpen: (value: boolean) => void,
+}
 
 const PopoverBase = ({
     render,
     text,
     jsx,
     className = '',
-    position = ['left', 'bottom'],
+    position = 'bottom',
     isPopoverOpen,
     setIsPopoverOpen,
     closeOnClickOutside = true,
     callback,
-}) => {
-    const content = () => {
+}: IPopoverBaseProps) => {
+    const content = (): JSX.Element => {
         if (jsx) return jsx;
         if (text) return <div className='popover'>{text}</div>;
+        else return <></>;
     };
 
     const onClose = () => {
@@ -41,5 +48,7 @@ const PopoverBase = ({
         </TinyPopover>
     );
 };
+
+
 
 export default PopoverBase;

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useMobbers } from '../context/MobbersContext';
 import './NameEntry.scss';
 
-const NameEntry = ({ name, submitNameChange }) => {
+const NameEntry = ({ name, submitNameChange }: Props) => {
     const [enteredName, setEnteredName] = useState(name);
     const { mobbers } = useMobbers();
 
@@ -23,11 +23,11 @@ const NameEntry = ({ name, submitNameChange }) => {
         submitNameChange(enteredName.trim());
     };
 
-    const isUnique = (newName) => {
+    const isUnique = (newName: string) => {
         return name !== newName && mobbers.map((m) => m.name).includes(newName);
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === strings.keyboardKeys.enter) submitName();
     };
 
@@ -46,3 +46,8 @@ const NameEntry = ({ name, submitNameChange }) => {
 };
 
 export default NameEntry;
+
+type Props = {
+    name: string,
+    submitNameChange: (newName: string) => void
+}

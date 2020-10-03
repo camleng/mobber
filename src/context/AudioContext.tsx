@@ -1,11 +1,12 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import useStorage from '../hooks/useStorage';
+import { AudioNotificationOption } from '../models/AudioNotificationOption';
 import { strings } from '../strings';
 
-const AudioContext = createContext();
+const AudioContext = createContext<AudioContextValue>({} as AudioContextValue);
 
-const AudioProvider = (props) => {
-    const initialOptions = [
+const AudioProvider = (props: Props) => {
+    const initialOptions: AudioNotificationOption[] = [
         {
             name: strings.audioFiles.yourTurn.name,
             file: strings.audioFiles.yourTurn.file,
@@ -31,20 +32,21 @@ const AudioProvider = (props) => {
     );
     const [isMuted, setIsMuted] = useState(false);
 
-    const selectOption = (selectionPredicate) => {
-        let _options = [...options].map((opt) => ({ ...opt, selected: false }));
+    const selectOption = (selectionPredicate: (option: AudioNotificationOption) => boolean) => {
+        let _options: AudioNotificationOption[] = [...options].map((opt) => ({ ...opt, selected: false }));
         let optionIndex = _options.findIndex(selectionPredicate);
         if (optionIndex !== -1) _options[optionIndex].selected = true;
         setOptions(_options);
     };
 
     const resetSelectedOption = () => {
-        selectOption((opt) => opt.file === previousSelectedOption.file);
+        if (previousSelectedOption)
+            selectOption((opt: AudioNotificationOption) => opt.file === previousSelectedOption.file);
     };
 
     useEffect(() => {
         if (currentlySelectedOption) {
-            selectOption((opt) => opt.file === currentlySelectedOption.file);
+            selectOption((opt: AudioNotificationOption) => opt.file === currentlySelectedOption.file);
         }
     }, [currentlySelectedOption]);
 
@@ -77,3 +79,20 @@ const AudioProvider = (props) => {
 const useAudio = () => useContext(AudioContext);
 
 export { useAudio, AudioProvider };
+
+export type AudioContextValue = {
+    audioFile: string,
+    options: AudioNotificationOption[],
+    resetSelectedOption: () => void,
+    setAudioFile: (value: string) => void,
+    isMuted: boolean,
+    mute: () => void,
+    unmute: () => void,
+    currentlySelectedOption: AudioNotificationOption | undefined,
+    setCurrentlySelectedOption: React.Dispatch<React.SetStateAction<AudioNotificationOption | undefined>>
+    setPreviousSelectedOption: React.Dispatch<React.SetStateAction<AudioNotificationOption | undefined>>
+};
+
+export type Props = {
+    children: JSX.Element
+}

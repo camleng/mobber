@@ -6,7 +6,7 @@ import {
 } from '../services/screenSize';
 import './Menu.scss';
 
-const Menu = ({ children }) => {
+const Menu = ({ children }: Props) => {
     const category = determineScreenSizeCategory();
     const [isTablet, setIsTablet] = useState(category === 'tablet');
     const [shown, setShown] = useState(false);
@@ -14,7 +14,7 @@ const Menu = ({ children }) => {
     const toggle = () => setShown(!shown);
 
     useEffect(() => {
-        addWindowResizeCallback((category) => {
+        addWindowResizeCallback((category: string) => {
             const isTablet = category === 'tablet';
             setIsTablet(isTablet);
         });
@@ -42,3 +42,7 @@ const Menu = ({ children }) => {
 };
 
 export default Menu;
+
+type Props = {
+    children: JSX.Element
+}

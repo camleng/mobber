@@ -8,12 +8,12 @@ import {
 } from '../services/screenSize';
 import './Mobbers.scss';
 
-const Mobbers = ({ name, setIsEditingName }) => {
+const Mobbers = ({ name, setIsEditingName }: Props) => {
     const { mobbers, addMobber, removeMobber } = useMobbers();
     const [screenSize, setScreenSize] = useState(determineScreenSizeCategory());
 
     useEffect(() => {
-        addWindowResizeCallback((category) => {
+        addWindowResizeCallback((category: string) => {
             setScreenSize(category);
         });
 
@@ -51,3 +51,8 @@ const Mobbers = ({ name, setIsEditingName }) => {
 };
 
 export default Mobbers;
+
+type Props = {
+    name: string,
+    setIsEditingName: (value: boolean) => void
+}

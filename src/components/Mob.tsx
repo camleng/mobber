@@ -15,7 +15,7 @@ import { useMobbers } from '../context/MobbersContext';
 import { useMob } from '../context/MobContext';
 import { useHistory } from 'react-router-dom';
 import { formatTime } from '../services/timeFormatter';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import {
     determineScreenSizeCategory,
     addWindowResizeCallback,
@@ -62,7 +62,7 @@ const Mob = () => {
     useEffect(() => {
         connectToMobIfActive();
 
-        addWindowResizeCallback((category) => {
+        addWindowResizeCallback((category: string) => {
             setIsTablet(category === 'tablet');
         });
     }, [connectToMobIfActive]);
@@ -84,7 +84,7 @@ const Mob = () => {
         };
     }, [countdown, driver]);
 
-    const placeMobberInDroppedPosition = (result) => {
+    const placeMobberInDroppedPosition = (result: DropResult) => {
         const { destination, source } = result;
 
         if (!destination || destination.index === source.index) return;
@@ -101,7 +101,7 @@ const Mob = () => {
         return name.trim() !== '' && !isEditingName;
     };
 
-    const submitNameChange = (newName) => {
+    const submitNameChange = (newName: string) => {
         if (name !== newName) {
             changeName(name, newName);
             setName(newName);
@@ -122,14 +122,16 @@ const Mob = () => {
     ) : (
         <>
             <Menu>
-                <Randomize
-                    randomize={randomizeMobbers}
-                    position={getPopupPosition()}
-                    disabled={mobbers.length < 2 || !isReset()}
-                />
-                <Volume />
-                <Clipboard position={getPopupPosition()} />
-                <Settings position={getPopupPosition()} isReset={isReset} />
+                <>
+                    <Randomize
+                        randomize={randomizeMobbers}
+                        position={getPopupPosition()}
+                        disabled={mobbers.length < 2 || !isReset()}
+                    />
+                    <Volume />
+                    <Clipboard position={getPopupPosition()} />
+                    <Settings position={getPopupPosition()} isReset={isReset} />
+                </>
             </Menu>
 
             <div className='countdown-and-controls'>
