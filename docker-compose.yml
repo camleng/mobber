@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  mobber:
+    ports:
+      - "3002:3002"
+    volumes:
+      - $PWD/certs:/app/certs
+      - $PWD/.env:/app/.env
+    image: mobber
+
