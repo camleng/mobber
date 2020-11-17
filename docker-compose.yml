@@ -6,5 +6,5 @@ services:
     volumes:
       - $PWD/certs:/app/certs
       - $PWD/.env:/app/.env
-    image: mobber
+    image: camleng/mobber
 
