@@ -46,11 +46,11 @@ if (NODE_ENV === 'production') {
 }
 
 const server = createServer(
-    {
-        key: readFileSync(SSL_KEY_FILE),
-        cert: readFileSync(SSL_CRT_FILE),
-    },
-    app
+   {
+      key: readFileSync(SSL_KEY_FILE),
+      cert: readFileSync(SSL_CRT_FILE),
+   },
+   app
 );
 
 server.listen(PORT, () => {
