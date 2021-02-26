@@ -17,6 +17,6 @@ If the SSL certificate has expired, follow these steps to renew the certificate
 - Add challenge file in `.well-known/acme-challenge`
 - Run `node server.js`
 - Finish certbot prompt
-- `sudo chown cameron:cameron` the `fullchain.pem` and `privkey.pem` files that were generated
+- `sudo chown` to own the `fullchain.pem` and `privkey.pem` files that were generated
 - Put back everything when finished!
 
